@@ -21,7 +21,6 @@
     "@floating-ui/react": "^0.26.19",
     "@googlemaps/js-api-loader": "^1.16.6",
     "@headlessui/react": "2.0.4",
-    "@isomorphic/core": "workspace:*",
     "@paralleldrive/cuid2": "^2.2.2",
     "@react-email/body": "0.0.8",
     "@react-email/button": "0.0.15",
@@ -42,10 +41,13 @@
     "@react-email/text": "0.0.8",
     "@t3-oss/env-nextjs": "^0.10.1",
     "@tailwindcss/container-queries": "^0.1.1",
+    "@tailwindcss/forms": "^0.5.7",
     "@tanstack/match-sorter-utils": "^8.15.1",
     "@tanstack/react-table": "^8.19.3",
     "@uploadthing/react": "^6.7.2",
     "ahooks": "^3.8.0",
+    "antd": "^5.20.0",
+    "axios": "^1.7.3",
     "clsx": "^2.1.1",
     "date-arithmetic": "^4.1.0",
     "dayjs": "^1.11.11",
@@ -54,6 +56,9 @@
     "framer-motion": "^11.3.6",
     "fs-extra": "^11.2.0",
     "glob": "^11.0.0",
+    "i18next": "^23.12.1",
+    "i18next-browser-languagedetector": "^8.0.0",
+    "i18next-resources-to-backend": "^1.2.1",
     "jotai": "2.9.0",
     "lodash": "^4.17.21",
     "next": "14.2.5",
@@ -81,6 +86,7 @@
     "react-email": "2.1.5",
     "react-hook-form": "^7.52.1",
     "react-hot-toast": "^2.4.1",
+    "react-i18next": "^15.0.0",
     "react-icons": "^5.2.1",
     "react-phone-input-2": "^2.15.1",
     "react-player": "^2.16.0",
@@ -96,6 +102,7 @@
     "simplebar-react": "^3.2.6",
     "swiper": "^11.1.5",
     "tailwind-merge": "^2.4.0",
+    "tailwindcss": "^3.4.1",
     "typescript": "5.5.3",
     "uploadthing": "^6.13.2",
     "zod": "^3.23.8"
@@ -103,8 +110,6 @@
   "devDependencies": {
     "@hookform/devtools": "^4.3.1",
     "@hookform/resolvers": "^3.9.0",
-    "@repo/tailwind-config": "workspace:*",
-    "@repo/typescript-config": "workspace:*",
     "@tailwindcss/forms": "^0.5.7",
     "@total-typescript/ts-reset": "^0.5.1",
     "@types/date-arithmetic": "^4.1.4",
@@ -124,7 +129,8 @@
     "prettier": "3.3.3",
     "prettier-plugin-tailwindcss": "^0.6.5",
     "rimraf": "^6.0.1",
-    "tailwindcss": "^3.4.6"
+    "tailwindcss": "^3.4.6",
+    "typescript": "^5.3.3"
   },
   "engines": {
     "node": ">=18.15.0"
