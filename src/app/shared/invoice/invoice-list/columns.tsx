@@ -1,7 +1,8 @@
 'use client';
 
 import Link from 'next/link';
-import { type Invoice } from '@/data/invoice-data';
+
+// import { type Invoice } from '@/data/invoice-data';
 import { routes } from '@/config/routes';
 import { Text, Badge, Tooltip, Checkbox, ActionIcon } from 'rizzui';
 import { HeaderCell } from '@/app/shared/table';
@@ -10,6 +11,9 @@ import PencilIcon from '@components/icons/pencil';
 import AvatarCard from '@ui/avatar-card';
 import DateCell from '@ui/date-cell';
 import DeletePopover from '@/app/shared/delete-popover';
+
+
+
 
 function getStatusBadge(status: string) {
   switch (status.toLowerCase()) {
@@ -44,6 +48,8 @@ function getStatusBadge(status: string) {
   }
 }
 
+
+
 type Columns = {
   data: any[];
   sortConfig?: any;
@@ -53,6 +59,8 @@ type Columns = {
   onHeaderCellClick: (value: string) => void;
   onChecked?: (id: string) => void;
 };
+
+
 
 export const getColumns = ({
   data,
@@ -108,6 +116,7 @@ export const getColumns = ({
     width: 250,
     render: (email: string) => email.toLowerCase(),
   },
+
   {
     title: (
       <HeaderCell

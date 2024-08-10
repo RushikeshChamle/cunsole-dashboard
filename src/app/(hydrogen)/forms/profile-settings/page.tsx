@@ -5,6 +5,7 @@ export const metadata = {
   ...metaObject('Profile Settings'),
 };
 
+
 export default function ProfileSettingsFormPage() {
   return <PersonalInfoView />;
 }

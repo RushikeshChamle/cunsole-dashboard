@@ -2,7 +2,13 @@
   "compilerOptions": {
     "baseUrl": ".",
     "target": "es5",
-    "lib": ["dom", "dom.iterable", "esnext"],
+    "lib": [
+      "dom",
+      "dom.iterable",
+      "esnext",
+      "ES2015",
+      "DOM"
+    ],
     "allowJs": true,
     "skipLibCheck": true,
     "strict": true,
@@ -11,25 +17,46 @@
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
     "module": "esnext",
-    "resolveJsonModule": true,
     "isolatedModules": true,
     "jsx": "preserve",
     "incremental": true,
+    "composite": false,
+    "declaration": true,
+    "declarationMap": true,
+    "allowImportingTsExtensions": true,
+    "inlineSources": false,
+    "moduleResolution": "Bundler",
+    "noUnusedLocals": false,
+    "noUnusedParameters": false,
+    "preserveWatchOutput": true,
+    "strictNullChecks": true,
     "paths": {
-      "@/*": ["src/*"],
-      "@public/*": ["public/*"],
-      "@ui/*": ["../../packages/isomorphic-core/src/ui/*"],
-      "@components/*": ["../../packages/isomorphic-core/src/components/*"],
-      "@hooks/*": ["../../packages/isomorphic-core/src/hooks/*"],
-      "@utils/*": ["../../packages/isomorphic-core/src/utils/*"],
+      "@/*": [
+        "src/*"
+      ],
+      "@public/*": [
+        "public/*"
+      ],
+      "@ui/*": [
+        "src/packages/isomorphic-core/src/ui/*"
+      ],
+      "@components/*": [
+        "src/packages/isomorphic-core/src/components/*"
+      ],
+      "@hooks/*": [
+        "src/packages/isomorphic-core/src/hooks/*"
+      ],
+      "@utils/*": [
+        "src/packages/isomorphic-core/src/utils/*"
+      ]
     },
     "plugins": [
       {
         "name": "next"
       }
-    ]
+    ],
+    "resolveJsonModule": true
   },
-  "extends": "@repo/typescript-config/nextjs.json",
   "include": [
     "next-env.d.ts",
     "additional.d.ts",
@@ -39,5 +66,7 @@
     "**/*.mjs",
     ".next/types/**/*.ts"
   ],
-  "exclude": ["node_modules"]
+  "exclude": [
+    "node_modules"
+  ]
 }

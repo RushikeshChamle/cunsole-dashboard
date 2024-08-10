@@ -82,6 +82,16 @@ export const routes = {
     edit: (id: string) => `/invoice/${id}/edit`,
     builder: '/invoice/builder',
   },
+  
+  customers: {
+    home: '/customers',
+    create: '/customers/create',
+    details: (id: string) => `/customers/${id}`,
+    edit: (id: string) => `/customers/${id}/edit`,
+    builder: '/customers/builder',
+  },
+
+
   widgets: {
     cards: '/widgets/cards',
     icons: '/widgets/icons',

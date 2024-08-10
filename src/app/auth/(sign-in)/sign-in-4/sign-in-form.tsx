@@ -1,5 +1,7 @@
 'use client';
 
+
+import { useState } from 'react';
 import Link from 'next/link';
 import { SubmitHandler } from 'react-hook-form';
 import { Password, Checkbox, Button, Input, Text } from 'rizzui';
@@ -7,17 +9,52 @@ import { useMedia } from '@hooks/use-media';
 import { Form } from '@ui/form';
 import { routes } from '@/config/routes';
 import { loginSchema, LoginSchema } from '@/validators/login.schema';
-
+import axios from 'axios';
+import { message } from 'antd';
+import { toast } from 'react-hot-toast';
 const initialValues: LoginSchema = {
   email: 'admin@admin.com',
   password: 'admin',
   rememberMe: true,
 };
 
+
 export default function SignInForm() {
+
+
+
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
   const isMedium = useMedia('(max-width: 1200px)', false);
-  const onSubmit: SubmitHandler<LoginSchema> = (data) => {
-    console.log(data);
+  const [messageApi, contextHolder] = message.useMessage();
+  
+  const onSubmit: SubmitHandler<LoginSchema> = async (data) => {
+    setLoading(true);
+    setError(null);
+    try {
+      const response = await axios.post('http://localhost:9000/cunsol/signin/', data);
+      // Handle the response from the backend
+      if (response.data.access && response.data.refresh) {
+        // Store the access and refresh tokens in cookies
+        const accessExpiration = new Date(new Date().getTime() + 24 * 60 * 60 * 1000); // 24 hours
+        const refreshExpiration = new Date(new Date().getTime() + 7 * 24 * 60 * 60 * 1000); // 7 days
+        document.cookie = `access_token=${response.data.access}; expires=${accessExpiration.toUTCString()}; path=/; Secure; SameSite=None`;
+        document.cookie = `refresh_token=${response.data.refresh}; expires=${refreshExpiration.toUTCString()}; path=/; Secure; SameSite=None`;
+        // Redirect to the dashboard or any other protected route
+        window.location.href = '/financial';
+      } else {
+        setError('Invalid credentials. Please try again.');
+      }
+    } catch (err) {
+      // Handle the error
+      if (axios.isAxiosError(err) && err.response) {
+        setError(err.response.data.error || 'An error occurred. Please try again.');
+      } else {
+        setError('An error occurred. Please try again.');
+      }
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -67,6 +104,7 @@ export default function SignInForm() {
               className="w-full"
               type="submit"
               size={isMedium ? 'lg' : 'xl'}
+              isLoading={loading}
             >
               Sign In
             </Button>
@@ -85,3 +123,5 @@ export default function SignInForm() {
     </>
   );
 }
+
+
