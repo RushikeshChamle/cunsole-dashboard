@@ -12,16 +12,15 @@ import { loginSchema, LoginSchema } from '@/validators/login.schema';
 import axios from 'axios';
 import { message } from 'antd';
 import { toast } from 'react-hot-toast';
-const initialValues: LoginSchema = {
-  email: 'admin@admin.com',
-  password: 'admin',
-  rememberMe: true,
-};
+
+// const initialValues: LoginSchema = {
+//   email: 'admin@admin.com',
+//   password: 'admin',
+//   rememberMe: true,
+// };
 
 
 export default function SignInForm() {
-
-
 
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -64,7 +63,7 @@ export default function SignInForm() {
         onSubmit={onSubmit}
         useFormProps={{
           mode: 'onChange',
-          defaultValues: initialValues,
+          // defaultValues: initialValues,
         }}
       >
         {({ register, formState: { errors } }) => (

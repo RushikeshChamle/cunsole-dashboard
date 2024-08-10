@@ -1,46 +1,84 @@
-import { PiDownloadSimpleBold } from 'react-icons/pi';
-import InvoiceDetails from '@/app/shared/invoice/invoice-details';
-import PrintButton from '@/app/shared/print-button';
-import PageHeader from '@/app/shared/page-header';
-import { metaObject } from '@/config/site.config';
+'use client'
 import { Button } from 'rizzui';
 import { routes } from '@/config/routes';
+import PageHeader from '@/app/shared/page-header';
+import Link from 'next/link';
+import OrderView from '@/app/shared/ecommerce/order/order-view';
+import { CartProvider } from '@/store/quick-cart/cart.context';
+import OrderDetailsPage from '@/app/shared/Components/customersdetails/OrderDetailsPage';
+import { Tab } from "rizzui";
 
-export const metadata = {
-  ...metaObject('Invoice'),
-};
 
-const pageHeader = {
-  title: 'Invoice Details',
-  breadcrumb: [
-    {
-      href: routes.eCommerce.dashboard,
-      name: 'Home',
-    },
-    {
-      href: routes.invoice.home,
-      name: 'Invoice',
-    },
-    {
-      name: 'Details',
-    },
-  ],
-};
 
-export default function InvoiceDetailsPage() {
+export default function SomeOtherPage({ params }: any) {
   return (
-    <>
-      <PageHeader title={pageHeader.title} breadcrumb={pageHeader.breadcrumb}>
-        <div className="mt-4 flex items-center gap-3 @lg:mt-0">
-          <PrintButton />
-          <Button className="w-full @lg:w-auto">
-            <PiDownloadSimpleBold className="me-1.5 h-[17px] w-[17px]" />
-            Download
-          </Button>
-        </div>
-      </PageHeader>
-
-      <InvoiceDetails />
-    </>
+    <div>
+  
+      <OrderDetailsPage params={params} />
+    </div>
   );
 }
+
+
+
+
+// export default function CustomerDetailsPage({ params }: any) {
+//   const pageHeader = {
+//     title: `Order #${params.id}`,
+//     breadcrumb: [
+//       {
+//         href: routes.customers,
+//         name: 'Customers',
+//       },
+//       {
+//         href: routes.eCommerce.orders,
+//         name: 'Orders',
+//       },
+//       {
+//         name: params.id,
+//       },
+//     ],
+//   };
+
+
+//   return (
+//     <>
+//       <PageHeader title={pageHeader.title} breadcrumb={pageHeader.breadcrumb}>
+//         <Link
+//           href={routes.eCommerce.editOrder(params.id)}
+//           className="mt-4 w-full @lg:mt-0 @lg:w-auto"
+//         >
+//           <Button as="span" className="w-full @lg:w-auto ">
+//             Edit Order
+//           </Button>
+//         </Link>
+//       </PageHeader>
+//       <Tab>
+
+//       <Tab.List>
+//         <Tab.ListItem>Recent</Tab.ListItem>
+//         <Tab.ListItem>Popular</Tab.ListItem>
+//         <Tab.ListItem>Trending</Tab.ListItem>
+//       </Tab.List>
+
+//       <Tab.Panels>
+//         <Tab.Panel>
+
+//         <CartProvider>
+//       <OrderView />
+//       </CartProvider>
+          
+
+
+//         </Tab.Panel>
+//         <Tab.Panel>Popular panel</Tab.Panel>
+//         <Tab.Panel>Trending panel</Tab.Panel>
+//       </Tab.Panels>
+//     </Tab>
+
+     
+    
+    
+//     </>
+//   );
+// }

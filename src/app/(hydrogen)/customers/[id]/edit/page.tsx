@@ -1,9 +1,11 @@
-import { routes } from '@/config/routes';
-import PageHeader from '@/app/shared/page-header';
-import CreateInvoice from '@/app/shared/invoice/create-invoice';
-import ImportButton from '@/app/shared/import-button';
-import { metaObject } from '@/config/site.config';
+import Link from 'next/link';
 import { Metadata } from 'next';
+import { routes } from '@/config/routes';
+import { Button } from 'rizzui';
+import { metaObject } from '@/config/site.config';
+import PageHeader from '@/app/shared/page-header';
+import CreateOrder from '@/app/shared/ecommerce/order/create-order';
+import { orderData } from '@/app/shared/ecommerce/order/order-form/form-utils';
 
 type Props = {
   params: { id: string };
@@ -21,16 +23,18 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   return metaObject(`Edit ${id}`);
 }
 
+// TODO: Need added Order date default value
+
 const pageHeader = {
-  title: 'Edit Invoice',
+  title: 'Edit Order',
   breadcrumb: [
     {
       href: routes.eCommerce.dashboard,
-      name: 'Home',
+      name: 'E-Commerce',
     },
     {
-      href: routes.invoice.home,
-      name: 'Invoice',
+      href: routes.eCommerce.orders,
+      name: 'Orders',
     },
     {
       name: 'Edit',
@@ -38,44 +42,20 @@ const pageHeader = {
   ],
 };
 
-const invoiceData = {
-  fromName: 'Ashley Kling-Breitenberg Jr.',
-  fromAddress: '8179 Armstrong Tunnel Apt. 182 Maribelview, WI 05172',
-  toName: 'Cameron Hudson V',
-  toAddress: '081 Fadel Extensions Suite 252 West Duncanborough, OK 92119',
-  fromPhone: '12083972822',
-  toPhone: '12073252812',
-  shipping: 10,
-  discount: 50,
-  taxes: 15,
-  createDate: new Date(),
-  status: 'draft',
-  dueDate: new Date(),
-  invoiceNumber: 'INV-0071',
-  items: [
-    {
-      item: 'Logo Design',
-      description: 'Custom logo design for website',
-      quantity: 3,
-      price: 200,
-    },
-    {
-      item: 'Web Development',
-      description: 'Front-end and back-end development',
-      quantity: 1,
-      price: 1200,
-    },
-  ],
-};
-
-export default function InvoiceEditPage({ params }: any) {
+export default function EditOrderPage({ params }: any) {
   return (
     <>
       <PageHeader title={pageHeader.title} breadcrumb={pageHeader.breadcrumb}>
-        <ImportButton title="Upload File" className="mt-4 @lg:mt-0" />
+        <Link
+          href={routes.eCommerce.orders}
+          className="mt-4 w-full @lg:mt-0 @lg:w-auto"
+        >
+          <Button as="span" className="w-full @lg:w-auto" variant="outline">
+            Cancel
+          </Button>
+        </Link>
       </PageHeader>
-
-      <CreateInvoice id={params.id} record={invoiceData} />
+      <CreateOrder id={params.id} order={orderData} />
     </>
   );
 }

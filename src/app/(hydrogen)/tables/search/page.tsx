@@ -25,6 +25,7 @@ const pageHeader = {
   ],
 };
 
+
 export default function SearchTablePage() {
   return (
     <TableLayout

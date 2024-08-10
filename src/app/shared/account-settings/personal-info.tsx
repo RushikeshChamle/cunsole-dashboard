@@ -30,6 +30,7 @@ const QuillEditor = dynamic(() => import('@ui/quill-editor'), {
   ssr: false,
 });
 
+
 export default function PersonalInfoView() {
   const onSubmit: SubmitHandler<PersonalInfoFormTypes> = (data) => {
     toast.success(<Text as="b">Successfully added!</Text>);
@@ -38,7 +39,7 @@ export default function PersonalInfoView() {
     });
   };
 
-  
+
   return (
     <Form<PersonalInfoFormTypes>
       validationSchema={personalInfoFormSchema}
