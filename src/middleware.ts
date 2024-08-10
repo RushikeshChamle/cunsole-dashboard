@@ -7,6 +7,8 @@ export default withAuth({
   },
 });
 
+
+
 export const config = {
   // restricted routes
   matcher: [
@@ -29,6 +31,7 @@ export const config = {
 // previous middleware
 
 
+
 // import { NextResponse } from 'next/server';
 // import type { NextRequest } from 'next/server';
 // import { jwtVerify } from 'jose';
@@ -44,6 +47,8 @@ export const config = {
 //     return redirectToLogin(request);
 //   }
 
+
+
 //   try {
 //     // Verify the token
 //     // Replace 'your-secret-key' with your actual secret key
@@ -53,6 +58,8 @@ export const config = {
 //     console.log('Token verification failed:', error);
 //     return redirectToLogin(request);
 //   }
+
+
 
 //   // Token is present and valid, continue to the requested route
 //   return NextResponse.next();

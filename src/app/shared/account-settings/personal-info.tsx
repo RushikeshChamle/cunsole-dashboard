@@ -38,6 +38,7 @@ export default function PersonalInfoView() {
     });
   };
 
+  
   return (
     <Form<PersonalInfoFormTypes>
       validationSchema={personalInfoFormSchema}

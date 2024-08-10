@@ -4,6 +4,7 @@ import cn from '@utils/class-names';
 import { Controller, useFormContext } from 'react-hook-form';
 import Upload from '@ui/upload';
 
+
 interface BasicInfoProps {
   className?: string;
 }
@@ -17,6 +18,7 @@ export default function UploadPhoto({ className }: BasicInfoProps) {
     control,
     formState: { errors },
   } = useFormContext();
+
   return (
     <div className={cn(className)}>
       <Controller

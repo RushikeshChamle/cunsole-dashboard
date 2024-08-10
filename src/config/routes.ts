@@ -82,6 +82,7 @@ export const routes = {
     edit: (id: string) => `/invoice/${id}/edit`,
     builder: '/invoice/builder',
   },
+  
   customers: {
     home: '/customers',
     create: '/customers/create',

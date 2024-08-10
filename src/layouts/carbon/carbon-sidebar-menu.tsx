@@ -55,6 +55,7 @@ export function CarbonSidebarMenu() {
                     offset={2}
                     closeDelay={0}
                   >
+                    
                     <Menu.Trigger>
                       <div
                         className={cn(

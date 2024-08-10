@@ -31,6 +31,8 @@ const pageHeader = {
 
 export default function BasicTablePage() {
   return (
+
+    
     <TableLayout
       title={pageHeader.title}
       breadcrumb={pageHeader.breadcrumb}
