@@ -172,6 +172,8 @@
   /* base style */
   html {
     @apply h-full antialiased;
+    /* zoom: 90%; */
+  
   }
 
   #player {

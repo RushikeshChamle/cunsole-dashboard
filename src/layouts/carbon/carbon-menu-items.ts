@@ -73,10 +73,12 @@ export interface MenuItemsType {
   name: string;
   title: string;
   icon: IconType;
+
   menuItems: ItemType[];
 }
 
 export const carbonMenuItems: MenuItemsType[] = [
+ 
   {
     id: '1',
     name: 'Dashboard',
@@ -240,26 +242,26 @@ export const carbonMenuItems: MenuItemsType[] = [
       {
         name: 'Invoice',
         description: 'Professional-looking invoices for each customer order',
-        href: '#',
+        href: '/invoice',
         icon: PiCurrencyDollarDuotone,
-        subMenuItems: [
-          {
-            name: 'List',
-            href: routes.invoice.home,
-          },
-          {
-            name: 'Details',
-            href: routes.invoice.details(DUMMY_ID),
-          },
-          {
-            name: 'Create',
-            href: routes.invoice.create,
-          },
-          {
-            name: 'Edit',
-            href: routes.invoice.edit(DUMMY_ID),
-          },
-        ],
+        // subMenuItems: [
+        //   {
+        //     name: 'List',
+        //     href: routes.invoice.home,
+        //   },
+        //   {
+        //     name: 'Details',
+        //     href: routes.invoice.details(DUMMY_ID),
+        //   },
+        //   {
+        //     name: 'Create',
+        //     href: routes.invoice.create,
+        //   },
+        //   {
+        //     name: 'Edit',
+        //     href: routes.invoice.edit(DUMMY_ID),
+        //   },
+        // ],
       },
       // {
       //   name: 'Logistics',
@@ -340,7 +342,7 @@ export const carbonMenuItems: MenuItemsType[] = [
     icon: PiUserCircleDuotone,
     menuItems: [
       {
-        name: 'Real Estate',
+        name: 'Customers',
         href: routes.searchAndFilter.realEstate,
         icon: PiHouseLineDuotone,
         badge: '',

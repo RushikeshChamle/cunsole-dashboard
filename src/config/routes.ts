@@ -19,7 +19,7 @@ export const routes = {
     trackingId: (id: string) => `/ecommerce/tracking/${id}`,
   },
   searchAndFilter: {
-    realEstate: '/search/real-estate',
+    realEstate: '/customers',
     nft: '/search/nft',
     flight: '/search/flight',
   },
@@ -73,6 +73,8 @@ export const routes = {
   pos: {
     index: '/point-of-sale',
   },
+
+  
   eventCalendar: '/event-calendar',
   rolesPermissions: '/roles-permissions',
   invoice: {

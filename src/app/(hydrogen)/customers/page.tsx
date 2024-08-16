@@ -1,6 +1,5 @@
 "use client"
 
-
 const pageHeader = {
   title: 'Customers List',
   breadcrumb: [
@@ -87,7 +86,7 @@ export default function CustomersListPage() {
           return;
         }
 
-        const response = await fetch('http://localhost:9000/cunsol/cutomerinvoices/', {
+        const response = await fetch('http://localhost:9000/customers/cutomerinvoices/', {
           headers: {
             'Authorization': `Bearer ${token}`,
             'Content-Type': 'application/json',
