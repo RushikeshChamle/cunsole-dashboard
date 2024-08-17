@@ -321,9 +321,9 @@ import { toast } from 'react-hot-toast';
 import { EmailTriggerFormInput, emailTriggerFormSchema } from '@/validators/trigger_schema';
 
 const conditionOptions = [
-  { value: 0, label: 'Before Due Date' },
-  { value: 1, label: 'On Due Date' },
-  { value: 2, label: 'After Due Date' },
+  { value: '0', label: 'Before Due Date' },
+  { value: '1', label: 'On Due Date' },
+  { value: '2', label: 'After Due Date' },
 ];
 
 function getCookie(name: string): string | null {
@@ -354,34 +354,37 @@ export default function CreateEmailTrigger({
     },
   });
 
+
+  
   const onSubmit: SubmitHandler<EmailTriggerFormInput> = async (data) => {
     const formattedData = {
       ...data,
+      condition_type: data.condition_type !== null ? parseInt(data.condition_type, 10) : null,
       days_offset: Number(data.days_offset),
     };
+
+
     
     setLoading(true);
     setError(null);
     try {
       const token = getCookie('access_token');
-      // const csrfToken = getCookie('csrftoken'); 
+      const csrfToken = getCookie('csrftoken'); 
       if (!token) {
         setError('No access token found');
         return;
       }
 
-      const response = await fetch('http://localhost:9000/customers/create_email_trigger/', {
-        method: 'POST',
+      const response = await axios.post('http://localhost:9000/customers/create_email_trigger/', formattedData, {
         headers: {
           'Authorization': `Bearer ${token}`,
-          'Content-Type': 'application/json',
-          // 'X-CSRFToken': csrfToken || '',  // Add the CSRF token to the headers
+          'x-csrftoken': csrfToken || '',
         },
-        body: JSON.stringify(formattedData),
+        withCredentials: true
       });
 
-      if (response.ok) {
-        const result = await response.json();
+      if (response.data) {
+        const result = response.data
         toast.success(
           <Text as="b">Email trigger successfully {id ? 'updated' : 'created'}</Text>
         );
@@ -394,7 +397,7 @@ export default function CreateEmailTrigger({
           isactive: true,
         });
       } else {
-        const errorData = await response.json();
+        const errorData = response.data
         setError(errorData.error || 'Failed to create email trigger');
         toast.error(<Text as="b">{errorData.error || 'Failed to create email trigger'}</Text>);
       }
@@ -418,19 +421,19 @@ export default function CreateEmailTrigger({
               {...register('name')}
               error={errors.name?.message}
             />
-            <Controller
-              name="condition_type"
-              control={control}
-              render={({ field: { onChange, value } }) => (
-                <Select
-                  label="Condition Type"
-                  options={conditionOptions}
-                  value={value}
-                  onChange={onChange}
-                  error={errors.condition_type?.message}
-                />
-              )}
+           <Controller
+          name="condition_type"
+          control={control}
+          render={({ field: { onChange, value } }) => (
+            <Select
+              label="Condition Type"
+              options={conditionOptions}
+              value={conditionOptions.find(option => option.value === value) || null}
+              onChange={(selectedOption) => onChange(selectedOption ? selectedOption.value : null)}
+              error={errors.condition_type?.message}
             />
+          )}
+        />
           </div>
           <div className="grid grid-cols-2 gap-4 pt-8">
             <Input

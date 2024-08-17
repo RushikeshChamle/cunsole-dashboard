@@ -43,6 +43,21 @@ interface EmailTrigger {
   account: number;
 }
 
+function getConditionTypeLabel(type: number): string {
+  switch (type) {
+    case 0:
+      return 'Before Due Date';
+    case 1:
+      return 'On Due Date';
+    case 2:
+      return 'After Due Date';
+    default:
+      return 'Unknown';
+  }
+}
+
+
+
 export default function EmailTriggersListPage() {
   const [emailTriggers, setEmailTriggers] = useState<EmailTrigger[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
@@ -107,17 +122,17 @@ export default function EmailTriggersListPage() {
       <Table>
         <Table.Header>
           <Table.Row>
-            <Table.Head>ID</Table.Head>
-            <Table.Head>Condition Type</Table.Head>
+            {/* <Table.Head>ID</Table.Head> */}
             <Table.Head>Name</Table.Head>
+            <Table.Head>Condition Type</Table.Head>
             <Table.Head>Email Subject</Table.Head>
             <Table.Head>Email Body</Table.Head>
             <Table.Head>Days Offset</Table.Head>
             <Table.Head>Created At</Table.Head>
-            <Table.Head>Updated At</Table.Head>
+            {/* <Table.Head>Updated At</Table.Head> */}
             <Table.Head>Is Active</Table.Head>
             <Table.Head>User</Table.Head>
-            <Table.Head>Account</Table.Head>
+            {/* <Table.Head>Account</Table.Head> */}
           </Table.Row>
         </Table.Header>
         <Table.Body>
@@ -133,17 +148,18 @@ export default function EmailTriggersListPage() {
                 style={{
                   cursor: "pointer"
                 }}>
-                <Table.Cell>{trigger.id}</Table.Cell>
-                <Table.Cell>{trigger.condition_type_display}</Table.Cell>
+                {/* <Table.Cell>{trigger.id}</Table.Cell> */}
+                {/* <Table.Cell>{trigger.condition_type}</Table.Cell> */}
                 <Table.Cell>{trigger.name}</Table.Cell>
+                <Table.Cell>{getConditionTypeLabel(trigger.condition_type)}</Table.Cell>
                 <Table.Cell>{trigger.email_subject}</Table.Cell>
                 <Table.Cell>{trigger.email_body}</Table.Cell>
                 <Table.Cell>{trigger.days_offset}</Table.Cell>
                 <Table.Cell>{new Date(trigger.created_at).toLocaleString()}</Table.Cell>
-                <Table.Cell>{new Date(trigger.updated_at).toLocaleString()}</Table.Cell>
+                {/* <Table.Cell>{new Date(trigger.updated_at).toLocaleString()}</Table.Cell> */}
                 <Table.Cell>{trigger.isactive ? 'Yes' : 'No'}</Table.Cell>
                 <Table.Cell>{trigger.user}</Table.Cell>
-                <Table.Cell>{trigger.account}</Table.Cell>
+                {/* <Table.Cell>{trigger.account}</Table.Cell> */}
               </Table.Row>
             ))
           )}
