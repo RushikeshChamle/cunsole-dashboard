@@ -48,6 +48,7 @@ interface Invoice {
   account: number;
 }
 
+
 interface Customer {
   id: string;
   name: string;
