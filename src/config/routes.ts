@@ -94,6 +94,15 @@ export const routes = {
   },
 
 
+  actions: {
+    home: '/actions',
+    create: '/actions/create',
+    details: (id: string) => `/actions/${id}`,
+    edit: (id: string) => `/actions/${id}/edit`,
+    builder: '/actions/builder',
+  },
+
+
   widgets: {
     cards: '/widgets/cards',
     icons: '/widgets/icons',

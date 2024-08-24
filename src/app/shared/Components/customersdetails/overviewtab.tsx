@@ -90,7 +90,8 @@ function WidgetCard({
   );
 }
 
-export default function Overviewtab() {
+
+export default function Overviewtab({ customerId }: { customerId: string }) {
   const { items, total, totalItems } = useCart();
   const { price: subtotal } = usePrice(
     items && {
@@ -138,141 +139,7 @@ export default function Overviewtab() {
             </div>
           )}
 
-          {/* <div className="pb-5">
-            <OrderViewProducts />
-            <div className="border-t border-muted pt-7 @5xl:mt-3">
-              <div className="ms-auto max-w-lg space-y-6">
-                <div className="flex justify-between font-medium">
-                  Subtotal <span>{subtotal}</span>
-                </div>
-                <div className="flex justify-between font-medium">
-                  Store Credit <span>{toCurrency(0)}</span>
-                </div>
-                <div className="flex justify-between font-medium">
-                  Subtotal <span>{toCurrency(0)}</span>
-                </div>
-                <div className="flex justify-between border-t border-muted pt-5 text-base font-semibold">
-                  Total <span>{totalPrice}</span>
-                </div>
-              </div>
-            </div>
-          </div> */}
-
-          {/* <div className="">
-            <Title
-              as="h3"
-              className="mb-3.5  text-base font-semibold @5xl:mb-5 @7xl:text-lg"
-            >
-              Transactions
-            </Title>
-
-            <div className="space-y-4">
-              {transitions.map((item) => (
-                <div
-                  key={item.paymentMethod.name}
-                  className="flex items-center justify-between rounded-lg border border-gray-100 px-5 py-5 font-medium shadow-sm transition-shadow @5xl:px-7"
-                >
-                  <div className="flex w-1/3 items-center">
-                    <div className="shrink-0">
-                      <Image
-                        src={item.paymentMethod.image}
-                        alt={item.paymentMethod.name}
-                        height={60}
-                        width={60}
-                        className="object-contain"
-                      />
-                    </div>
-                    <div className="flex flex-col ps-4">
-                      <Text as="span" className="font-lexend text-gray-700">
-                        Payment
-                      </Text>
-                      <span className="pt-1 text-[13px] font-normal text-gray-500">
-                        Via {item.paymentMethod.name}
-                      </span>
-                    </div>
-                  </div>
-
-                  <div className="w-1/3 text-end">{item.price}</div>
-                </div>
-              ))}
-            </div>
-          </div> */}
-
-          {/* <div className="">
-            <div className="mb-3.5 @5xl:mb-5">
-              <Title as="h3" className="text-base font-semibold @7xl:text-lg">
-                Balance
-              </Title>
-            </div>
-            <div className="space-y-6 rounded-xl border border-muted px-5 py-6 @5xl:space-y-7 @5xl:p-7">
-            <div className="flex justify-between font-medium">
-                Total Invoice Ammount <span>$5275.00</span>
-              </div>
-              
-              
-              <div className="flex justify-between font-medium">
-                Total Paid Amount <span>$5275.00</span>
-              </div>
-
-              <div className="flex justify-between font-medium">
-                Total Outstanding <span>$350.00</span>
-              </div>
-              <div className="flex justify-between font-medium">
-                Due Date <span> 15 Feb 2025</span>
-              </div>
-
-
-              <div className="flex justify-between font-medium">
-                Refunded <span>$350.00</span>
-              </div>
-
-              <div className="flex justify-between font-medium">
-                Balance <span>$4975.00</span>
-              </div>
-            </div>
-          </div> */}
-
-{/* <div className="p-5 @5xl:p-7 bg-white rounded-xl shadow-md">
-  <div className="mb-4 @5xl:mb-6">
-    <Title as="h3" className="text-lg font-semibold @7xl:text-xl">
-      Payment Summary
-    </Title>
-  </div>
-
-  
-  <div className="space-y-5 @5xl:space-y-6">
-
-  <div className="flex justify-between items-center border-b border-muted py-2">
-      <span className="text-sm font-medium">Next Due Date</span>
-      <span className="text-sm font-medium">15 Feb 2025</span>
-    </div>
-    
-    <div className="flex justify-between items-center border-b border-muted py-2">
-      <span className="text-sm font-medium">Total Invoice Amount</span>
-      <span className="text-sm font-medium">$5275.00</span>
-    </div>
-    
-    <div className="flex justify-between items-center border-b border-muted py-2">
-      <span className="text-sm font-medium">Total Paid Amount</span>
-      <span className="text-sm font-medium">$5275.00</span>
-    </div>
-    
-    <div className="flex justify-between items-center border-b border-muted py-2">
-      <span className="text-sm font-medium">Total Outstanding</span>
-      <span className="text-sm font-medium">$350.00</span>
-    </div>
-    
-
-    
-
-    <div className="flex justify-between items-center py-2">
-      <span className="text-sm font-medium">Balance</span>
-      <span className="text-sm font-medium">$4975.00</span>
-    </div>
-  </div>
-</div> */}
-
-<Details/>
+<Details customerId={customerId} />
 
 
           
