@@ -45,7 +45,7 @@ export default function OrderTabs({ params }: any ) {
         </Tab.Panel>
 
         <Tab.Panel>
-          <Details />
+          <Details customerId={customerId}/>
 
 
         </Tab.Panel>

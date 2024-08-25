@@ -1,64 +1,70 @@
-'use client'
-import React from 'react';
-import { Badge, Table } from "rizzui";
+'use client';
 
-export default function Transactions() {
-    // Sample data - replace with actual data as needed
-    const transactions = [
-        {
-            id: '#INV12345',
-            customer: 'Acme Corp',
-            amount: '$1,200.00',
-            paymentDate: '2024-08-01',
-            paymentMethod: 'Credit Card',
-            transactionStatus: 'Completed'
-        },
-        {
-            id: '#INV12346',
-            customer: 'Acme Corp',
-            amount: '$800.00',
-            paymentDate: '2024-08-05',
-            paymentMethod: 'Bank Transfer',
-            transactionStatus: 'Pending'
-        },
-        {
-            id: '#INV12347',
-            customer: 'Acme Corp',
-            amount: '$500.00',
-            paymentDate: '2024-08-10',
-            paymentMethod: 'PayPal',
-            transactionStatus: 'Failed'
-        }
-    ];
+import React, { useState, useEffect } from 'react';
+import axiosInstance from '@/axiosInstance'; // Import your custom Axios instance
+import { Table, Badge } from 'rizzui';
 
-    return (
-        <div>
-            <Table>
-                <Table.Header>
-                    <Table.Row>
-                        <Table.Head>Invoice ID</Table.Head>
-                        <Table.Head>Customer</Table.Head>
-                        <Table.Head>Amount</Table.Head>
-                        <Table.Head>Payment Date</Table.Head>
-                        <Table.Head>Payment Method</Table.Head>
-                        <Table.Head>Status</Table.Head>
-                    </Table.Row>
-                </Table.Header>
-                <Table.Body>
-                    {transactions.map((transaction, index) => (
-                        <Table.Row key={index}>
-                            <Table.Cell>{transaction.id}</Table.Cell>
-                            <Table.Cell>{transaction.customer}</Table.Cell>
-                            <Table.Cell>{transaction.amount}</Table.Cell>
-                            <Table.Cell>{transaction.paymentDate}</Table.Cell>
-                            <Table.Cell>{transaction.paymentMethod}</Table.Cell>
-                            <Table.Cell>
-                                <Badge>{transaction.transactionStatus}</Badge>
-                            </Table.Cell>
-                        </Table.Row>
-                    ))}
-                </Table.Body>
-            </Table>
-        </div>
-    );
+interface Payment {
+  invoice: number;
+  amount: string;
+  method: string;
+  reference: string;
+  account: number;
+  user: number;
+}
+
+export default function Transactions({ customerId }: { customerId: string }) {
+  const [payments, setPayments] = useState<Payment[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    async function fetchPayments() {
+      setLoading(true);
+      setError(null);
+
+      try {
+        const response = await axiosInstance.get(`invoices/get_customer_payments/${customerId}/`);
+        setPayments(response.data);
+      } catch (err) {
+        setError('Failed to fetch payments');
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    fetchPayments();
+  }, [customerId]);
+
+  if (loading) return <div>Loading...</div>;
+  if (error) return <div>{error}</div>;
+
+  return (
+    <div>
+      <Table>
+        <Table.Header>
+          <Table.Row>
+            <Table.Head>Invoice ID</Table.Head>
+            <Table.Head>Amount</Table.Head>
+            <Table.Head>Payment Method</Table.Head>
+            <Table.Head>Reference</Table.Head>
+            <Table.Head>Status</Table.Head>
+          </Table.Row>
+        </Table.Header>
+        <Table.Body>
+          {payments.map((payment, index) => (
+            <Table.Row key={index}>
+              <Table.Cell>{payment.invoice}</Table.Cell>
+              <Table.Cell>${payment.amount}</Table.Cell>
+              <Table.Cell>{payment.method}</Table.Cell>
+              <Table.Cell>{payment.reference}</Table.Cell>
+              <Table.Cell>
+                <Badge>Completed</Badge> {/* Assuming all payments are completed */}
+              </Table.Cell>
+            </Table.Row>
+          ))}
+        </Table.Body>
+      </Table>
+    </div>
+  );
 }
