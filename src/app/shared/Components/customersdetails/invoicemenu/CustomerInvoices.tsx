@@ -15,6 +15,7 @@ interface Invoice {
 }
 
 
+
 export default function CustomerInvoices({ customerId }: { customerId: string }) {
   const [invoices, setInvoices] = useState<Invoice[]>([]);
   const [loading, setLoading] = useState(true);

@@ -368,8 +368,8 @@ export const carbonMenuItems: MenuItemsType[] = [
     menuItems: [
 
       {
-        name: 'Cards',
-        href: routes.widgets.cards,
+        name: 'Actions',
+        href: routes.actions.home,
         icon: PiSquaresFourDuotone,
       },
       {
