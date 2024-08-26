@@ -4,11 +4,11 @@ const pageHeader = {
   title: 'Email Triggers List',
   breadcrumb: [
     {
-      href: routes.eCommerce.dashboard,
+      href: routes.actions.home,
       name: 'Home',
     },
     {
-      href: routes.invoice.home,
+      href: routes.actions.home,
       name: 'Email Triggers',
     },
     {
