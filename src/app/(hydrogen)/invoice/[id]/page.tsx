@@ -268,6 +268,7 @@
 //   );
 // }
 
+
 "use client";
 
 import { useState, useEffect, useMemo } from 'react';
@@ -279,6 +280,32 @@ import { routes } from '@/config/routes';
 import { useRouter } from 'next/navigation';  // Updated import
 import { useParams } from 'next/navigation';
 import { Table, Badge } from "rizzui";
+import { Textarea } from "rizzui";
+
+import { RxCross2 } from "react-icons/rx";
+
+import {
+
+  Title,
+  Select,
+
+  NumberInput,
+  AdvancedRadio,
+  type SelectOption,
+} from "rizzui";
+
+
+
+import {
+  Modal,
+  
+  Text,
+  ActionIcon,
+  Input,
+  Password,
+  Checkbox,
+} from "rizzui";
+import TextArea from 'antd/es/input/TextArea';
 
 // Define TypeScript interfaces for your data
 interface Invoice {
@@ -316,7 +343,10 @@ interface Payment {
   reference: string;
   account: string;
   user: string;
+  payment_date:string;
 }
+
+
 
 // Utility function to determine the file type from the URL
 const getFileType = (url: string) => {
@@ -378,11 +408,39 @@ const pageHeader = {
 export default function InvoiceDetailsPage() {
   const router = useRouter();
   const { id } = useParams(); // Use useParams to get the dynamic route parameter
+  const [modalState, setModalState] = useState(false);
 
   const [invoiceData, setInvoiceData] = useState<Invoice | null>(null);
   const [fileUrl, setFileUrl] = useState<string>('');
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [error, setError] = useState<Error | null>(null);
+
+  const [value, setValue] = useState(null);
+
+  
+  const options = [
+    { label: 'Credit Card', value: 'Credit Card' },
+    { label: 'Debit Card', value: 'Debit Card' },
+    { label: 'Cash', value: 'Cash' },
+    { label: 'Net Banking', value: 'Net Banking' },
+    { label: 'Credit', value: 'Credit' },
+    { label: 'UPI', value: 'UPI' },
+
+  ];
+
+
+  const companyOptions = [
+    {
+      label: "Google Inc",
+      value: "google",
+    },
+    {
+      label: "RizzUI Inc",
+      value: "rizzui",
+    },
+
+  ];
+
 
   useEffect(() => {
     async function fetchData() {
@@ -427,8 +485,119 @@ export default function InvoiceDetailsPage() {
 
   const { invoice, customer, payments } = invoiceData;
 
+
+  
+
   return (
     <>
+
+
+     <Modal isOpen={modalState} onClose={() => setModalState(false)}>
+     
+
+
+{/* <div className="max-w-2xl mx-auto p-6 bg-white rounded-lg shadow-lg">
+      <div className="flex items-center justify-between mb-6">
+        <h3 className="text-xl font-semibold">Add Payment</h3>
+        <button
+          onClick={() => setModalState(false)}
+          className="text-gray-500 hover:text-gray-700"
+        >
+          <RxCross2 className="w-5 h-5" />
+        </button>
+      </div>
+
+      <div className="grid grid-cols-2 gap-6 mb-6">
+        <p><span className="font-medium">Invoice Id:</span> #4444</p>
+        <p><span className="font-medium">Customer name:</span> Alice Beth</p>
+        <p><span className="font-medium">Total Amount:</span> INR 5000.00</p>
+        <p><span className="font-medium">Paid Amount:</span> INR 0.00</p>
+        <p className="col-span-2"><span className="font-medium">Balance Remaining:</span> INR 5000.00</p>
+      </div>
+
+      <form className="grid grid-cols-2 gap-6">
+        <Input label="Payment Amount" />
+        <Input label="Payment Date" type="date" />
+        <Select
+          label="Payment Mode"
+          options={options}
+          value={value}
+          onChange={setValue}
+        />
+        <div className="col-span-2">
+          <label htmlFor="remark" className="block mb-2 font-medium">Add Remark</label>
+          <textarea
+            id="remark"
+            className="w-full p-2 border rounded-md"
+            rows="4"
+            placeholder="Enter your remark"
+          />
+        </div>
+        <Button
+          type="submit"
+          className="col-span-2 w-full py-2 mt-4 bg-blue-600 text-white rounded-md hover:bg-blue-700"
+          onClick={() => setModalState(false)}
+        >
+          Submit Payment
+        </Button>
+      </form>
+    </div> */}
+    <div className="max-w-2xl mx-auto p-8 bg-white rounded-lg shadow-md">
+  <div className="flex items-center justify-between mb-8">
+    <h3 className="text-2xl font-semibold text-gray-800">Add Payment</h3>
+    <button
+      onClick={() => setModalState(false)}
+      className="text-gray-500 hover:text-gray-700"
+    >
+      <RxCross2 className="w-6 h-6" />
+    </button>
+  </div>
+
+  <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
+    <p><span className="font-medium text-gray-700">Invoice Id:</span> #4444</p>
+    <p><span className="font-medium text-gray-700">Customer Name:</span> Alice Beth</p>
+    <p><span className="font-medium text-gray-700">Total Amount:</span> INR 5000.00</p>
+    <p><span className="font-medium text-gray-700">Paid Amount:</span> INR 0.00</p>
+    <p className="md:col-span-2"><span className="font-medium text-gray-700">Balance Remaining:</span> INR 5000.00</p>
+  </div>
+
+  <form className="grid grid-cols-1 md:grid-cols-2 gap-6">
+    <Input label="Payment Amount" className="w-full" />
+    <Input label="Payment Date" type="date" className="w-full" />
+    <Select
+      label="Payment Mode"
+      options={options}
+      value={value}
+      onChange={setValue}
+      className="w-full"
+    />
+    <div className="md:col-span-2">
+      <label htmlFor="remark" className="block mb-2 text-gray-700 font-medium">Add Remark</label>
+      <textarea
+        id="remark"
+        className="w-full p-3 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
+        rows="4"
+        placeholder="Enter your remark"
+      />
+    </div>
+    <Button
+      type="submit"
+      className="col-span-1 md:col-span-2 w-full py-3 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition duration-200"
+      onClick={() => setModalState(false)}
+    >
+      Submit Payment
+    </Button>
+  </form>
+</div>
+
+
+
+
+
+
+      
+      </Modal>
+      
       <PageHeader title="Invoice Details" breadcrumb={['Home', 'Invoices', invoice.customid]}>
         <div className="mt-4 flex items-center gap-3 @lg:mt-0">
           <Button variant="outline">
@@ -443,7 +612,7 @@ export default function InvoiceDetailsPage() {
             </Dropdown.Trigger>
             <Dropdown.Menu>
               <Dropdown.Item>Add Remark</Dropdown.Item>
-              <Dropdown.Item>Add Payment Entry</Dropdown.Item>
+              <Dropdown.Item onClick={() => setModalState(true)}>Add Payment Entry</Dropdown.Item>
               <Dropdown.Item>Send Email</Dropdown.Item>
             </Dropdown.Menu>
           </Dropdown>
@@ -518,9 +687,29 @@ export default function InvoiceDetailsPage() {
                 ) : (
                   <p>No payment details available.</p>
                 )}
-              </div> */}
+              // </div> */}
+<div
+  style={{
+    position: "relative",
+    left: "998px",
+    top: "-8px"
+  }}
+>
+  {/* Your content here */}
+
+
+<Button variant="outline">Add Payment</Button>  
+
+
+     
+
+</div>
+
+
+
 
 <div className="">
+
   
 {/* bg-white rounded-lg shadow-lg p-6 h-[75vh] */}
       {/* <h2 className="text-2xl font-bold mb-6 pb-4 border-b">Payment Details</h2> */}
@@ -529,6 +718,7 @@ export default function InvoiceDetailsPage() {
           <Table.Header>
             <Table.Row>
               <Table.Head>Amount</Table.Head>
+              <Table.Head>Payment Date</Table.Head>
               <Table.Head>Method</Table.Head>
               <Table.Head>Reference</Table.Head>
             </Table.Row>
@@ -537,6 +727,7 @@ export default function InvoiceDetailsPage() {
             {payments.map((payment, index) => (
               <Table.Row key={index}>
                 <Table.Cell>{invoice.currency} {payment.amount}</Table.Cell>
+                <Table.Cell>{payment.payment_date} </Table.Cell>
                 <Table.Cell>{payment.method}</Table.Cell>
                 <Table.Cell>{payment.reference}</Table.Cell>
               </Table.Row>
