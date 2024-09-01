@@ -127,13 +127,13 @@ export default function EmailTriggersListPage() {
             {/* <Table.Head>ID</Table.Head> */}
             <Table.Head>Name</Table.Head>
             <Table.Head>Condition Type</Table.Head>
-            <Table.Head>Email Subject</Table.Head>
-            <Table.Head>Email Body</Table.Head>
+            {/* <Table.Head>Email Subject</Table.Head> */}
+            {/* <Table.Head>Email Body</Table.Head> */}
             <Table.Head>Days Offset</Table.Head>
             <Table.Head>Created At</Table.Head>
             {/* <Table.Head>Updated At</Table.Head> */}
-            <Table.Head>Is Active</Table.Head>
-            <Table.Head>User</Table.Head>
+            {/* <Table.Head>Is Active</Table.Head> */}
+            {/* <Table.Head>User</Table.Head> */}
             {/* <Table.Head>Account</Table.Head> */}
           </Table.Row>
         </Table.Header>
@@ -154,13 +154,13 @@ export default function EmailTriggersListPage() {
                 {/* <Table.Cell>{trigger.condition_type}</Table.Cell> */}
                 <Table.Cell>{trigger.name}</Table.Cell>
                 <Table.Cell>{getConditionTypeLabel(trigger.condition_type)}</Table.Cell>
-                <Table.Cell>{trigger.email_subject}</Table.Cell>
-                <Table.Cell>{trigger.email_body}</Table.Cell>
+                {/* <Table.Cell>{trigger.email_subject}</Table.Cell> */}
+                {/* <Table.Cell>{trigger.email_body}</Table.Cell> */}
                 <Table.Cell>{trigger.days_offset}</Table.Cell>
                 <Table.Cell>{new Date(trigger.created_at).toLocaleString()}</Table.Cell>
                 {/* <Table.Cell>{new Date(trigger.updated_at).toLocaleString()}</Table.Cell> */}
-                <Table.Cell>{trigger.isactive ? 'Yes' : 'No'}</Table.Cell>
-                <Table.Cell>{trigger.user}</Table.Cell>
+                {/* <Table.Cell>{trigger.isactive ? 'Yes' : 'No'}</Table.Cell> */}
+                {/* <Table.Cell>{trigger.user}</Table.Cell> */}
                 {/* <Table.Cell>{trigger.account}</Table.Cell> */}
               </Table.Row>
             ))

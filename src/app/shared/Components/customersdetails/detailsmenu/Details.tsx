@@ -1,6 +1,5 @@
 // 'use client';
 
-
 // // Import necessary libraries and components
 // import { useState, useEffect } from 'react';
 // import axios from 'axios';
@@ -269,6 +268,8 @@ export default function Details({ customerId, className }: { customerId: string;
         { name: 'Payment Terms', value: customer.paymentterms },
       ],
     },
+
+    // s
     {
       title: 'Recent Transactions',
       icon: <MdPayment className="h-5 w-5 text-primary" />,
