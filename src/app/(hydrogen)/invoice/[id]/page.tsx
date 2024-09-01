@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useMemo } from 'react';
 import { PiDownloadSimpleBold, PiEnvelopeBold } from 'react-icons/pi';
-import { Button, Tab, Dropdown } from 'rizzui';
+import { Button, Tab, Dropdown , Drawer, MultiSelect } from 'rizzui';
 import PageHeader from '@/app/shared/page-header';
 import axiosInstance from '@/axiosInstance';
 import { routes } from '@/config/routes';
@@ -10,13 +10,16 @@ import { useRouter } from 'next/navigation';  // Updated import
 import { useParams } from 'next/navigation';
 import { Table, Badge } from "rizzui";
 import { Textarea } from "rizzui";
+import { Select } from 'antd';
+import type { SelectProps } from 'antd';
+
 
 import { RxCross2 } from "react-icons/rx";
 
 import {
 
   Title,
-  Select,
+  // Select,
 
   NumberInput,
   AdvancedRadio,
@@ -77,6 +80,22 @@ interface Payment {
 
 
 
+
+const optionss: SelectProps['options'] = [];
+
+for (let i = 10; i < 36; i++) {
+  optionss.push({
+    value: i.toString(36) + i,
+    label: i.toString(36) + i,
+  });
+}
+
+const handleChange = (value: string) => {
+  console.log(`selected ${value}`);
+};
+
+
+
 // Utility function to determine the file type from the URL
 const getFileType = (url: string) => {
   const extension = url.split('.').pop().toLowerCase();
@@ -133,20 +152,43 @@ const pageHeader = {
     },
   ],
 };
+type Option = {
+  label: string;
+  value: string;
+};
+
+
+const multiselectoptions = [
+  { label: "Apple 🍎", value: "apple" },
+  { label: "Banana 🍌", value: "banana" },
+  { label: "Cherry 🍒", value: "cherry" },
+
+];
+
 
 export default function InvoiceDetailsPage() {
   const router = useRouter();
   const { id } = useParams(); // Use useParams to get the dynamic route parameter
   const [modalState, setModalState] = useState(false);
-
+  const [drawerState, setDrawerState] = useState(false );
   const [invoiceData, setInvoiceData] = useState<Invoice | null>(null);
   const [fileUrl, setFileUrl] = useState<string>('');
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [error, setError] = useState<Error | null>(null);
+  const [subject, setSubject] = useState('');
+  const [sendTo, setSendTo] = useState('');
+  const [addCC, setAddCC] = useState('');
+  const [emailDescription, setEmailDescription] = useState('');
+  // const [value, setValue] = useState(null);
+  const [value, setValue] = useState([]);
 
-  const [value, setValue] = useState(null);
+ 
 
+
+ 
   
+
+ 
   const options = [
     { label: 'Credit Card', value: 'Credit Card' },
     { label: 'Debit Card', value: 'Debit Card' },
@@ -157,6 +199,16 @@ export default function InvoiceDetailsPage() {
 
   ];
 
+  
+
+  const customerData = {
+    name: 'John Doe',
+    totalAmount: 5000,
+    balanceRemaining: 2000,
+    accountManager: 'Jane Smith',
+    email: 'john.doe@example.com',
+    cc:'rushikesh.doe@example.com'
+  };
 
   const companyOptions = [
     {
@@ -325,10 +377,214 @@ export default function InvoiceDetailsPage() {
       
       <PageHeader title="Invoice Details" breadcrumb={['Home', 'Invoices', invoice.customid]}>
         <div className="mt-4 flex items-center gap-3 @lg:mt-0">
-          <Button variant="outline">
+          <Button variant="outline" onClick={() => setDrawerState(true)}>
             <PiEnvelopeBold className="me-1.5 h-[17px] w-[17px]" />
             Email Invoice
           </Button>
+      {/* <Drawer
+        isOpen={drawerState}
+        size = "lg"
+        onClose={() => setDrawerState(false) }
+      >
+        
+        <div className="flex flex-col h-full">
+        <div className="p-6 flex-grow overflow-y-auto">
+          <Title className="text-2xl font-bold mb-6">Send Manual Email to Customer</Title>
+
+          <div className="bg-gray-50 p-4 rounded-lg mb-6">
+            <Title as="h3" className="text-lg font-semibold mb-3">Customer Details</Title>
+            <div className="grid grid-cols-2 gap-3">
+              <Text><strong>Name:</strong> {customerData.name}</Text>
+              <Text><strong>Account Manager:</strong> {customerData.accountManager}</Text>
+              <Text><strong>Current Total Amount:</strong> ${customerData.totalAmount.toLocaleString()}</Text>
+              <Text><strong>Balance Remaining:</strong> ${customerData.balanceRemaining.toLocaleString()}</Text>
+            </div>
+          </div>
+
+          <div className="space-y-4">
+            <Input
+              label="Subject"
+              placeholder="Enter email subject"
+              value={subject}
+              onChange={(e) => setSubject(e.target.value)}
+            />
+            <Input
+              label="Send Email to"
+              placeholder="Enter recipient email"
+              value={sendTo}
+              onChange={(e) => setSendTo(e.target.value)}
+              defaultValue={customerData.email}
+            />
+            <Textarea
+              label="Email Description"
+              placeholder="Enter email content"
+              value={emailDescription}
+              onChange={(e) => setEmailDescription(e.target.value)}
+              className="h-40"
+            />
+          </div>
+        </div>
+
+        <div className="p-3 border-t border-gray-200 bg-gray-50">
+          <div className="flex justify-end space-x-4">
+            <Button variant="outline" onClick={() => setDrawerState(false)}>
+              Cancel
+            </Button>
+            <Button variant="solid" onClick={() => {
+              // Implement send email logic here
+              console.log('Sending email:', { subject, sendTo, emailDescription });
+              setDrawerState(false);
+            }}>
+              Send Email
+            </Button>
+          </div>
+        </div>
+      </div>
+
+
+
+
+
+
+
+
+      </Drawer> */}
+
+<Drawer
+      isOpen={drawerState}
+      size="lg"
+      onClose={() => setDrawerState(false)}
+    >
+      <div
+        style={{
+          display: 'flex',
+          flexDirection: 'column',
+          height: '100%',
+        }}
+      >
+        <div
+          style={{
+            padding: '24px',
+            flexGrow: 1,
+            overflowY: 'auto',
+            // backgroundColor: '#f9fafb', // Light gray background
+          }}
+        >
+          <Title className="text-2xl font-bold mb-6">Send Manual Email to Customer</Title>
+
+          <div
+            style={{
+              backgroundColor: '#ffffff', // White background
+              padding: '16px',
+              borderRadius: '8px',
+              marginBottom: '24px',
+              boxShadow: '0 2px 4px rgba(0,0,0,0.1)', // Subtle shadow
+            }}
+          >
+            <Title as="h3" className="text-lg font-semibold mb-3">Customer Details</Title>
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
+              <Text><strong>Name:</strong> {customerData.name}</Text>
+              <Text><strong>Account Manager:</strong> {customerData.accountManager}</Text>
+              <Text><strong>Current Total Amount:</strong> ${customerData.totalAmount.toLocaleString()}</Text>
+              <Text><strong>Balance Remaining:</strong> ${customerData.balanceRemaining.toLocaleString()}</Text>
+            </div>
+          </div>
+
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+            <Input
+              label="Subject"
+              placeholder="Enter email subject"
+              value={subject}
+              onChange={(e) => setSubject(e.target.value)}
+            />
+            <Input
+              label="Send Email to"
+              placeholder="Enter recipient email"
+              value={sendTo}
+              onChange={(e) => setSendTo(e.target.value)}
+              defaultValue={customerData.email}
+            />
+            <Input
+              label="Add CC "
+              placeholder="Enter recipient email"
+              value={addCC}
+              onChange={(e) => setAddCC(e.target.value)}
+              defaultValue={customerData.cc}
+            />
+            <Textarea
+              label="Email Description"
+              placeholder="Enter email content"
+              value={emailDescription}
+              onChange={(e) => setEmailDescription(e.target.value)}
+              style={{ height: '160px' }} // Fixed height for textarea
+            />
+
+
+<Select
+    mode="tags"
+    style={{ width: '100%' , borderColor: 'red' }}
+    placeholder="Tags Mode"
+    onChange={handleChange}
+    options={optionss}
+    size="large"
+
+
+  />
+
+
+            {/* <MultiSelect
+      value={value}
+      clearable={true}
+      searchable={true}
+      options={multiselectoptions}
+      onChange={setValue}
+      label="Multi Select"
+    /> */}
+
+
+
+
+
+
+
+      
+
+          </div>
+        </div>
+
+        <div
+          style={{
+            padding: '12px',
+            borderTop: '1px solid #e5e7eb', // Light gray border
+            backgroundColor: '#ffffff', // White background
+            boxShadow: '0 -2px 4px rgba(0,0,0,0.1)', // Subtle shadow
+          }}
+        >
+          <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '12px' }}>
+            <Button
+              variant="outline"
+              onClick={() => setDrawerState(false)}
+              style={{ borderColor: '#ddd', color: '#333' }} // Outline style
+            >
+              Cancel
+            </Button>
+            <Button
+              variant="solid"
+              onClick={() => {
+                // Implement send email logic here
+                console.log('Sending email:', { subject, sendTo, emailDescription });
+                setDrawerState(false);
+              }}
+             // Solid style
+            >
+              Send Email
+            </Button>
+          </div>
+        </div>
+      </div>
+    </Drawer>
+
+
           <Dropdown>
             <Dropdown.Trigger>
               <Button as="span">

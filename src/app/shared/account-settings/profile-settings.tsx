@@ -91,6 +91,7 @@ export default function ProfileSettingsView() {
                     placeholder="Enter your website url"
                     {...register('website')}
                     error={errors.website?.message}
+                    disabled
                   />
                 </FormGroup>
 

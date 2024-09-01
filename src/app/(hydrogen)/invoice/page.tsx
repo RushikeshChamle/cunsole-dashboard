@@ -20,7 +20,7 @@ const pageHeader = {
 
 import Link from 'next/link';
 import { routes } from '@/config/routes';
-import { Button } from 'rizzui';
+import { Button, Loader } from 'rizzui';
 import PageHeader from '@/app/shared/page-header';
 import ExportButton from '@/app/shared/export-button';
 import { metaObject } from '@/config/site.config';
@@ -84,6 +84,7 @@ export default function CustomersListPage() {
           return;
         }
 
+        debugger; // Execution will pause here
         const response = await fetch('http://localhost:9000/customers/cutomerinvoices/', {
           headers: {
             'Authorization': `Bearer ${token}`,
@@ -110,7 +111,19 @@ export default function CustomersListPage() {
     fetchData();
   }, []);
 
-  if (loading) return <p>Loading...</p>;
+  // Display loader while loading
+  // if (loading) return <Loader  />;
+
+  if (loading) {
+    return (
+      <div className="flex justify-center items-center min-h-screen">
+        <Loader variant="pulse" />
+      </div>
+    );
+  }
+
+
+  // if (loading) return <p>Loading...</p>;
   // if (error) return <p>Error loading data: {error}</p>;
 
   return (
@@ -144,6 +157,7 @@ export default function CustomersListPage() {
             <Table.Head>Paid Amount</Table.Head>
             <Table.Head>Created At</Table.Head>
             <Table.Head>Due Date</Table.Head>
+            <Table.Head>Details</Table.Head>
           </Table.Row>
         </Table.Header>
         <Table.Body>
@@ -164,6 +178,13 @@ export default function CustomersListPage() {
                   <Table.Cell>{invoice.paid_amount}</Table.Cell>
                   <Table.Cell>{invoice.created_at}</Table.Cell>
                   <Table.Cell>{invoice.duedate}</Table.Cell>
+
+                  <Table.Cell>
+                    <Link href={`/invoice/${invoice.id}`}>
+                      <Button  variant="outline" size="sm">Details</Button> {/* Added Details Button */}
+                    </Link>
+                    </Table.Cell>
+                  
                 </Table.Row>
               ))
             )

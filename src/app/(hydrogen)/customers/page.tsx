@@ -4,11 +4,11 @@ const pageHeader = {
   title: 'Customers List',
   breadcrumb: [
     {
-      href: routes.eCommerce.dashboard,
+      href: routes.customers,
       name: 'Home',
     },
     {
-      href: routes.invoice.home,
+      href: routes.customers.home,
       name: 'Customers',
     },
     {
@@ -16,7 +16,6 @@ const pageHeader = {
     },
   ],
 };
-
 
 
 
@@ -144,6 +143,7 @@ export default function CustomersListPage() {
       <Table.Head>Phone</Table.Head>
       <Table.Head>Total Amount to Pay</Table.Head>
       <Table.Head>Total Paid Amount</Table.Head>
+      <Table.Head></Table.Head>
     </Table.Row>
   </Table.Header>
   <Table.Body>
@@ -166,6 +166,11 @@ export default function CustomersListPage() {
           <Table.Cell>{customer.phone}</Table.Cell>
           <Table.Cell>{customer.total_amount_to_pay}</Table.Cell>
           <Table.Cell>{customer.total_paid_amount}</Table.Cell>
+          <Table.Cell>
+                    <Link href={`/customers/${customer.id}`}>
+                      <Button  variant="outline" size="sm">Details</Button> {/* Added Details Button */}
+                    </Link>
+                    </Table.Cell>
         </Table.Row>
       ))
     )}

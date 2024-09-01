@@ -58,6 +58,8 @@ export default function PersonalInfoView() {
               title="Personal Info"
               description="Update your photo and personal details here"
               className="pt-7 @2xl:pt-9 @3xl:grid-cols-12 @3xl:pt-11"
+              
+
             />
 
             <div className="mb-10 grid gap-7 divide-y divide-dashed divide-gray-200 @2xl:gap-9 @3xl:gap-11">
@@ -70,12 +72,15 @@ export default function PersonalInfoView() {
                   {...register('first_name')}
                   error={errors.first_name?.message}
                   className="flex-grow"
+                  disabled
+
                 />
                 <Input
                   placeholder="Last Name"
                   {...register('last_name')}
                   error={errors.last_name?.message}
                   className="flex-grow"
+                  disabled
                 />
               </FormGroup>
 
@@ -214,17 +219,16 @@ export default function PersonalInfoView() {
                 description="Share a few snippets of your work"
                 className="pt-7 @2xl:pt-9 @3xl:grid-cols-12 @3xl:pt-11"
               >
-                <div className="mb-5 @3xl:col-span-2">
+               <div className="mb-5 @3xl:col-span-2">
                   <UploadZone
                     name="portfolios"
                     getValues={getValues}
                     setValue={setValue}
                     error={errors?.portfolios?.message as string}
                   />
-                </div>
+               </div>
               </FormGroup>
             </div>
-
             <FormFooter
               // isLoading={isLoading}
               altBtnText="Cancel"

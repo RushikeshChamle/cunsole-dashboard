@@ -10,12 +10,12 @@ export default function OrderPageHeader({ params }: any) {
     title: `Order #${params.id}`,
     breadcrumb: [
       {
-        href: routes.customers,
+        href: routes.customers.home,
         name: 'Customers',
       },
       {
-        href: routes.eCommerce.orders,
-        name: 'Orders',
+        href: routes.customers.home,
+        name: 'Details',
       },
       {
         name: params.id,
