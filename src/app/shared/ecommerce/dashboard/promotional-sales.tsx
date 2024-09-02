@@ -330,6 +330,73 @@
 //   );
 // }
 
+// 'use client';
+
+// import WidgetCard from '@components/cards/widget-card';
+// import { CustomTooltip } from '@components/charts/custom-tooltip';
+// import {
+//   BarChart,
+//   Bar,
+//   XAxis,
+//   YAxis,
+//   CartesianGrid,
+//   Tooltip,
+//   Legend,
+//   ResponsiveContainer,
+//   Cell,
+// } from 'recharts';
+// import { useMedia } from '@hooks/use-media';
+
+// const data = [
+//   { name: 'Due', uv: 4000, color: '#10b981' },        // Green for 'Due'
+//   { name: 'Over Due', uv: 3000, color: '#f97316' },   // Orange for 'Over Due'
+//   { name: '', uv: 0, color: 'transparent' },          // Spacer (invisible bar)
+//   { name: '<30 days', uv: 2000, color: '#eab308' },   // Yellow for '<30 days'
+//   { name: '30-60 Days', uv: 2780, color: '#3b82f6' }, // Blue for '30-60 Days'
+//   { name: '60-90 Days', uv: 1890, color: '#8b5cf6' }, // Purple for '60-90 Days'
+//   { name: '>90 days', uv: 2390, color: '#ef4444' },   // Red for '>90 days'
+// ];
+
+// export default function PromotionalSales({
+//   className,
+// }: {
+//   className?: string;
+// }) {
+//   const isMobile = useMedia('(max-width: 480px)', false);
+//   const isMediumScreen = useMedia('(max-width: 1200px)', false);
+
+//   return (
+//     <WidgetCard title={'Aging Balance'} className={className}>
+//       <div className="mt-5 aspect-[1060/660] w-full lg:mt-7">
+//         <ResponsiveContainer width="100%" height="100%">
+//           <BarChart
+//             data={data}
+//             barSize={isMediumScreen ? 18 : 24}
+//             barGap={5} // Smaller gap for other bars
+//             margin={{ left: -10 }}
+//             className="[&_.recharts-cartesian-grid-vertical]:opacity-0"
+//           >
+//             <CartesianGrid strokeDasharray="3 3" />
+//             <XAxis tickLine={false} dataKey="name" />
+//             <YAxis tickLine={false} />
+//             <Tooltip content={<CustomTooltip />} />
+//             <Legend />
+
+//             {/* Use a single Bar component to render all bars with different colors */}
+//             <Bar dataKey="uv" radius={[4, 4, 0, 0]}>
+//               {/* Map through data to dynamically set bar colors */}
+//               {data.map((entry, index) => (
+//                 <Cell key={`cell-${index}`} fill={entry.color} />
+//               ))}
+//             </Bar>
+//           </BarChart>
+//         </ResponsiveContainer>
+//       </div>
+//     </WidgetCard>
+//   );
+// }
+
+
 'use client';
 
 import WidgetCard from '@components/cards/widget-card';
@@ -350,7 +417,7 @@ import { useMedia } from '@hooks/use-media';
 const data = [
   { name: 'Due', uv: 4000, color: '#10b981' },        // Green for 'Due'
   { name: 'Over Due', uv: 3000, color: '#f97316' },   // Orange for 'Over Due'
-  { name: '', uv: 0, color: 'transparent' },          // Spacer (invisible bar)
+  // { name: '', uv: 0, color: 'transparent' },          // Spacer (invisible bar)
   { name: '<30 days', uv: 2000, color: '#eab308' },   // Yellow for '<30 days'
   { name: '30-60 Days', uv: 2780, color: '#3b82f6' }, // Blue for '30-60 Days'
   { name: '60-90 Days', uv: 1890, color: '#8b5cf6' }, // Purple for '60-90 Days'
@@ -367,7 +434,11 @@ export default function PromotionalSales({
 
   return (
     <WidgetCard title={'Aging Balance'} className={className}>
-      <div className="mt-5 aspect-[1060/660] w-full lg:mt-7">
+      <div className="mt-5 aspect-[1060/800] w-full lg:mt-7" style={{
+
+        position:"relative",
+        top
+      }}>
         <ResponsiveContainer width="100%" height="100%">
           <BarChart
             data={data}
@@ -377,10 +448,16 @@ export default function PromotionalSales({
             className="[&_.recharts-cartesian-grid-vertical]:opacity-0"
           >
             <CartesianGrid strokeDasharray="3 3" />
-            <XAxis tickLine={false} dataKey="name" />
+            <XAxis 
+              tickLine={false} 
+              dataKey="name" 
+              tick={{ fontSize: 1 }}  // Reducing the font size of labels
+              angle={0}              // Rotating labels slightly to prevent overlap
+              dy={5}                   // Adjusting the vertical position of labels
+            />
             <YAxis tickLine={false} />
             <Tooltip content={<CustomTooltip />} />
-            <Legend />
+            {/* <Legend /> */}
 
             {/* Use a single Bar component to render all bars with different colors */}
             <Bar dataKey="uv" radius={[4, 4, 0, 0]}>
