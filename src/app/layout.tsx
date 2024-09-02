@@ -13,6 +13,8 @@ import 'swiper/css';
 import 'swiper/css/navigation';
 import '@/app/globals.css';
 
+
+
 export const metadata = {
   title: siteConfig.title,
   description: siteConfig.description,
@@ -33,15 +35,16 @@ export default async function RootLayout({
       <body
         // to prevent any warning that is caused by third party extensions like Grammarly
         suppressHydrationWarning
-        className={cn(inter.variable, lexendDeca.variable, 'font-inter')}
-      >
+        className={cn(inter.variable, lexendDeca.variable, 'font-inter')}>
+
           <ThemeProvider>
             <NextProgress />
             {children}
             <Toaster />
-            <GlobalDrawer />
+            <GlobalDrawer/>
             <GlobalModal />
           </ThemeProvider>
+
       </body>
     </html>
   );

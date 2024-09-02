@@ -2,16 +2,18 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { routes } from '@/config/routes';
 import { Button } from 'rizzui';
+
+
 import WelcomeBanner from '@components/banners/welcome';
-import StatCards from '@/app/shared/ecommerce/dashboard/stat-cards';
-import ProfitWidget from '@/app/shared/ecommerce/dashboard/profit-widget';
-import SalesReport from '@/app/shared/ecommerce/dashboard/sales-report';
-import BestSellers from '@/app/shared/ecommerce/dashboard/best-sellers';
-import RepeatCustomerRate from '@/app/shared/ecommerce/dashboard/repeat-customer-rate';
-import UserLocation from '@/app/shared/ecommerce/dashboard/user-location';
-import PromotionalSales from '@/app/shared/ecommerce/dashboard/promotional-sales';
-import RecentOrder from '@/app/shared/ecommerce/dashboard/recent-order';
-import StockReport from '@/app/shared/ecommerce/dashboard/stock-report';
+import StatCards from '@/app/shared/Components/dashboard/ecommerce/dashboard';
+import ProfitWidget from '@/app/shared/Components/dashboard/ecommerce/dashboard/profit-widget';
+import SalesReport from '@/app/shared/Components/dashboard/ecommerce/dashboard/sales-report';
+import BestSellers from '@/app/shared/Components/dashboard/ecommerce/dashboard/best-sellers';
+import RepeatCustomerRate from '@/app/shared/Components/dashboard/ecommerce/dashboard/repeat-customer-rate';
+import UserLocation from '@/app/shared/Components/dashboard/ecommerce/dashboard/user-location';
+import PromotionalSales from '@/app/shared/Components/dashboard/ecommerce/dashboard/promotional-sales';
+import RecentOrder from '@/app/shared/Components/dashboard/ecommerce/dashboard/recent-order';
+import StockReport from '@/app/shared/Components/dashboard/ecommerce/dashboard/stock-report';
 import { PiPlusBold } from 'react-icons/pi';
 import welcomeImg from '@public/shop-illustration.png';
 import HandWaveIcon from '@components/icons/hand-wave';
@@ -51,7 +53,7 @@ export default function EcommerceDashboard() {
           </Link>
         </WelcomeBanner>
 
-        <StatCards className="@2xl:grid-cols-4 @3xl:gap-6 @4xl:col-span-2 @7xl:col-span-8" />
+        <StatCards className="@2xl:grid-cols-3 @3xl:gap-6 @4xl:col-span-2 @7xl:col-span-8" />
         <ProfitWidget className="h-[464px] @sm:h-[520px] @7xl:col-span-4 @7xl:col-start-9 @7xl:row-start-1 @7xl:row-end-3 @7xl:h-full" />
 
         <SalesReport className="@4xl:col-span-2 @7xl:col-span-8" />

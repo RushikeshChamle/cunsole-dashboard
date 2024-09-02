@@ -16,7 +16,6 @@ import cn from '@utils/class-names';
 import { toCurrency } from '@utils/to-currency';
 import { formatDate } from '@utils/format-date';
 import usePrice from '@hooks/use-price';
-import Details from "@/app/shared/Components/customersdetails/detailsmenu/Details"
 
 const orderStatus = [
   { id: 1, label: 'Order Pending' },
@@ -25,7 +24,6 @@ const orderStatus = [
   { id: 4, label: 'Order Out For Delivery' },
   { id: 5, label: 'Order Completed' },
 ];
-
 
 const transitions = [
   {
@@ -64,9 +62,7 @@ function WidgetCard({
   className,
   children,
   childrenWrapperClass,
-}: 
-
-{
+}: {
   title?: string;
   className?: string;
   children: React.ReactNode;
@@ -92,15 +88,13 @@ function WidgetCard({
   );
 }
 
-
-export default function Overviewtab({ customerId }: { customerId: string }) {
+export default function OrderView() {
   const { items, total, totalItems } = useCart();
   const { price: subtotal } = usePrice(
     items && {
       amount: total,
     }
   );
-
   const { price: totalPrice } = usePrice({
     amount: total,
   });
@@ -115,17 +109,14 @@ export default function Overviewtab({ customerId }: { customerId: string }) {
           {formatDate(new Date(), 'MMMM D, YYYY')} at{' '}
           {formatDate(new Date(), 'h:mm A')}
         </span>
-
-
         <span className="my-2 border-r border-muted px-5 py-0.5 first:ps-0 last:border-r-0">
           {totalItems} Items
         </span>
         <span className="my-2 border-r border-muted px-5 py-0.5 first:ps-0 last:border-r-0">
           Total {totalPrice}
         </span>
-       
         <span className="my-2 ms-5 rounded-3xl border-r border-muted bg-green-lighter px-2.5 py-1 text-xs text-green-dark first:ps-0 last:border-r-0">
-          Due
+          Paid
         </span>
       </div>
       <div className="items-start pt-10 @5xl:grid @5xl:grid-cols-12 @5xl:gap-7 @6xl:grid-cols-10 @7xl:gap-10">
@@ -141,10 +132,90 @@ export default function Overviewtab({ customerId }: { customerId: string }) {
             </div>
           )}
 
-<Details customerId={customerId} />
+          <div className="pb-5">
+            <OrderViewProducts />
+            <div className="border-t border-muted pt-7 @5xl:mt-3">
+              <div className="ms-auto max-w-lg space-y-6">
+                <div className="flex justify-between font-medium">
+                  Subtotal <span>{subtotal}</span>
+                </div>
+                <div className="flex justify-between font-medium">
+                  Store Credit <span>{toCurrency(0)}</span>
+                </div>
+                <div className="flex justify-between font-medium">
+                  Subtotal <span>{toCurrency(0)}</span>
+                </div>
+                <div className="flex justify-between border-t border-muted pt-5 text-base font-semibold">
+                  Total <span>{totalPrice}</span>
+                </div>
+              </div>
+            </div>
+          </div>
 
+          <div className="">
+            <Title
+              as="h3"
+              className="mb-3.5  text-base font-semibold @5xl:mb-5 @7xl:text-lg"
+            >
+              Transactions
+            </Title>
 
-          
+            <div className="space-y-4">
+              {transitions.map((item) => (
+                <div
+                  key={item.paymentMethod.name}
+                  className="flex items-center justify-between rounded-lg border border-gray-100 px-5 py-5 font-medium shadow-sm transition-shadow @5xl:px-7"
+                >
+                  <div className="flex w-1/3 items-center">
+                    <div className="shrink-0">
+                      <Image
+                        src={item.paymentMethod.image}
+                        alt={item.paymentMethod.name}
+                        height={60}
+                        width={60}
+                        className="object-contain"
+                      />
+                    </div>
+                    <div className="flex flex-col ps-4">
+                      <Text as="span" className="font-lexend text-gray-700">
+                        Payment
+                      </Text>
+                      <span className="pt-1 text-[13px] font-normal text-gray-500">
+                        Via {item.paymentMethod.name}
+                      </span>
+                    </div>
+                  </div>
+
+                  <div className="w-1/3 text-end">{item.price}</div>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          <div className="">
+            <div className="mb-3.5 @5xl:mb-5">
+              <Title as="h3" className="text-base font-semibold @7xl:text-lg">
+                Balance
+              </Title>
+            </div>
+            <div className="space-y-6 rounded-xl border border-muted px-5 py-6 @5xl:space-y-7 @5xl:p-7">
+              <div className="flex justify-between font-medium">
+                Total Order <span>$5275.00</span>
+              </div>
+              <div className="flex justify-between font-medium">
+                Total Return <span>$350.00</span>
+              </div>
+              <div className="flex justify-between font-medium">
+                Paid By Customer <span>$3000.00</span>
+              </div>
+              <div className="flex justify-between font-medium">
+                Refunded <span>$350.00</span>
+              </div>
+              <div className="flex justify-between font-medium">
+                Balance <span>$4975.00</span>
+              </div>
+            </div>
+          </div>
         </div>
         <div className="space-y-7 pt-8 @container @5xl:col-span-4 @5xl:space-y-10 @5xl:pt-0 @6xl:col-span-3">
           <WidgetCard
