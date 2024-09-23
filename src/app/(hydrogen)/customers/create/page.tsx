@@ -4,6 +4,15 @@ import ImportButton from '@/app/shared/import-button';
 import CreateInvoice from '@/app/shared/invoice/create-invoice';
 import { metaObject } from '@/config/site.config';
 
+
+import Link from 'next/link';
+import { PiPlusBold } from 'react-icons/pi';
+import CreateEditProduct from '@/app/shared/ecommerce/product/create-edit';
+
+
+import { Button } from 'rizzui';
+
+
 export const metadata = {
   ...metaObject('Create Invoice'),
 };
@@ -27,14 +36,27 @@ const pageHeader = {
 
 
 
-export default function InvoiceCreatePage() {
+export default function CreateProductPage() {
   return (
     <>
       <PageHeader title={pageHeader.title} breadcrumb={pageHeader.breadcrumb}>
-        <ImportButton title="Upload File" className="mt-4 @lg:mt-0" />
+        <Link
+          href={routes.eCommerce.createProduct}
+          className="mt-4 w-full @lg:mt-0 @lg:w-auto"
+        >
+          <Button as="span" className="w-full @lg:w-auto">
+            <PiPlusBold className="me-1.5 h-[17px] w-[17px]" />
+            Add Product
+          </Button>
+        </Link>
       </PageHeader>
 
-      <CreateInvoice />
+      <CreateEditProduct />
     </>
   );
 }
+
+
+
+
+

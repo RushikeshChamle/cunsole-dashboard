@@ -51,7 +51,7 @@ export function middleware(request: NextRequest) {
   // For example, check if the token has the expected format
   if (typeof token !== 'string' || token.split('.').length !== 3) {
     // If the token is invalid, redirect to the signin page
-    return NextResponse.redirect(new URL('/financial', request.url));
+    return NextResponse.redirect(new URL('/actions', request.url));
   }
 
   // If the token exists and passes basic validation, set the Authorization header
@@ -59,6 +59,8 @@ export function middleware(request: NextRequest) {
 
   return NextResponse.next();
 }
+
+
 
 export const config = {
   matcher: [
@@ -74,5 +76,7 @@ export const config = {
     '/invoice/:path*',
     '/customers/:path*',
     '/forms/profile-settings/:path*',
+    '/actions',
+    '/actions:path*',
   ],
 };

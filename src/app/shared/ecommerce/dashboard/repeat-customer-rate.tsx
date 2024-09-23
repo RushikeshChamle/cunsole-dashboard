@@ -197,62 +197,62 @@ import SimpleBar from '@ui/simplebar';
 const data = [
   {
     month: 'Jan',
-    salesTotal: 2000,
+    invoiceTotal: 2000,
     collectedAmount: 1000,
   },
   {
     month: 'Feb',
-    salesTotal: 4200,
+    invoiceTotal: 4200,
     collectedAmount: 2798,
   },
   {
     month: 'Mar',
-    salesTotal: 5000,
+    invoiceTotal: 5000,
     collectedAmount: 4000,
   },
   {
     month: 'Apr',
-    salesTotal: 5780,
+    invoiceTotal: 5780,
     collectedAmount: 3908,
   },
   {
     month: 'May',
-    salesTotal: 4890,
+    invoiceTotal: 4890,
     collectedAmount: 2500,
   },
   {
     month: 'Jun',
-    salesTotal: 8000,
+    invoiceTotal: 8000,
     collectedAmount: 5200,
   },
   {
     month: 'Jul',
-    salesTotal: 4890,
+    invoiceTotal: 4890,
     collectedAmount: 6500,
   },
   {
     month: 'Aug',
-    salesTotal: 3780,
+    invoiceTotal: 3780,
     collectedAmount: 4908,
   },
   {
     month: 'Sep',
-    salesTotal: 7800,
+    invoiceTotal: 7800,
     collectedAmount: 2800,
   },
   {
     month: 'Oct',
-    salesTotal: 5780,
+    invoiceTotal: 5780,
     collectedAmount: 1908,
   },
   {
     month: 'Nov',
-    salesTotal: 2780,
+    invoiceTotal: 2780,
     collectedAmount: 3908,
   },
   {
     month: 'Dec',
-    salesTotal: 7500,
+    invoiceTotal: 7500,
     collectedAmount: 3000,
   },
 ];
@@ -266,12 +266,12 @@ export default function SalesOverview({
   const [startDate, setStartDate] = useState<Date>(new Date());
   return (
     <WidgetCard
-      title={'Sales Overview'}
+      title={'Payment Details'}
       description={
         <>
           <Badge renderAsDot className="ms-1 bg-[#10b981]" /> 
           <Text as="span" className="hidden xs:inline-flex">
-            Total Sales
+            Total Invoice Amount
           </Text>
           <Badge renderAsDot className="me-1 ms-4 bg-[#0470f2]" /> Collected{' '}
           <Text as="span" className="hidden xs:inline-flex">
@@ -309,7 +309,7 @@ export default function SalesOverview({
               className="[&_.recharts-cartesian-axis-tick-value]:fill-gray-500 rtl:[&_.recharts-cartesian-axis.yAxis]:-translate-x-12 [&_.recharts-cartesian-grid-vertical]:opacity-0"
             >
               <defs>
-                <linearGradient id="salesTotal" x1="0" y1="0" x2="0" y2="1">
+                <linearGradient id="invoiceTotal" x1="0" y1="0" x2="0" y2="1">
                   <stop offset="5%" stopColor="#ffdadf" stopOpacity={0.1} />
                   <stop offset="95%" stopColor="#10b981" stopOpacity={0} />
                 </linearGradient>
@@ -329,11 +329,11 @@ export default function SalesOverview({
               <Tooltip content={<CustomTooltip />} />
               <Area
                 type="natural"
-                dataKey="salesTotal"
+                dataKey="invoiceTotal"
                 stroke="#10b981"
                 strokeWidth={2.3}
                 fillOpacity={1}
-                fill="url(#salesTotal)"
+                fill="url(#invoiceTotal)"
               />
               <Area
                 type="natural"

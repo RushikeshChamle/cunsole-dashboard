@@ -30,7 +30,6 @@ import {
 
 import {
   Modal,
-  
   Text,
   ActionIcon,
   Input,
@@ -38,6 +37,7 @@ import {
   Checkbox,
 } from "rizzui";
 import TextArea from 'antd/es/input/TextArea';
+import { stringify } from 'querystring';
 
 // Define TypeScript interfaces for your data
 interface Invoice {
@@ -68,6 +68,7 @@ interface Customer {
   total_paid_amount: number;
 }
 
+
 interface Payment {
   invoice: string;
   amount: number;
@@ -77,7 +78,6 @@ interface Payment {
   user: string;
   payment_date:string;
 }
-
 
 
 
@@ -181,12 +181,15 @@ export default function InvoiceDetailsPage() {
   const [emailDescription, setEmailDescription] = useState('');
   // const [value, setValue] = useState(null);
   const [value, setValue] = useState([]);
+  // State hooks to manage form inputs
+  const [amount, setAmount] = useState('');
+  const [method, setMethod] = useState('');
+  const [reference, setReference] = useState('');
+
 
  
 
 
- 
-  
 
  
   const options = [
@@ -246,6 +249,30 @@ export default function InvoiceDetailsPage() {
 
     fetchData();
   }, [id]);
+  const handleAddPayment = async (event) => {
+    event.preventDefault();
+    try {
+      const response = await axiosInstance.post('/invoices/add_payment/', {
+        invoice: id,
+        amount: parseFloat(amount), // Convert to a number
+        method,
+        reference,
+        account: 'account_id', // Replace with actual account ID
+        user: 'user_id', // Replace with actual user ID
+        payment_date: new Date().toISOString(),
+      });
+
+      console.log('Payment added successfully:', response.data);
+      setModalState(false); // Close the modal on success
+    } catch (error) {
+      console.error('Failed to add payment:', error);
+    }
+  };
+
+  const handleAmountChange = (event) => setAmount(event.target.value);
+  const handleMethodChange = (option) => setMethod(option.value);
+  const handleReferenceChange = (event) => setReference(event.target.value);
+
 
 
   const memoizedFileViewer = useMemo(() => {
@@ -271,58 +298,13 @@ export default function InvoiceDetailsPage() {
 
   return (
     <>
-
+    
+    {/* <PageHeader title={pageHeader.title} breadcrumb={pageHeader.breadcrumb}></PageHeader> */}
 
      <Modal isOpen={modalState} onClose={() => setModalState(false)}>
      
 
 
-{/* <div className="max-w-2xl mx-auto p-6 bg-white rounded-lg shadow-lg">
-      <div className="flex items-center justify-between mb-6">
-        <h3 className="text-xl font-semibold">Add Payment</h3>
-        <button
-          onClick={() => setModalState(false)}
-          className="text-gray-500 hover:text-gray-700"
-        >
-          <RxCross2 className="w-5 h-5" />
-        </button>
-      </div>
-
-      <div className="grid grid-cols-2 gap-6 mb-6">
-        <p><span className="font-medium">Invoice Id:</span> #4444</p>
-        <p><span className="font-medium">Customer name:</span> Alice Beth</p>
-        <p><span className="font-medium">Total Amount:</span> INR 5000.00</p>
-        <p><span className="font-medium">Paid Amount:</span> INR 0.00</p>
-        <p className="col-span-2"><span className="font-medium">Balance Remaining:</span> INR 5000.00</p>
-      </div>
-
-      <form className="grid grid-cols-2 gap-6">
-        <Input label="Payment Amount" />
-        <Input label="Payment Date" type="date" />
-        <Select
-          label="Payment Mode"
-          options={options}
-          value={value}
-          onChange={setValue}
-        />
-        <div className="col-span-2">
-          <label htmlFor="remark" className="block mb-2 font-medium">Add Remark</label>
-          <textarea
-            id="remark"
-            className="w-full p-2 border rounded-md"
-            rows="4"
-            placeholder="Enter your remark"
-          />
-        </div>
-        <Button
-          type="submit"
-          className="col-span-2 w-full py-2 mt-4 bg-blue-600 text-white rounded-md hover:bg-blue-700"
-          onClick={() => setModalState(false)}
-        >
-          Submit Payment
-        </Button>
-      </form>
-    </div> */}
     <div className="max-w-2xl mx-auto p-8 bg-white rounded-lg shadow-md">
   <div className="flex items-center justify-between mb-8">
     <h3 className="text-2xl font-semibold text-gray-800">Add Payment</h3>
@@ -342,115 +324,63 @@ export default function InvoiceDetailsPage() {
     <p className="md:col-span-2"><span className="font-medium text-gray-700">Balance Remaining:</span> INR 5000.00</p>
   </div>
 
-  <form className="grid grid-cols-1 md:grid-cols-2 gap-6">
-    <Input label="Payment Amount" className="w-full" />
-    <Input label="Payment Date" type="date" className="w-full" />
-    <Select
-      label="Payment Mode"
-      options={options}
-      value={value}
-      onChange={setValue}
-      className="w-full"
-    />
-    <div className="md:col-span-2">
-      <label htmlFor="remark" className="block mb-2 text-gray-700 font-medium">Add Remark</label>
-      <textarea
-        id="remark"
-        className="w-full p-3 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
-        rows="4"
-        placeholder="Enter your remark"
-      />
-    </div>
-    <Button
-      type="submit"
-      className="col-span-1 md:col-span-2 w-full py-3 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition duration-200"
-      onClick={() => setModalState(false)}
-    >
-      Submit Payment
-    </Button>
-  </form>
+
+
+<form onSubmit={handleAddPayment}>
+      <div className="grid grid-cols-1 gap-8 mb-6">
+        <div>
+          <label className="text-sm font-medium text-gray-700">Amount</label>
+          <Input
+            type="number"
+            placeholder="Enter Amount"
+            value={amount}
+            onChange={handleAmountChange}
+          />
+        </div>
+        <div>
+          <label className="text-sm font-medium text-gray-700">Payment Method</label>
+          <Select
+            options={options}
+            onChange={handleMethodChange}
+          />
+        </div>
+        <div>
+          <label className="text-sm font-medium text-gray-700">Reference</label>
+          <TextArea
+            placeholder="Payment for Invoice"
+            value={reference}
+            onChange={handleReferenceChange}
+          />
+        </div>
+      </div>
+      <div className="flex justify-end">
+        <Button type="submit" className="bg-blue-500 hover:bg-blue-600 text-white font-medium py-2 px-4 rounded-lg">
+          Save Payment
+        </Button>
+      </div>
+    </form>
+
+
 </div>
 
 
       
       </Modal>
-      
-      <PageHeader title="Invoice Details" breadcrumb={['Home', 'Invoices', invoice.customid]}>
+
+      <PageHeader title={pageHeader.title} breadcrumb={pageHeader.breadcrumb}>
         <div className="mt-4 flex items-center gap-3 @lg:mt-0">
-          <Button variant="outline" onClick={() => setDrawerState(true)}>
+        <Button variant="outline" onClick={() => setDrawerState(true)}>
             <PiEnvelopeBold className="me-1.5 h-[17px] w-[17px]" />
             Email Invoice
           </Button>
-      {/* <Drawer
-        isOpen={drawerState}
-        size = "lg"
-        onClose={() => setDrawerState(false) }
-      >
-        
-        <div className="flex flex-col h-full">
-        <div className="p-6 flex-grow overflow-y-auto">
-          <Title className="text-2xl font-bold mb-6">Send Manual Email to Customer</Title>
-
-          <div className="bg-gray-50 p-4 rounded-lg mb-6">
-            <Title as="h3" className="text-lg font-semibold mb-3">Customer Details</Title>
-            <div className="grid grid-cols-2 gap-3">
-              <Text><strong>Name:</strong> {customerData.name}</Text>
-              <Text><strong>Account Manager:</strong> {customerData.accountManager}</Text>
-              <Text><strong>Current Total Amount:</strong> ${customerData.totalAmount.toLocaleString()}</Text>
-              <Text><strong>Balance Remaining:</strong> ${customerData.balanceRemaining.toLocaleString()}</Text>
-            </div>
-          </div>
-
-          <div className="space-y-4">
-            <Input
-              label="Subject"
-              placeholder="Enter email subject"
-              value={subject}
-              onChange={(e) => setSubject(e.target.value)}
-            />
-            <Input
-              label="Send Email to"
-              placeholder="Enter recipient email"
-              value={sendTo}
-              onChange={(e) => setSendTo(e.target.value)}
-              defaultValue={customerData.email}
-            />
-            <Textarea
-              label="Email Description"
-              placeholder="Enter email content"
-              value={emailDescription}
-              onChange={(e) => setEmailDescription(e.target.value)}
-              className="h-40"
-            />
-          </div>
-        </div>
-
-        <div className="p-3 border-t border-gray-200 bg-gray-50">
-          <div className="flex justify-end space-x-4">
-            <Button variant="outline" onClick={() => setDrawerState(false)}>
-              Cancel
-            </Button>
-            <Button variant="solid" onClick={() => {
-              // Implement send email logic here
-              console.log('Sending email:', { subject, sendTo, emailDescription });
-              setDrawerState(false);
-            }}>
-              Send Email
-            </Button>
-          </div>
-        </div>
-      </div>
+    
 
 
 
 
+          <Dropdown>
 
-
-
-
-      </Drawer> */}
-
-<Drawer
+          <Drawer
       isOpen={drawerState}
       size="lg"
       onClose={() => setDrawerState(false)}
@@ -532,22 +462,151 @@ export default function InvoiceDetailsPage() {
   />
 
 
-            {/* <MultiSelect
-      value={value}
-      clearable={true}
-      searchable={true}
-      options={multiselectoptions}
-      onChange={setValue}
-      label="Multi Select"
-    /> */}
+          </div>
+        </div>
+
+        <div
+          style={{
+            padding: '12px',
+            borderTop: '1px solid #e5e7eb', // Light gray border
+            backgroundColor: '#ffffff', // White background
+            boxShadow: '0 -2px 4px rgba(0,0,0,0.1)', // Subtle shadow
+          }}
+        >
+          <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '12px' }}>
+            <Button
+              variant="outline"
+              onClick={() => setDrawerState(false)}
+              style={{ borderColor: '#ddd', color: '#333' }} // Outline style
+            >
+              Cancel
+            </Button>
+            <Button
+              variant="solid"
+              onClick={() => {
+                // Implement send email logic here
+                console.log('Sending email:', { subject, sendTo, emailDescription });
+                setDrawerState(false);
+              }}
+             // Solid style
+            >
+              Send Email
+            </Button>
+          </div>
+        </div>
+      </div>
+    </Drawer>
+            <Dropdown.Trigger>
+              <Button as="span">
+                Actions <PiDownloadSimpleBold className="ml-2 w-5" />
+              </Button>
+            </Dropdown.Trigger>
+            <Dropdown.Menu>
+              <Dropdown.Item>Add Remark</Dropdown.Item>
+              <Dropdown.Item onClick={() => setModalState(true)}>Add Payment Entry</Dropdown.Item>
+              <Dropdown.Item>Send Email</Dropdown.Item>
+            </Dropdown.Menu>
+          </Dropdown>
+        
 
 
-
-
-
-
-
+        </div>
+      </PageHeader>
       
+      {/* <PageHeader title="Invoice Details" breadcrumb={['Home', 'Invoices', invoice.customid]}>
+        <div className="mt-4 flex items-center gap-3 @lg:mt-0">
+          <Button variant="outline" onClick={() => setDrawerState(true)}>
+            <PiEnvelopeBold className="me-1.5 h-[17px] w-[17px]" />
+            Email Invoice
+          </Button>
+    
+
+
+
+
+          <Dropdown>
+
+          <Drawer
+      isOpen={drawerState}
+      size="lg"
+      onClose={() => setDrawerState(false)}
+    >
+      <div
+        style={{
+          display: 'flex',
+          flexDirection: 'column',
+          height: '100%',
+        }}
+      >
+        <div
+          style={{
+            padding: '24px',
+            flexGrow: 1,
+            overflowY: 'auto',
+            // backgroundColor: '#f9fafb', // Light gray background
+          }}
+        >
+          <Title className="text-2xl font-bold mb-6">Send Manual Email to Customer</Title>
+
+          <div
+            style={{
+              backgroundColor: '#ffffff', // White background
+              padding: '16px',
+              borderRadius: '8px',
+              marginBottom: '24px',
+              boxShadow: '0 2px 4px rgba(0,0,0,0.1)', // Subtle shadow
+            }}
+          >
+            <Title as="h3" className="text-lg font-semibold mb-3">Customer Details</Title>
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
+              <Text><strong>Name:</strong> {customerData.name}</Text>
+              <Text><strong>Account Manager:</strong> {customerData.accountManager}</Text>
+              <Text><strong>Current Total Amount:</strong> ${customerData.totalAmount.toLocaleString()}</Text>
+              <Text><strong>Balance Remaining:</strong> ${customerData.balanceRemaining.toLocaleString()}</Text>
+            </div>
+          </div>
+
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+            <Input
+              label="Subject"
+              placeholder="Enter email subject"
+              value={subject}
+              onChange={(e) => setSubject(e.target.value)}
+            />
+            <Input
+              label="Send Email to"
+              placeholder="Enter recipient email"
+              value={sendTo}
+              onChange={(e) => setSendTo(e.target.value)}
+              defaultValue={customerData.email}
+            />
+            <Input
+              label="Add CC "
+              placeholder="Enter recipient email"
+              value={addCC}
+              onChange={(e) => setAddCC(e.target.value)}
+              defaultValue={customerData.cc}
+            />
+            <Textarea
+              label="Email Description"
+              placeholder="Enter email content"
+              value={emailDescription}
+              onChange={(e) => setEmailDescription(e.target.value)}
+              style={{ height: '160px' }} // Fixed height for textarea
+            />
+
+
+<Select
+    mode="tags"
+    style={{ width: '100%' , borderColor: 'red' }}
+    placeholder="Tags Mode"
+    onChange={handleChange}
+    options={optionss}
+    size="large"
+
+
+  />
+
 
           </div>
         </div>
@@ -583,9 +642,6 @@ export default function InvoiceDetailsPage() {
         </div>
       </div>
     </Drawer>
-
-
-          <Dropdown>
             <Dropdown.Trigger>
               <Button as="span">
                 Actions <PiDownloadSimpleBold className="ml-2 w-5" />
@@ -598,7 +654,7 @@ export default function InvoiceDetailsPage() {
             </Dropdown.Menu>
           </Dropdown>
         </div>
-      </PageHeader>
+      </PageHeader> */}
 
       <div className="">
         <Tab>
@@ -655,20 +711,7 @@ export default function InvoiceDetailsPage() {
               </div>
             </Tab.Panel>
             <Tab.Panel>
-              {/* <div className="bg-white rounded-lg shadow-lg p-6">
-                <h2 className="text-2xl font-bold mb-6 pb-4 border-b">Payment Details</h2>
-                {payments.length > 0 ? (
-                  payments.map((payment, index) => (
-                    <div key={index} className="mb-4 p-4 border rounded">
-                      <p><strong>Amount:</strong> {invoice.currency} {payment.amount}</p>
-                      <p><strong>Method:</strong> {payment.method}</p>
-                      <p><strong>Reference:</strong> {payment.reference}</p>
-                    </div>
-                  ))
-                ) : (
-                  <p>No payment details available.</p>
-                )}
-              // </div> */}
+   
 <div
   style={{
     position: "relative",
@@ -732,3 +775,4 @@ export default function InvoiceDetailsPage() {
     </>
   );
 }
+

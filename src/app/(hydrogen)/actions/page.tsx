@@ -65,40 +65,46 @@ export default function EmailTriggersListPage() {
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
 
+
+
   useEffect(() => {
     async function fetchData() {
       setLoading(true);
       setError(null);
       try {
         const token = getCookie('access_token');
+  
         if (!token) {
           setError('No access token found');
           return;
         }
-
+  
         const response = await fetch('http://localhost:9000/customers/get_email_triggers/', {
           headers: {
             'Authorization': `Bearer ${token}`,
             'Content-Type': 'application/json',
           },
         });
-
+  
         if (!response.ok) {
           const errorData = await response.json();
           throw new Error(errorData.error || 'Network response was not ok');
         }
 
-        const data: EmailTrigger[] = await response.json();
-        setEmailTriggers(data);
-      } catch (error) {
+        // Extract the email_triggers array from the response
+        const data = await response.json();
+        setEmailTriggers(data.email_triggers); // Update here
+        console.log(data)
+      } catch (error: any) {
         setError(error.message);
       } finally {
         setLoading(false);
       }
     }
-
+  
     fetchData();
   }, []);
+  
 
   if (loading) return <p>Loading...</p>;
   if (error) return <p>Error loading data: {error}</p>;
@@ -122,54 +128,41 @@ export default function EmailTriggersListPage() {
       </PageHeader>
 
       <Table>
-        <Table.Header>
+      <Table.Header>
+        <Table.Row>
+          <Table.Head>Name</Table.Head>
+          <Table.Head>Condition Type</Table.Head>
+          <Table.Head>Days Offset</Table.Head>
+          <Table.Head>Created At</Table.Head>
+          <Table.Head></Table.Head>
+        </Table.Row>
+      </Table.Header>
+      <Table.Body>
+
+        {emailTriggers.length === 0 ? (
           <Table.Row>
-            {/* <Table.Head>ID</Table.Head> */}
-            <Table.Head>Name</Table.Head>
-            <Table.Head>Condition Type</Table.Head>
-            {/* <Table.Head>Email Subject</Table.Head> */}
-            {/* <Table.Head>Email Body</Table.Head> */}
-            <Table.Head>Days Offset</Table.Head>
-            <Table.Head>Created At</Table.Head>
-            <Table.Head></Table.Head>
-            {/* <Table.Head>Updated At</Table.Head> */}
-            {/* <Table.Head>Is Active</Table.Head> */}
-            {/* <Table.Head>User</Table.Head> */}
-            {/* <Table.Head>Account</Table.Head> */}
+            <Table.Cell colSpan={5} className="text-center">
+              No email triggers found.
+            </Table.Cell>
           </Table.Row>
-        </Table.Header>
-        <Table.Body>
-          {emailTriggers.length === 0 ? (
-            <Table.Row>
-              <Table.Cell colSpan={11} className="text-center">
-                No email triggers found.
+
+        ) : (emailTriggers.map((trigger) => (
+            <Table.Row key={trigger.id} className="cursor-pointer">
+              <Table.Cell>{trigger.name}</Table.Cell>
+              <Table.Cell>{getConditionTypeLabel(trigger.condition_type)}</Table.Cell>
+              <Table.Cell>{trigger.days_offset}</Table.Cell>
+              <Table.Cell>{new Date(trigger.created_at).toLocaleString()}</Table.Cell>
+              <Table.Cell>
+                <Link href={`/actions/${trigger.id}`}>
+                  <Button variant="outline" size="sm">Details</Button>
+                </Link>
               </Table.Cell>
             </Table.Row>
-          ) : (
-            emailTriggers.map((trigger) => (
-              <Table.Row key={trigger.id}
-                style={{
-                  cursor: "pointer"
-                }}>
-                {/* <Table.Cell>{trigger.id}</Table.Cell> */}
-                {/* <Table.Cell>{trigger.condition_type}</Table.Cell> */}
-                <Table.Cell>{trigger.name}</Table.Cell>
-                <Table.Cell>{getConditionTypeLabel(trigger.condition_type)}</Table.Cell>
-               
-                <Table.Cell>{trigger.days_offset}</Table.Cell>
-                <Table.Cell>{new Date(trigger.created_at).toLocaleString()}</Table.Cell>
-                <Table.Cell>
-                    <Link href={`/actions/${trigger.id}`}>
-                      <Button  variant="outline" size="sm">Details</Button> {/* Added Details Button */}
-                    </Link>
-                    </Table.Cell>
-
-            
-              </Table.Row>
-            ))
-          )}
-        </Table.Body>
-      </Table>
+          ))
+        )}
+      </Table.Body>
+    </Table>
+    
     </>
   );
 }

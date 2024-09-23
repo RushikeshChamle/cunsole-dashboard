@@ -159,6 +159,7 @@ const eComDashboardStatData = [
   },
 
 
+  
   {
     id: '2',
     icon: <BsPatchExclamation/>,
@@ -218,13 +219,13 @@ export default function StatCards({ className }: { className?: string }) {
               '[&>svg]:w-9 [&>svg]:h-7 lg:[&>svg]:w-[42px] lg:[&>svg]:h-[34px]',
             stat.style
           )}
-          // chart={
-          //   <ResponsiveContainer width="100%" height="100%">
-          //     <BarChart barSize={5} barGap={2} data={stat.chart}>
-          //       <Bar dataKey="sale" fill={stat.fill} radius={5} />
-          //     </BarChart>
-          //   </ResponsiveContainer>
-          // }
+          chart={
+            <ResponsiveContainer width="100%" height="100%">
+              <BarChart barSize={5} barGap={2} data={stat.chart}>
+                <Bar dataKey="sale" fill={stat.fill} radius={5} />
+              </BarChart>
+            </ResponsiveContainer>
+          }
           chartClassName="hidden @[200px]:flex @[200px]:items-center h-14 w-24"
           className="@container [&>div]:items-center"
         >

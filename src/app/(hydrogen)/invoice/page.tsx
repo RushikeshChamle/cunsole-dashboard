@@ -84,7 +84,7 @@ export default function CustomersListPage() {
           return;
         }
 
-        debugger; // Execution will pause here
+        // debugger; // Execution will pause here
         const response = await fetch('http://localhost:9000/customers/cutomerinvoices/', {
           headers: {
             'Authorization': `Bearer ${token}`,
@@ -178,13 +178,17 @@ export default function CustomersListPage() {
                   <Table.Cell>{invoice.paid_amount}</Table.Cell>
                   <Table.Cell>{invoice.created_at}</Table.Cell>
                   <Table.Cell>{invoice.duedate}</Table.Cell>
-
                   <Table.Cell>
-                    <Link href={`/invoice/${invoice.id}`}>
+                  <Link href={`/invoice/${invoice.id}`}>
                       <Button  variant="outline" size="sm">Details</Button> {/* Added Details Button */}
+
+
                     </Link>
+
+
                     </Table.Cell>
-                  
+
+
                 </Table.Row>
               ))
             )
