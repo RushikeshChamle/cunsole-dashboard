@@ -1,6 +1,5 @@
 'use client';
 
-
 import { useState } from 'react';
 import Link from 'next/link';
 import { SubmitHandler } from 'react-hook-form';
@@ -19,19 +18,20 @@ import { toast } from 'react-hot-toast';
 //   rememberMe: true,
 // };
 
-
 export default function SignInForm() {
 
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const isMedium = useMedia('(max-width: 1200px)', false);
   const [messageApi, contextHolder] = message.useMessage();
-  
+
   const onSubmit: SubmitHandler<LoginSchema> = async (data) => {
     setLoading(true);
     setError(null);
     try {
       const response = await axios.post('http://localhost:9000/users/signin/', data);
+
+      
       // Handle the response from the backend
       if (response.data.access && response.data.refresh) {
         // Store the access and refresh tokens in cookies
@@ -40,7 +40,14 @@ export default function SignInForm() {
         document.cookie = `access_token=${response.data.access}; expires=${accessExpiration.toUTCString()}; path=/; Secure; SameSite=None`;
         document.cookie = `refresh_token=${response.data.refresh}; expires=${refreshExpiration.toUTCString()}; path=/; Secure; SameSite=None`;
         // Redirect to the dashboard or any other protected route
-        window.location.href = '/financial';
+
+       // Retrieve CSRF token from the response
+      //  const csrfToken = response.data.csrf_token || response.headers['x-csrf-token'];
+      //  if (csrfToken) {
+      //    document.cookie = `csrf_token=${csrfToken}; path=/; Secure; SameSite=None`;
+      //  }
+
+        window.location.href = '/invoice';
       } else {
         setError('Invalid credentials. Please try again.');
       }
@@ -56,9 +63,6 @@ export default function SignInForm() {
     }
   };
 
-
-
-  
   return (
     <>
       <Form<LoginSchema>
@@ -125,5 +129,3 @@ export default function SignInForm() {
     </>
   );
 }
-
-

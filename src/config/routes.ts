@@ -46,6 +46,13 @@ export const routes = {
     shipmentDetails: (id: string) => `/logistics/shipments/${id}`,
     tracking: (id: string) => `/logistics/tracking/${id}`,
   },
+  ARdashboard: {
+    dashboard: '/dashboard',
+
+  },
+
+
+
   appointment: {
     dashboard: '/appointment',
     appointmentList: '/appointment/list',
@@ -79,7 +86,7 @@ export const routes = {
   rolesPermissions: '/roles-permissions',
   invoice: {
     home: '/invoice',
-    create: '/invoice/create',
+    create: 'ecommerce/products/create',
     details: (id: string) => `/invoice/${id}`,
     edit: (id: string) => `/invoice/${id}/edit`,
     builder: '/invoice/builder',

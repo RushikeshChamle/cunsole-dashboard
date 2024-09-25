@@ -17,22 +17,22 @@ import { messages } from '@/data/support-inbox';
 export const supportNavItems = [
   {
     value: 'unassigned',
-    label: 'Unassigned',
+    label: 'To Do',
     count: 88,
   },
   {
     value: 'assigned-to-me',
-    label: 'Assigned to me',
+    label: 'Scheduled',
     count: 1515,
   },
   {
     value: 'all-open',
-    label: 'All open',
+    label: 'Paused',
     count: 1603,
   },
   {
     value: 'chat',
-    label: 'Chat',
+    label: 'Other',
     count: 991,
   },
 ];

@@ -3,13 +3,23 @@
 import MetricCard from '@components/cards/metric-card';
 import { Text } from 'rizzui';
 import cn from '@utils/class-names';
+import { FaFileInvoiceDollar } from "react-icons/fa6";
+import { LiaFileInvoiceDollarSolid } from "react-icons/lia";
+import { BsPatchExclamation } from "react-icons/bs";
+
 import {
   PiCaretDoubleUpDuotone,
   PiCaretDoubleDownDuotone,
   PiGiftDuotone,
   PiBankDuotone,
+  PiClockCountdownDuotone,
+  PiTimerDuotone,
+  PiCalendarBlankDuotone,
   PiChartPieSliceDuotone,
 } from 'react-icons/pi';
+
+import { MdAccountBalance } from "react-icons/md";
+
 import { BarChart, Bar, ResponsiveContainer } from 'recharts';
 
 const orderData = [
@@ -88,6 +98,12 @@ const salesData = [
   },
 ];
 
+const iconStyle = {
+  width: '42px', // Icon width
+  height: '42px', // Icon height (optional, if you want to maintain aspect ratio)
+  color: '#ffcc00', // Icon color (optional)
+};
+
 const revenueData = [
   {
     day: 'Sunday',
@@ -126,41 +142,61 @@ const revenueData = [
   },
 ];
 
+
 const eComDashboardStatData = [
   {
     id: '1',
-    icon: <PiGiftDuotone className="h-6 w-6" />,
-    title: 'New Orders',
-    metric: '1,390',
+    icon: <PiBankDuotone 
+    />,
+    title: 'Outstanding',
+    metric: ' ₹ 1,390',
     increased: true,
     decreased: false,
     percentage: '+32.40',
-    style: 'text-[#3872FA]',
+    style: 'text-[#7a9cf4]',
     fill: '#3872FA',
     chart: orderData,
   },
+
+
+  
   {
     id: '2',
-    icon: <PiChartPieSliceDuotone className="h-6 w-6" />,
-    title: 'Sales',
-    metric: '$57,890',
+    icon: <BsPatchExclamation/>,
+    title: 'Overdue',
+    metric: '₹ 57,890',
     increased: false,
     decreased: true,
     percentage: '-4.40',
-    style: 'text-[#10b981]',
-    fill: '#10b981',
+    style: 'text-[#ff8a8a]',
+    fill: '#ff8e8e',
     chart: salesData,
   },
+
+
+
   {
     id: '3',
-    icon: <PiBankDuotone className="h-6 w-6" />,
-    title: 'Revenue',
-    metric: '$12,390',
+    icon: <LiaFileInvoiceDollarSolid className="h-6 w-6" />,
+    title: 'Due',
+    metric: '₹ 12,390',
     increased: true,
     decreased: false,
     percentage: '+32.40',
-    style: 'text-[#7928ca]',
-    fill: '#7928ca',
+    style: 'text-[#a87ac7]',
+    fill: '#a87ac7',
+    chart: revenueData,
+  },
+  {
+    id: '4',
+    icon: <PiClockCountdownDuotone className="h-6 w-6" />,
+    title: 'DSO',
+    metric: '7 Days',
+    increased: true,
+    decreased: false,
+    percentage: '+32.40',
+    style: 'text-[#f7c59f]',
+    fill: '#f7c59f',
     chart: revenueData,
   },
 ];
@@ -178,18 +214,18 @@ export default function StatCards({ className }: { className?: string }) {
           metricClassName="lg:text-[22px]"
           icon={stat.icon}
           iconClassName={cn(
-            '[&>svg]:w-10 [&>svg]:h-8 lg:[&>svg]:w-11 lg:[&>svg]:h-9 w-auto h-auto p-0 bg-transparent -mx-1.5',
+            '[&>svg]:w-10 [&>svg]:h-6 lg:[&>svg]:w-[28px] lg:[&>svg]:h-9 w-auto h-auto p-0 bg-transparent -mx-1.5',
             stat.id === '1' &&
               '[&>svg]:w-9 [&>svg]:h-7 lg:[&>svg]:w-[42px] lg:[&>svg]:h-[34px]',
             stat.style
           )}
-          chart={
-            <ResponsiveContainer width="100%" height="100%">
-              <BarChart barSize={5} barGap={2} data={stat.chart}>
-                <Bar dataKey="sale" fill={stat.fill} radius={5} />
-              </BarChart>
-            </ResponsiveContainer>
-          }
+          // chart={
+          //   <ResponsiveContainer width="100%" height="100%">
+          //     <BarChart barSize={5} barGap={2} data={stat.chart}>
+          //       <Bar dataKey="sale" fill={stat.fill} radius={5} />
+          //     </BarChart>
+          //   </ResponsiveContainer>
+          // }
           chartClassName="hidden @[200px]:flex @[200px]:items-center h-14 w-24"
           className="@container [&>div]:items-center"
         >
@@ -214,6 +250,8 @@ export default function StatCards({ className }: { className?: string }) {
             last month
           </Text>
         </MetricCard>
+
+        
       ))}
     </div>
   );

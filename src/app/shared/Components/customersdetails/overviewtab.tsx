@@ -64,7 +64,9 @@ function WidgetCard({
   className,
   children,
   childrenWrapperClass,
-}: {
+}: 
+
+{
   title?: string;
   className?: string;
   children: React.ReactNode;

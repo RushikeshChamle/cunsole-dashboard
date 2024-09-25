@@ -274,7 +274,9 @@ export default function Details({ customerId, className }: { customerId: string;
       title: 'Recent Transactions',
       icon: <MdPayment className="h-5 w-5 text-primary" />,
       data: [
-        { name: 'Last Payment Date', value: invoices.length > 0 ? invoices[0].issuedat.split('T')[0] : 'N/A' },
+        // { name: 'Last Payment Date', value: invoices.length > 0 ? invoices[0].issuedat.split('T')[0] : 'N/A' },
+        {name: 'Last Payment Date',
+  value: invoices.length > 0 && invoices[0].issuedat ? invoices[0].issuedat.split('T')[0] : 'N/A'},
         { name: 'Last Payment Amount', value: invoices.length > 0 ? `$${invoices[0].paid_amount}` : 'N/A' },
         { name: 'Last Invoice Date', value: invoices.length > 0 ? invoices[0].duedate.split('T')[0] : 'N/A' },
         { name: 'Last Invoice Amount', value: invoices.length > 0 ? `$${invoices[0].total_amount}` : 'N/A' },

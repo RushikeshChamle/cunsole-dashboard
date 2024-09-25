@@ -89,7 +89,10 @@ export function CarbonSidebarMenu() {
 
                         {/* Arrow icon on the sidebar  */}
 
-                        {/* <div className="flex items-center transition-all group-hover:gap-1">
+                        {
+
+                          
+                        <div className="flex items-center transition-all group-hover:gap-1">
                           <PiCaretDownBold
                             strokeWidth={3}
                             className={cn(
@@ -97,7 +100,10 @@ export function CarbonSidebarMenu() {
                               isDropdownOpen ? 'text-gray-0' : 'text-gray-900'
                             )}
                           />
-                        </div> */}
+                        </div>
+
+
+                        }
                       </div>
                     </Menu.Trigger>
                     <Menu.List className="relative w-[280px] !border-transparent  !px-2 !py-3 after:absolute after:-start-5 after:top-0 after:h-full after:w-5 dark:border-gray-300">

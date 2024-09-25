@@ -116,8 +116,8 @@ export const carbonMenuItems: MenuItemsType[] = [
       
       
       {
-        name: 'Financial',
-        href: routes.financial.dashboard,
+        name: 'Dashboard',
+        href: routes.ARdashboard.dashboard,
         icon: PiCurrencyCircleDollarDuotone,
       }
       ,
