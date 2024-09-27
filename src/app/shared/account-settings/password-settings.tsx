@@ -52,10 +52,10 @@ export default function PasswordSettingsView({
         {({ register, control, formState: { errors }, getValues }) => {
           return (
             <>
-              <ProfileHeader
+              {/* <ProfileHeader
                 // title="Olivia Rhye"
                 // description="olivia@example.com"
-              />
+               /> */}
 
               <div className="mx-auto w-full max-w-screen-2xl">
                 <HorizontalFormBlockWrapper
