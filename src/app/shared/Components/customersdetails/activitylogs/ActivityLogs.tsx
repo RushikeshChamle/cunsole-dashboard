@@ -73,7 +73,14 @@ const timelineData = [
   },
 ];
 
-export default function ActivityLogs({ className }: { className?: string }) {
+
+interface ActivityLogsProps {
+  customerId: string | number;  // Adjust the type based on your actual data
+  className?: string;
+}
+
+
+export default function ActivityLogs({ customerId, className }: ActivityLogsProps) {
   return (
     <>
       <Collapse
