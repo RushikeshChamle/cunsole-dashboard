@@ -7,6 +7,11 @@ import Transactions from "@/app/shared/Components/customersdetails/transactions/
 import ActivityLogs from "@/app/shared/Components/customersdetails/activitylogs/ActivityLogs"
 import Details from "@/app/shared/Components/customersdetails/detailsmenu/Details"
 
+interface ActivityLogsProps {
+  customerId: string | number; // Adjust the type according to your actual data
+}
+
+
 export default function OrderTabs({ params }: any ) {
 
   const customerId = params.id; // Extract the customerId here
