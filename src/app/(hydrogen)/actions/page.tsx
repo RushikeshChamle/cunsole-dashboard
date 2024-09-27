@@ -19,16 +19,14 @@ const pageHeader = {
 
 
 
-import { Drawer, Text, Input, Textarea } from 'rizzui';
+import { Drawer, Text, Input, Textarea, Badge, Table, Button } from 'rizzui';
 import axiosInstance from '@/axiosInstance'; // Adjust your import for axiosInstance
 import Link from 'next/link';
 import { routes } from '@/config/routes';
-import { Button } from 'rizzui';
 import PageHeader from '@/app/shared/page-header';
 import ExportButton from '@/app/shared/export-button';
 import { metaObject } from '@/config/site.config';
 import { useEffect, useState } from 'react';
-import { Badge, Table } from 'rizzui';
 import { PiPlusBold } from 'react-icons/pi';
 import Footer from '@/app/multi-step/footer';
 
