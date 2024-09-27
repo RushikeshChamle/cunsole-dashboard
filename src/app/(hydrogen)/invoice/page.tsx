@@ -94,22 +94,41 @@ export default function CustomersListPage() {
 
 
         if (!response.ok) {
-          const errorData = await response.json();
+          const errorData: any = await response.json();
           throw new Error(errorData.error || 'Network response was not ok');
         }
 
 
-        const data: ApiResponse[] = await response.json();
-        setCustomersData(data);
-      } catch (error) {
-        setError(error.message);
-      } finally {
-        setLoading(false);
-      }
-    }
+        // const data: ApiResponse[] = await response.json();
+  //       const data = await response.json() as ApiResponse[]; // Assert the type
 
-    fetchData();
-  }, []);
+  //       setCustomersData(data);
+  //     } catch (error) {
+  //       setError(error.message);
+  //     } finally {
+  //       setLoading(false);
+  //     }
+  //   }
+
+  //   fetchData();
+  // }, []);
+
+  const data = await response.json() as ApiResponse[]; // Assert the type
+      setCustomersData(data); // Ensure you are setting the correct state here
+    } catch (error: unknown) {
+      // Safely handle error
+      if (error instanceof Error) {
+        setError(error.message);
+      } else {
+        setError('An unknown error occurred');
+      }
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  fetchData();
+}, []);
 
   // Display loader while loading
   // if (loading) return <Loader  />;

@@ -62,6 +62,7 @@ interface Customer {
   total_paid_amount: number;
 }
 
+
 interface Payment {
   invoice: string;
   amount: number;
@@ -70,6 +71,13 @@ interface Payment {
   account: string;
   user: string;
   payment_date: string;
+}
+
+
+interface InvoiceDetails {
+  invoice: Invoice;  // Assuming this is the type for the invoice
+  customer: Customer; // Replace with your actual Customer type
+  payments: Payment[]; // Assuming payments is an array of Payment
 }
 
 const optionss: SelectProps['options'] = [];
@@ -85,13 +93,21 @@ const handleChange = (value: string) => {
   console.log(`selected ${value}`);
 };
 
+
 // Utility function to determine the file type from the URL
 const getFileType = (url: string) => {
-  const extension = url.split('.').pop().toLowerCase();
-  if (['pdf'].includes(extension)) return 'pdf';
-  if (['jpg', 'jpeg', 'png', 'gif', 'bmp'].includes(extension)) return 'image';
-  return 'unknown';
+  const extension = url.split('.').pop(); // Get the last part after the dot
+
+  // Check if extension is undefined
+  if (extension) {
+    const lowerCaseExtension = extension.toLowerCase(); // Convert to lowercase
+    if (['pdf'].includes(lowerCaseExtension)) return 'pdf';
+    if (['jpg', 'jpeg', 'png', 'gif', 'bmp'].includes(lowerCaseExtension)) return 'image';
+  }
+
+  return 'unknown'; // Default return value if extension is undefined or does not match
 };
+
 
 // Define FileViewer component
 const FileViewer = ({ url }: { url: string }) => {
@@ -152,6 +168,15 @@ const multiselectoptions = [
   { label: 'Cherry 🍒', value: 'cherry' },
 ];
 
+
+interface InvoiceDetails {
+  invoice: Invoice;  
+  customer: Customer; 
+  payments: Payment[]; 
+}
+
+
+
 export default function InvoiceDetailsPage() {
   const router = useRouter();
   const { id } = useParams(); // Use useParams to get the dynamic route parameter
@@ -159,7 +184,10 @@ export default function InvoiceDetailsPage() {
 
   const [modalState, setModalState] = useState(false);
   const [drawerState, setDrawerState] = useState(false);
-  const [invoiceData, setInvoiceData] = useState<Invoice | null>(null);
+  // const [invoiceData, setInvoiceData] = useState<Invoice | null>(null);
+  const [invoiceData, setInvoiceData] = useState<InvoiceDetails | null>(null);
+
+
   const [fileUrl, setFileUrl] = useState<string>('');
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [error, setError] = useState<Error | null>(null);
@@ -167,14 +195,20 @@ export default function InvoiceDetailsPage() {
   const [sendTo, setSendTo] = useState('');
   const [addCC, setAddCC] = useState('');
   const [emailDescription, setEmailDescription] = useState('');
-  const [reminders, setReminders] = useState([]); // State to store reminders
-  const [reminderError, setReminderError] = useState(null);
+  // const [reminders, setReminders] = useState([]); // State to store reminders
+  const [reminders, setReminders] = useState<any[]>([]);
+
+  // const [reminderError, setReminderError] = useState(null);
+  const [reminderError, setReminderError] = useState<string | null>(null);
+  
+
   // const [value, setValue] = useState(null);
   const [value, setValue] = useState([]);
   // State hooks to manage form inputs
   const [amount, setAmount] = useState('');
   const [method, setMethod] = useState('');
   const [reference, setReference] = useState('');
+
 
   const options = [
     { label: 'Credit Card', value: 'Credit Card' },
@@ -250,14 +284,13 @@ export default function InvoiceDetailsPage() {
         const response = await axiosInstance.get(`/invoices/invoice_details/${id}/`);
         setInvoiceData(response.data);
         setFileUrl(response.data.invoice.file_path);
-  
         // Fetching reminders for the invoice
         const fetchReminders = async () => {
           try {
             // const remindersResponse = await axiosInstance.get(`/customers/invoices/${id}/dynamic_next_reminders/`);
             const remindersResponse = await axiosInstance.get(`/customers/invoices/${id}/all-reminders/`);
             setReminders(remindersResponse.data.reminders);
-          } catch (error) {
+          } catch (error: any) {
             if (error.response && error.response.status === 404) {
               setReminderError("No future reminders scheduled for this invoice.");
             } else {
@@ -267,7 +300,7 @@ export default function InvoiceDetailsPage() {
         };
     
         await fetchReminders();
-      } catch (err) {
+      } catch (err: any) {
         setError(err);
       } finally {
         setIsLoading(false);
@@ -279,7 +312,7 @@ export default function InvoiceDetailsPage() {
 
 
 
-  const handleAddPayment = async (event) => {
+  const handleAddPayment = async (event: any) => {
     event.preventDefault();
     try {
       const response = await axiosInstance.post('/invoices/add_payment/', {
@@ -299,9 +332,16 @@ export default function InvoiceDetailsPage() {
     }
   };
 
-  const handleAmountChange = (event) => setAmount(event.target.value);
-  const handleMethodChange = (option) => setMethod(option.value);
-  const handleReferenceChange = (event) => setReference(event.target.value);
+  const handleAmountChange = (event : any) => setAmount(event.target.value);
+  const handleMethodChange = (option: any) => setMethod(option.value);
+  // const handleReferenceChange = (even: any) => setReference(event.target.value);
+
+
+  const handleReferenceChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
+    setReference(event.target.value);
+  };
+  
+  
 
   const memoizedFileViewer = useMemo(() => {
     return fileUrl ? <FileViewer url={fileUrl} /> : null;
@@ -320,6 +360,8 @@ export default function InvoiceDetailsPage() {
   }
 
   const { invoice, customer, payments } = invoiceData;
+
+
 
   return (
     <>

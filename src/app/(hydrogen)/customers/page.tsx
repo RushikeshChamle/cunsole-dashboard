@@ -260,6 +260,12 @@
 
 "use client"
 
+
+interface ErrorResponse {
+  error: string;
+}
+
+
 const pageHeader = {
   title: 'Customers List',
   breadcrumb: [
@@ -367,16 +373,17 @@ export default function CustomersListPage() {
       });
 
       if (!response.ok) {
-        const errorData = await response.json();
+        const errorData: any = await response.json();
         throw new Error(errorData.error || 'Network response was not ok');
       }
 
-      const data: ApiResponse[] = await response.json();
+      // const data: ApiResponse[] = await response.json();
+      const data = await response.json() as ApiResponse[]; // Assert the type
       // Extract customer data from the API response
       const customerData = data.map((customerData) => customerData.customer);
       setCustomers(customerData);
     } catch (error) {
-      setError(error.message);
+      setError((error as Error).message); // Safely casting error to Error
     } finally {
       setLoading(false);
     }
@@ -416,8 +423,10 @@ export default function CustomersListPage() {
       });
   
       if (!response.ok) {
-        const { error } = await response.json();
-        throw new Error(error || 'Failed to create customer');
+        // const { error } = await response.json();
+        // throw new Error(error || 'Failed to create customer');
+        const errorData: any = await response.json(); // Use 'any' temporarily
+       throw new Error(errorData.error || 'Failed to create customer');
       }
   
       toast.success('Customer created successfully');
@@ -433,7 +442,7 @@ export default function CustomersListPage() {
 
   return (
     <>
-      <PageHeader title={pageHeader.title} breadcrumb={pageHeader.breadcrumb}>
+      <PageHeader title={pageHeader.title} breadcrumb={pageHeader.breadcrumb as any}>
         <div className="mt-4 flex items-center gap-3 @lg:mt-0">
           <ExportButton
             data={customers}
@@ -458,14 +467,14 @@ export default function CustomersListPage() {
 
       <Modal
         isOpen={modalState.isOpen}
-        size={modalState.size}
+        size={modalState.size as any}
         onClose={() =>
           setModalState((prevState) => ({ ...prevState, isOpen: false }))
         }
       >
         <div className="m-auto px-7 pt-6 pb-8">
           <div className="mb-7 flex items-center justify-between">
-            <Text as="h3">Create Customer</Text>
+            <Text as="strong" >Create Customer</Text>
             <ActionIcon
               size="sm"
               variant="text"

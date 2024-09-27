@@ -44,10 +44,16 @@ interface User {
   account: number;
 }
 
+
+
+
+
+
 const ProfileSettingsView = () => {
   const [isEditable, setIsEditable] = useState(false);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+  // const [error, setError] = useState(null);
+  const [error, setError] = useState<string | null>(null);
 
   const { control, handleSubmit, reset } = useForm({
     mode: 'onChange',
@@ -81,13 +87,13 @@ const ProfileSettingsView = () => {
     reset();
   };
 
-  const handleSave = (data) => {
+  const handleSave = (data :any) => {
     console.log('Saving data:', data);
     setIsEditable(false);
     toast.success('Changes saved successfully');
   };
 
-  if (loading) return <Loader text="Loading..." />;
+  if (loading) return <Loader string="Loading..." />;
   if (error) return <p className="text-red-500">{error}</p>;
 
   return (
@@ -111,7 +117,9 @@ const ProfileSettingsView = () => {
                   title="Users"
                   className="pt-7 @2xl:pt-9 @3xl:grid-cols-12 @3xl:pt-11"
                 >
-                  {field.value?.map((user, index) => (
+
+
+                  {field.value?.map((user: any, index : number) => (
                     <div key={user.id} className="mb-4">
                       <Input
                         label="Name"
@@ -122,7 +130,9 @@ const ProfileSettingsView = () => {
                           field.onChange(newUsers);
                         }}
                         disabled={!isEditable}
-                        error={errors?.users?.[index]?.name?.message}
+                        // error={errors?.users?.[index]?.name?.message}
+                        error={(errors as any)?.users?.[index]?.name?.message}
+
                         className="mb-2"
                       />
                       <Input
@@ -134,7 +144,9 @@ const ProfileSettingsView = () => {
                           field.onChange(newUsers);
                         }}
                         disabled={!isEditable}
-                        error={errors?.users?.[index]?.email?.message}
+                        // error={errors?.users?.[index]?.email?.message}
+                        error={(errors as any)?.users?.[index]?.email?.message}
+
                         className="mb-2"
                         prefix={<PiEnvelopeSimple className="h-6 w-6 text-gray-500" />}
                       />

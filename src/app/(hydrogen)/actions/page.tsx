@@ -17,7 +17,11 @@ const pageHeader = {
   ],
 };
 
-
+interface DrawerState {
+  isOpen: boolean;
+  triggerDetails: EmailTrigger | null;
+  isEditable: boolean;
+}
 
 import { Drawer, Text, Input, Textarea, Badge, Table, Button } from 'rizzui';
 import axiosInstance from '@/axiosInstance'; // Adjust your import for axiosInstance
@@ -63,12 +67,12 @@ export default function EmailTriggersListPage() {
   const [emailTriggers, setEmailTriggers] = useState<EmailTrigger[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
- 
-  const [drawerState, setDrawerState] = useState({
-    isOpen: false,
-    triggerDetails: null as EmailTrigger | null, // Store trigger details here
-  });
 
+  const [drawerState, setDrawerState] = useState<DrawerState>({
+    isOpen: false,
+    triggerDetails: null,
+    isEditable: false,
+  });
 
   useEffect(() => {
     async function fetchData() {
@@ -88,23 +92,38 @@ export default function EmailTriggersListPage() {
     fetchData();
   }, []);
 
-  
+  // const fetchEmailTriggerById = async (triggerId: string) => {
+  //   try {
+  //     const response = await axiosInstance.get(
+  //       `/customers/email_trigger/${triggerId}`
+  //     );
+  //     setDrawerState({
+  //       isOpen: true, // Set isOpen to true to open the drawer
+  //       triggerDetails: response.data, // Store the fetched details
+  //       isEditable: false, // Open in view-only mode initially
+  //     });
+  //   } catch (error) {
+  //     console.error('Failed to fetch email trigger:', error);
+  //   }
+  // };
+
+  // Toggle edit mode for the drawer
+
   const fetchEmailTriggerById = async (triggerId: string) => {
     try {
       const response = await axiosInstance.get(
         `/customers/email_trigger/${triggerId}`
       );
       setDrawerState({
-        isOpen: true, // Set isOpen to true to open the drawer
-        triggerDetails: response.data, // Store the fetched details
-        isEditable: false, // Open in view-only mode initially
+        isOpen: true,
+        triggerDetails: response.data,
+        isEditable: false,
       });
     } catch (error) {
       console.error('Failed to fetch email trigger:', error);
     }
   };
 
-  // Toggle edit mode for the drawer
   const handleEditToggle = () => {
     setDrawerState((prevState) => ({
       ...prevState,
@@ -250,12 +269,24 @@ export default function EmailTriggersListPage() {
                 </>
               ) : (
                 <>
-                  <Button
+                  {/* <Button
                     variant="outline"
                     onClick={() =>
                       setDrawerState({
                         isOpen: false,
                         triggerDetails: null as EmailTrigger | null, // Store trigger details here
+                      })
+                    }
+                  >
+                    Close
+                  </Button> */}
+                  <Button
+                    variant="outline"
+                    onClick={() =>
+                      setDrawerState({
+                        isOpen: false,
+                        triggerDetails: null,
+                        isEditable: false, // Include the isEditable property
                       })
                     }
                   >
