@@ -48,7 +48,7 @@ export default function SignInForm() {
       //  }
 
       toast.success('Login successful!', {
-        duration: 300,
+        duration: 2000,
         position: 'top-center',
       });
 

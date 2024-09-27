@@ -52,8 +52,8 @@ export default function PasswordSettingsView({
           return (
             <>
               <ProfileHeader
-                title="Olivia Rhye"
-                description="olivia@example.com"
+                // title="Olivia Rhye"
+                // description="olivia@example.com"
               />
 
               <div className="mx-auto w-full max-w-screen-2xl">
