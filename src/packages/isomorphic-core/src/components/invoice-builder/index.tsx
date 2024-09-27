@@ -10,7 +10,7 @@ import {
   InvoiceType,
   invoiceBuilderSchema,
   INVOICE_BUILDER_DEFAULT_VALUE,
-} from "../../../../../apps/isomorphic-i18n/src/validators/invoice-builder.schema";
+} from "src/validators/invoice-builder.schema.ts";
 import { zodResolver } from "@hookform/resolvers/zod";
 import CalcPayBlock from "./invoice-details/calc-pay-block";
 import { FormProvider, SubmitHandler, useForm } from "react-hook-form";
