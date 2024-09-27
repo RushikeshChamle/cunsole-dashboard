@@ -12,11 +12,11 @@ import { useBerylliumSidebars } from '@/layouts/beryllium/beryllium-utils';
 
 const menuItems = [
   {
-    label: 'My Details',
+    label: 'Account Details',
     value: '/forms/profile-settings',
   },
   {
-    label: 'Profile',
+    label: 'User Details',
     value: '/forms/profile-settings/profile',
   },
   {
