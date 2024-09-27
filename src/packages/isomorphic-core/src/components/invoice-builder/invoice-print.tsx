@@ -2,7 +2,7 @@ import Image from 'next/image';
 import { forwardRef } from 'react';
 import { Text, Title } from 'rizzui';
 import cn from '../../utils/class-names';
-import { InvoiceType } from '../../../../../apps/isomorphic-i18n/src/validators/invoice-builder.schema';
+import { InvoiceType } from 'src/validators/invoice-builder.schema.ts';
 
 interface InvoicePrintProps {
   data: InvoiceType;
