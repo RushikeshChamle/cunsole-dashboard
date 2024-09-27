@@ -7,6 +7,10 @@ import { signOut } from 'next-auth/react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useEffect, useState } from 'react';
+import { useRouter } from 'next/navigation';
+
+import Cookies from 'js-cookie';
+import { toast } from 'react-hot-toast';
 
 export default function ProfileMenu({
   buttonClassName,
@@ -82,6 +86,62 @@ const menuItems = [
 ];
 
 function DropdownMenu() {
+  const router = useRouter();
+
+  // const handleSignOut = async () => {
+  //   // Clear the JWT tokens from cookies
+  //   Cookies.remove('access_token');
+  //   Cookies.remove('refresh_token');
+
+  //   try {
+  //     // Sign out using next-auth
+  //     await signOut({ redirect: false });
+
+  //     // Redirect to the login page
+  //     router.push('/auth/sign-in-4');
+  //   } catch (error) {
+  //     console.error('Error during sign out:', error);
+  //     // Fallback: force redirect even if there's an error
+  //     window.location.href = '/auth/sign-in-4';
+  //   }
+  // };
+
+  const handleSignOut = async () => {
+    try {
+      // Clear the JWT tokens from cookies
+      Cookies.remove('access_token');
+      Cookies.remove('refresh_token');
+  
+      // Sign out using next-auth
+      await signOut({ redirect: false });
+  
+      // Show success toast
+      toast.success('Signed out successfully', {
+        duration: 2000,
+        position: 'top-center',
+      });
+  
+      // Redirect to the login page after a short delay
+      setTimeout(() => {
+        router.push('/auth/sign-in-4');
+      }, 2000);
+    } catch (error) {
+      console.error('Error during sign out:', error);
+      
+      // Show error toast
+      toast.error('Error signing out. Redirecting to login page.', {
+        duration: 3000,
+        position: 'top-center',
+      });
+  
+      // Redirect to login page even if there's an error, but with a longer delay
+      setTimeout(() => {
+        router.push('/auth/sign-in-4');
+      }, 3000);
+    }
+  };
+
+
   return (
     <div className="w-64 text-left rtl:text-right">
       <div className="flex items-center border-b border-gray-300 px-6 pb-5 pt-6">
@@ -111,7 +171,7 @@ function DropdownMenu() {
         <Button
           className="h-auto w-full justify-start p-0 font-medium text-gray-700 outline-none focus-within:text-gray-600 hover:text-gray-900 focus-visible:ring-0"
           variant="text"
-          onClick={() => signOut()}
+          onClick={handleSignOut}
         >
           Sign Out
         </Button>

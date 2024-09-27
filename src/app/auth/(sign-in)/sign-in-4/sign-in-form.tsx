@@ -47,17 +47,30 @@ export default function SignInForm() {
       //    document.cookie = `csrf_token=${csrfToken}; path=/; Secure; SameSite=None`;
       //  }
 
+      toast.success('Login successful!', {
+        duration: 300,
+        position: 'top-center',
+      });
+
         window.location.href = '/invoice';
       } else {
         setError('Invalid credentials. Please try again.');
       }
     } catch (err) {
+      let errorMessage = 'An error occurred. Please try again.';
+
       // Handle the error
       if (axios.isAxiosError(err) && err.response) {
         setError(err.response.data.error || 'An error occurred. Please try again.');
       } else {
         setError('An error occurred. Please try again.');
       }
+
+      toast.error(errorMessage, {
+        duration: 1000,
+        position: 'top-center',
+      });
+      
     } finally {
       setLoading(false);
     }
