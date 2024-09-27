@@ -450,6 +450,7 @@ export default function PersonalInfoView() {
     setIsEditable(false);
     toast.success('Changes saved successfully');
   };
+  
 
   if (loading) return <Loader string="Loading..." />;
   if (error) return <p className="text-red-500">{error}</p>;
