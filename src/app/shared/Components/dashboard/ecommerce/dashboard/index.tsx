@@ -56,7 +56,7 @@ export default function EcommerceDashboard() {
         {/* <StatCards className="@2xl:grid-cols-3 @3xl:gap-6 @4xl:col-span-2 @7xl:col-span-8" /> */}
 
         
-        <StatCards className="@2xl:grid-cols-4 @3xl:gap-6 @4xl:col-span-2 @7xl:col-span-8" />
+        {/* <StatCards className="@2xl:grid-cols-4 @3xl:gap-6 @4xl:col-span-2 @7xl:col-span-8" /> */}
         <ProfitWidget className="h-[464px] @sm:h-[520px] @7xl:col-span-4 @7xl:col-start-9 @7xl:row-start-1 @7xl:row-end-3 @7xl:h-full" />
 
         <SalesReport className="@4xl:col-span-2 @7xl:col-span-8" />
