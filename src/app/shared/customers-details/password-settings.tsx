@@ -6,7 +6,7 @@ import { PiDesktop } from 'react-icons/pi';
 import { Form } from '@ui/form';
 import { Button, Password, Title, Text } from 'rizzui';
 import cn from '@utils/class-names';
-import { ProfileHeader } from '@/app/shared/account-settings/profile-settings';
+// import { ProfileHeader } from '@/app/shared/account-settings/profile-settings';
 import HorizontalFormBlockWrapper from '@/app/shared/account-settings/horiozontal-block';
 import {
   passwordFormSchema,
@@ -51,10 +51,10 @@ export default function PasswordSettingsView({
         {({ register, control, formState: { errors }, getValues }) => {
           return (
             <>
-              <ProfileHeader
+              {/* <ProfileHeader
                 title="Olivia Rhye"
                 description="olivia@example.com"
-              />
+              /> */}
 
               <div className="mx-auto w-full max-w-screen-2xl">
                 <HorizontalFormBlockWrapper

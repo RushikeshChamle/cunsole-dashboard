@@ -6,7 +6,8 @@ import { PiDesktop } from 'react-icons/pi';
 import { Form } from '@ui/form';
 import { Button, Password, Title, Text } from 'rizzui';
 import cn from '@utils/class-names';
-import ProfileHeader  from '@/app/shared/account-settings/profile-settings';
+
+// import ProfileHeader from '@/app/shared/profile/profile-header';
 import HorizontalFormBlockWrapper from '@/app/shared/account-settings/horiozontal-block';
 import {
   passwordFormSchema,

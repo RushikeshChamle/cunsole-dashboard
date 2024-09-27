@@ -50,7 +50,7 @@ export default function ProfileSettingsView() {
           getValues,
           setValue,
           formState: { errors },
-        }) => {
+        }) => {git 
           return (
             <>
               <ProfileHeader
