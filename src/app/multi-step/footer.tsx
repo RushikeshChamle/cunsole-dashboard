@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect } from 'react';
+import { Suspense, useEffect } from 'react';
 import { useSetAtom } from 'jotai';
 import { useResetAtom } from 'jotai/utils';
 import { PiArrowUpLight, PiCheck } from 'react-icons/pi';
@@ -41,7 +41,14 @@ function buttonLabel(formId?: number) {
 export default function Footer({ isLoading, className }: FooterProps) {
   const { push } = useRouter();
   const pathname = usePathname();
+
+
+
   const searchParams = useSearchParams();
+
+
+
+
   const setFormData = useSetAtom(formDataAtom);
   const { step, gotoPrevStep } = useStepperOne();
   const resetLocation = useResetAtom(stepperAtomOne);
@@ -62,6 +69,7 @@ export default function Footer({ isLoading, className }: FooterProps) {
   }
 
   return (
+    <Suspense fallback={<div>Loading...</div>}>
     <footer
       className={cn(
         'fixed bottom-0 left-0 right-0 flex items-center justify-between gap-3 px-4 py-5 lg:px-8 4xl:px-10',
@@ -90,5 +98,11 @@ export default function Footer({ isLoading, className }: FooterProps) {
         {buttonLabel(step)}
       </Button>
     </footer>
+    </Suspense>
+
   );
 }
+
+
+
+
