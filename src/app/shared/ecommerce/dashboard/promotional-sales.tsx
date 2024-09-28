@@ -437,7 +437,7 @@ export default function PromotionalSales({
       <div className="mt-5 aspect-[1060/800] w-full lg:mt-7" style={{
 
         position:"relative",
-        top
+
       }}>
         <ResponsiveContainer width="100%" height="100%">
           <BarChart
