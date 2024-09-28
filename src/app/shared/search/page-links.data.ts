@@ -204,6 +204,11 @@ export const pageLinks = [
   //   href: routes.forms.multiStep,
   // },
   {
+    name: 'Multi Step',
+    href: routes.multiStep,
+    icon: 'MultiStepArrowIcon',
+  },
+  {
     name: 'Payment checkout',
     href: routes.eCommerce.checkout,
   },

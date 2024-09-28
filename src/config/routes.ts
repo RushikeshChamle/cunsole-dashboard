@@ -131,6 +131,7 @@ export const routes = {
     tanTableEnhanced: '/tables/tan-table-enhanced',
     tanTableCollapsible: '/tables/tan-table-collapsible',
   },
+
   multiStep: '/multi-step',
   forms: {
     profileSettings: '/forms/profile-settings',

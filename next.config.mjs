@@ -51,7 +51,7 @@ const nextConfig = {
     ],
   },
   reactStrictMode: true,
-  transpilePackages: ["@isomorphic/core"],
+  
 };
 
 export default nextConfig;
