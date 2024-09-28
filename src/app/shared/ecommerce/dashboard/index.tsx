@@ -45,14 +45,14 @@ export default function EcommerceDashboard() {
   //   </>
   // }
 
-  title={
-    <>
+  // title={
+  //   <>
 
-      {/* Good Morning, <br /> Morgan{' '}
-      <HandWaveIcon className="inline-flex h-8 w-8" /> */}
-    </>
-  }
-  description={
+  //     {/* Good Morning, <br /> Morgan{' '}
+  //     <HandWaveIcon className="inline-flex h-8 w-8" /> */}
+  //   </>
+  // }
+  title={
     <>
       <h2>Good Morning, <br /> Morgan{' '}
         <HandWaveIcon className="inline-flex h-8 w-8" />
