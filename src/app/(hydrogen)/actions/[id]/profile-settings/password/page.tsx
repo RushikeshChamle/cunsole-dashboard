@@ -1,6 +1,8 @@
 import { metaObject } from '@/config/site.config';
 import PasswordSettingsView from '@/app/shared/account-settings/password-settings';
 
+
+export const runtime = 'edge';
 export const metadata = {
   ...metaObject('Password'),
 };

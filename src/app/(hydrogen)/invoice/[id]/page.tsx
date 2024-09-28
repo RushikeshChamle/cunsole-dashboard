@@ -33,6 +33,9 @@ import { Modal, Text, ActionIcon, Input, Password, Checkbox } from 'rizzui';
 import TextArea from 'antd/es/input/TextArea';
 import { stringify } from 'querystring';
 
+
+
+export const runtime = 'edge';
 // Define TypeScript interfaces for your data
 interface Invoice {
   customid: string;

@@ -7,6 +7,7 @@ import MessageDetails from '@/app/shared/support/inbox/message-details';
 type Props = {
   params: { id: string };
 };
+export const runtime = 'edge';
 
 /**
  * for dynamic metadata
