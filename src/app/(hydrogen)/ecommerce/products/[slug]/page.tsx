@@ -6,7 +6,7 @@ import { metaObject } from '@/config/site.config';
 export const metadata = {
   ...metaObject('Product Details'),
 };
-export const runtime = 'edge';
+
 export default function ProductDetailsPage({ params }: any) {
   const pageHeader = {
     title: 'Shop',

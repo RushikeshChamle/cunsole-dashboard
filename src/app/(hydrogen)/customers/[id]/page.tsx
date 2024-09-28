@@ -8,7 +8,7 @@ import { CartProvider } from '@/store/quick-cart/cart.context';
 import OrderDetailsPage from '@/app/shared/Components/customersdetails/OrderDetailsPage';
 
 
-export const runtime = 'edge';
+
 
 export default function SomeOtherPage({ params }: any) {
   return (

@@ -4,7 +4,6 @@ import PasswordSettingsView from '@/app/shared/account-settings/password-setting
 export const metadata = {
   ...metaObject('Password'),
 };
-export const runtime = 'edge';
 
 export default function ProfileSettingsFormPage() {
   return (

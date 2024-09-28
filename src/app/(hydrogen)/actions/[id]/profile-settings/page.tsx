@@ -1,7 +1,7 @@
 import { metaObject } from '@/config/site.config';
 import PersonalInfoView from '@/app/shared/cunsolecomponents/customers-details/personal-info';
 
-export const runtime = 'edge';
+
 export const metadata = {
   ...metaObject('Profile Settings'),
 };

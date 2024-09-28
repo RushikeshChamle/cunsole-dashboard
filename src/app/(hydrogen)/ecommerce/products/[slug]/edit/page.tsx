@@ -11,7 +11,7 @@ import { routes } from '@/config/routes';
 type Props = {
   params: { slug: string };
 };
-export const runtime = 'edge';
+
 /**
  * for dynamic metadata
  * @link: https://nextjs.org/docs/app/api-reference/functions/generate-metadata#generatemetadata-function
