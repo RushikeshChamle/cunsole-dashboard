@@ -145,10 +145,6 @@
   "engines": {
     "node": ">=18.15.0"
   },
-  "browser": {
-    "crypto": false,
-    "stream": false
-  },
   "readme": "ERROR: No README data found!",
   "_id": "isomorphic-furyroad@0.0.1"
 }
