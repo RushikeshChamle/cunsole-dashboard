@@ -618,29 +618,7 @@ export default function CustomersListPage() {
             <Table.Head></Table.Head>
           </Table.Row>
         </Table.Header>
-        {/* <Table.Body>
-          {customers.length === 0 ? (
-            <Table.Row>
-              <Table.Cell colSpan={7} className="text-center">No customers found</Table.Cell>
-            </Table.Row>
-          ) : (
-            customers.map((customer) => (
-              <Table.Row key={customer.id}>
-                <Table.Cell>{customer.id}</Table.Cell>
-                <Table.Cell>{customer.name}</Table.Cell>
-                <Table.Cell>{customer.email}</Table.Cell>
-                <Table.Cell>{customer.phone}</Table.Cell>
-                <Table.Cell>{customer.total_amount_to_pay}</Table.Cell>
-                <Table.Cell>{customer.total_paid_amount}</Table.Cell>
-                 <Table.Cell>
-                <Link href={`/customers/${customer.id}`}>
-                  <Button variant="outline" size="sm">Details</Button>
-                </Link>
-              </Table.Cell>
-              </Table.Row>
-            ))
-          )}
-        </Table.Body> */}
+      
         <Table.Body>
           {filteredCustomers.length === 0 ? (
             <Table.Row>

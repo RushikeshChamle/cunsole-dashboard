@@ -18,7 +18,6 @@ import { Collapse } from 'rizzui';
 import cn from '@utils/class-names';
 import Timeline from '@/app/shared/logistics/tracking/timeline';
 
-
 import { RxCross2 } from 'react-icons/rx';
 
 import {
@@ -62,7 +61,6 @@ interface Customer {
   total_paid_amount: number;
 }
 
-
 interface Payment {
   invoice: string;
   amount: number;
@@ -73,9 +71,8 @@ interface Payment {
   payment_date: string;
 }
 
-
 interface InvoiceDetails {
-  invoice: Invoice;  // Assuming this is the type for the invoice
+  invoice: Invoice; // Assuming this is the type for the invoice
   customer: Customer; // Replace with your actual Customer type
   payments: Payment[]; // Assuming payments is an array of Payment
 }
@@ -93,7 +90,6 @@ const handleChange = (value: string) => {
   console.log(`selected ${value}`);
 };
 
-
 // Utility function to determine the file type from the URL
 const getFileType = (url: string) => {
   const extension = url.split('.').pop(); // Get the last part after the dot
@@ -102,12 +98,12 @@ const getFileType = (url: string) => {
   if (extension) {
     const lowerCaseExtension = extension.toLowerCase(); // Convert to lowercase
     if (['pdf'].includes(lowerCaseExtension)) return 'pdf';
-    if (['jpg', 'jpeg', 'png', 'gif', 'bmp'].includes(lowerCaseExtension)) return 'image';
+    if (['jpg', 'jpeg', 'png', 'gif', 'bmp'].includes(lowerCaseExtension))
+      return 'image';
   }
 
   return 'unknown'; // Default return value if extension is undefined or does not match
 };
-
 
 // Define FileViewer component
 const FileViewer = ({ url }: { url: string }) => {
@@ -168,25 +164,24 @@ const multiselectoptions = [
   { label: 'Cherry 🍒', value: 'cherry' },
 ];
 
-
 interface InvoiceDetails {
-  invoice: Invoice;  
-  customer: Customer; 
-  payments: Payment[]; 
+  invoice: Invoice;
+  customer: Customer;
+  payments: Payment[];
 }
-
-
 
 export default function InvoiceDetailsPage() {
   const router = useRouter();
   const { id } = useParams(); // Use useParams to get the dynamic route parameter
 
-
   const [modalState, setModalState] = useState(false);
   const [drawerState, setDrawerState] = useState(false);
   // const [invoiceData, setInvoiceData] = useState<Invoice | null>(null);
   const [invoiceData, setInvoiceData] = useState<InvoiceDetails | null>(null);
-
+  const [amount, setAmount] = useState('');
+  //  const [method, setMethod] = useState('');
+  const [method, setMethod] = useState('');
+  const [reference, setReference] = useState('');
 
   const [fileUrl, setFileUrl] = useState<string>('');
   const [isLoading, setIsLoading] = useState<boolean>(true);
@@ -200,15 +195,10 @@ export default function InvoiceDetailsPage() {
 
   // const [reminderError, setReminderError] = useState(null);
   const [reminderError, setReminderError] = useState<string | null>(null);
-  
 
   // const [value, setValue] = useState(null);
   const [value, setValue] = useState([]);
   // State hooks to manage form inputs
-  const [amount, setAmount] = useState('');
-  const [method, setMethod] = useState('');
-  const [reference, setReference] = useState('');
-
 
   const options = [
     { label: 'Credit Card', value: 'Credit Card' },
@@ -239,36 +229,6 @@ export default function InvoiceDetailsPage() {
     },
   ];
 
-
-  // useEffect(() => {
-  //   async function fetchData() {
-  //     if (!id) {
-  //       setError(new Error('Invoice ID is missing'));
-  //       setIsLoading(false);
-  //       return;
-  //     }
-  
-  //     setIsLoading(true);
-  //     setError(null);
-  //     try {
-  //       // Fetching invoice details
-  //       const response = await axiosInstance.get(`/invoices/invoice_details/${id}/`);
-  //       setInvoiceData(response.data);
-  //       setFileUrl(response.data.invoice.file_path);
-  
-  //       // Fetching reminders for the invoice
-  //       const remindersResponse = await axiosInstance.get(`/customers/invoices/${id}/dynamic_next_reminders/`);
-  //       setReminders(remindersResponse.data.reminders); // Store reminders in state
-  //     } catch (err) {
-  //       setError(err as Error);
-  //     } finally {
-  //       setIsLoading(false);
-  //     }
-  //   }
-  
-  //   fetchData();
-  // }, [id]);
-  
   useEffect(() => {
     async function fetchData() {
       if (!id) {
@@ -276,29 +236,35 @@ export default function InvoiceDetailsPage() {
         setIsLoading(false);
         return;
       }
-  
+
       setIsLoading(true);
       setError(null);
       try {
         // Fetching invoice details
-        const response = await axiosInstance.get(`/invoices/invoice_details/${id}/`);
+        const response = await axiosInstance.get(
+          `/invoices/invoice_details/${id}/`
+        );
         setInvoiceData(response.data);
         setFileUrl(response.data.invoice.file_path);
         // Fetching reminders for the invoice
         const fetchReminders = async () => {
           try {
             // const remindersResponse = await axiosInstance.get(`/customers/invoices/${id}/dynamic_next_reminders/`);
-            const remindersResponse = await axiosInstance.get(`/customers/invoices/${id}/all-reminders/`);
+            const remindersResponse = await axiosInstance.get(
+              `/customers/invoices/${id}/all-reminders/`
+            );
             setReminders(remindersResponse.data.reminders);
           } catch (error: any) {
             if (error.response && error.response.status === 404) {
-              setReminderError("No future reminders scheduled for this invoice.");
+              setReminderError(
+                'No future reminders scheduled for this invoice.'
+              );
             } else {
-              setReminderError("An error occurred while fetching reminders.");
+              setReminderError('An error occurred while fetching reminders.');
             }
           }
         };
-    
+
         await fetchReminders();
       } catch (err: any) {
         setError(err);
@@ -310,38 +276,63 @@ export default function InvoiceDetailsPage() {
     fetchData();
   }, [id]);
 
-
-
   const handleAddPayment = async (event: any) => {
     event.preventDefault();
-    try {
-      const response = await axiosInstance.post('/invoices/add_payment/', {
-        invoice: id,
-        amount: parseFloat(amount), // Convert to a number
-        method,
-        reference,
-        account: 'account_id', // Replace with actual account ID
-        user: 'user_id', // Replace with actual user ID
-        payment_date: new Date().toISOString(),
-      });
+    const paymentPayload = {
+      invoice: id,
+      amount: parseFloat(amount),
+      method,
+      reference,
+      payment_date: new Date().toISOString(),
+    };
+    console.log('Payment Payload:', paymentPayload); // Log the payload
 
+    try {
+      const response = await axiosInstance.post(
+        '/invoices/add_payment/',
+        paymentPayload
+      );
       console.log('Payment added successfully:', response.data);
-      setModalState(false); // Close the modal on success
+      setModalState(false);
+      // Refresh invoice data after adding payment
+      const updatedInvoiceResponse = await axiosInstance.get(
+        `/invoices/invoice_details/${id}/`
+      );
+      setInvoiceData(updatedInvoiceResponse.data);
     } catch (error) {
       console.error('Failed to add payment:', error);
+      // Handle error (e.g., show error message to user)
     }
   };
 
-  const handleAmountChange = (event : any) => setAmount(event.target.value);
-  const handleMethodChange = (option: any) => setMethod(option.value);
-  // const handleReferenceChange = (even: any) => setReference(event.target.value);
+  const handleAmountChange = (event: any) => setAmount(event.target.value);
+  // const handleMethodChange = (option: any) => {
+  //   console.log("Selected Payment Method:", option.value);
+  //   setMethod(option.value);
+  // };
 
-
-  const handleReferenceChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
-    setReference(event.target.value);
+  const handleMethodChange = (option: any) => {
+    console.log('Selected Payment Method:', option);
+    if (option && typeof option === 'object') {
+      console.log('Option value:', option.value);
+      console.log('Option label:', option.label);
+      setMethod(option.value);
+    } else if (typeof option === 'string') {
+      console.log('Option (string):', option);
+      setMethod(option);
+    } else {
+      console.log('Unexpected option type:', typeof option);
+    }
   };
-  
-  
+
+  const handleReferenceChange = (event: any) =>
+    setReference(event.target.value);
+
+  // const handleReferenceChange = (
+  //   event: React.ChangeEvent<HTMLTextAreaElement>
+  // ) => {
+  //   setReference(event.target.value);
+  // };
 
   const memoizedFileViewer = useMemo(() => {
     return fileUrl ? <FileViewer url={fileUrl} /> : null;
@@ -361,13 +352,11 @@ export default function InvoiceDetailsPage() {
 
   const { invoice, customer, payments } = invoiceData;
 
-
-
   return (
     <>
       {/* <PageHeader title={pageHeader.title} breadcrumb={pageHeader.breadcrumb}></PageHeader> */}
 
-      <Modal isOpen={modalState} onClose={() => setModalState(false)}>
+      {/* <Modal isOpen={modalState} onClose={() => setModalState(false)}>
         <div className="mx-auto max-w-2xl rounded-lg bg-white p-8 shadow-md">
           <div className="mb-8 flex items-center justify-between">
             <h3 className="text-2xl font-semibold text-gray-800">
@@ -424,6 +413,75 @@ export default function InvoiceDetailsPage() {
                   Payment Method
                 </label>
                 <Select options={options} onChange={handleMethodChange} />
+              </div>
+              <div>
+                <label className="text-sm font-medium text-gray-700">
+                  Reference
+                </label>
+                <TextArea
+                  placeholder="Payment for Invoice"
+                  value={reference}
+                  onChange={handleReferenceChange}
+                />
+              </div>
+            </div>
+            <div className="flex justify-end">
+              <Button
+                type="submit"
+                className="rounded-lg bg-blue-500 px-4 py-2 font-medium text-white hover:bg-blue-600"
+              >
+                Save Payment
+              </Button>
+            </div>
+          </form>
+        </div>
+      </Modal> */}
+
+      <Modal isOpen={modalState} onClose={() => setModalState(false)}>
+        <div className="mx-auto max-w-2xl rounded-lg bg-white p-8 shadow-md">
+          <div className="mb-8 flex items-center justify-between">
+            <h3 className="text-2xl font-semibold text-gray-800">
+              Add Payment
+            </h3>
+            <button
+              onClick={() => setModalState(false)}
+              className="text-gray-500 hover:text-gray-700"
+            >
+              <RxCross2 className="h-6 w-6" />
+            </button>
+          </div>
+
+          <form onSubmit={handleAddPayment}>
+            <div className="mb-6 grid grid-cols-1 gap-8">
+              <div>
+                <label className="text-sm font-medium text-gray-700">
+                  Amount
+                </label>
+                <Input
+                  type="number"
+                  placeholder="Enter Amount"
+                  value={amount}
+                  onChange={handleAmountChange}
+                />
+              </div>
+              <div>
+                <label className="text-sm font-medium text-gray-700">
+                  Payment Method
+                </label>
+
+                <Select
+                  options={[
+                    { label: 'Credit Card', value: 'Credit Card' },
+                    { label: 'Debit Card', value: 'Debit Card' },
+                    { label: 'Cash', value: 'Cash' },
+                    { label: 'Net Banking', value: 'Net Banking' },
+                    { label: 'Credit', value: 'Credit' },
+                    { label: 'UPI', value: 'UPI' },
+                  ]}
+                  onChange={handleMethodChange}
+                  value={method ? { label: method, value: method } : null}
+                  placeholder="Select a payment method"
+                />
               </div>
               <div>
                 <label className="text-sm font-medium text-gray-700">
@@ -620,149 +678,6 @@ export default function InvoiceDetailsPage() {
         </div>
       </PageHeader>
 
-      {/* <PageHeader title="Invoice Details" breadcrumb={['Home', 'Invoices', invoice.customid]}>
-        <div className="mt-4 flex items-center gap-3 @lg:mt-0">
-          <Button variant="outline" onClick={() => setDrawerState(true)}>
-            <PiEnvelopeBold className="me-1.5 h-[17px] w-[17px]" />
-            Email Invoice
-          </Button>
-    
-
-
-
-
-          <Dropdown>
-
-          <Drawer
-      isOpen={drawerState}
-      size="lg"
-      onClose={() => setDrawerState(false)}
-    >
-      <div
-        style={{
-          display: 'flex',
-          flexDirection: 'column',
-          height: '100%',
-        }}
-      >
-        <div
-          style={{
-            padding: '24px',
-            flexGrow: 1,
-            overflowY: 'auto',
-            // backgroundColor: '#f9fafb', // Light gray background
-          }}
-        >
-          <Title className="text-2xl font-bold mb-6">Send Manual Email to Customer</Title>
-
-          <div
-            style={{
-              backgroundColor: '#ffffff', // White background
-              padding: '16px',
-              borderRadius: '8px',
-              marginBottom: '24px',
-              boxShadow: '0 2px 4px rgba(0,0,0,0.1)', // Subtle shadow
-            }}
-          >
-            <Title as="h3" className="text-lg font-semibold mb-3">Customer Details</Title>
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
-              <Text><strong>Name:</strong> {customerData.name}</Text>
-              <Text><strong>Account Manager:</strong> {customerData.accountManager}</Text>
-              <Text><strong>Current Total Amount:</strong> ${customerData.totalAmount.toLocaleString()}</Text>
-              <Text><strong>Balance Remaining:</strong> ${customerData.balanceRemaining.toLocaleString()}</Text>
-            </div>
-          </div>
-
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
-            <Input
-              label="Subject"
-              placeholder="Enter email subject"
-              value={subject}
-              onChange={(e) => setSubject(e.target.value)}
-            />
-            <Input
-              label="Send Email to"
-              placeholder="Enter recipient email"
-              value={sendTo}
-              onChange={(e) => setSendTo(e.target.value)}
-              defaultValue={customerData.email}
-            />
-            <Input
-              label="Add CC "
-              placeholder="Enter recipient email"
-              value={addCC}
-              onChange={(e) => setAddCC(e.target.value)}
-              defaultValue={customerData.cc}
-            />
-            <Textarea
-              label="Email Description"
-              placeholder="Enter email content"
-              value={emailDescription}
-              onChange={(e) => setEmailDescription(e.target.value)}
-              style={{ height: '160px' }} // Fixed height for textarea
-            />
-
-
-<Select
-    mode="tags"
-    style={{ width: '100%' , borderColor: 'red' }}
-    placeholder="Tags Mode"
-    onChange={handleChange}
-    options={optionss}
-    size="large"
-
-
-  />
-
-
-          </div>
-        </div>
-
-        <div
-          style={{
-            padding: '12px',
-            borderTop: '1px solid #e5e7eb', // Light gray border
-            backgroundColor: '#ffffff', // White background
-            boxShadow: '0 -2px 4px rgba(0,0,0,0.1)', // Subtle shadow
-          }}
-        >
-          <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '12px' }}>
-            <Button
-              variant="outline"
-              onClick={() => setDrawerState(false)}
-              style={{ borderColor: '#ddd', color: '#333' }} // Outline style
-            >
-              Cancel
-            </Button>
-            <Button
-              variant="solid"
-              onClick={() => {
-                // Implement send email logic here
-                console.log('Sending email:', { subject, sendTo, emailDescription });
-                setDrawerState(false);
-              }}
-             // Solid style
-            >
-              Send Email
-            </Button>
-          </div>
-        </div>
-      </div>
-    </Drawer>
-            <Dropdown.Trigger>
-              <Button as="span">
-                Actions <PiDownloadSimpleBold className="ml-2 w-5" />
-              </Button>
-            </Dropdown.Trigger>
-            <Dropdown.Menu>
-              <Dropdown.Item>Add Remark</Dropdown.Item>
-              <Dropdown.Item onClick={() => setModalState(true)}>Add Payment Entry</Dropdown.Item>
-              <Dropdown.Item>Send Email</Dropdown.Item>
-            </Dropdown.Menu>
-          </Dropdown>
-        </div>
-      </PageHeader> */}
-
       <div className="">
         <Tab>
           <Tab.List>
@@ -896,7 +811,6 @@ export default function InvoiceDetailsPage() {
               </div>
             </Tab.Panel>
 
-
             {/* <Tab.Panel>
               <div className="rounded-lg bg-white p-6 shadow-lg">
                 <h2 className="mb-6 border-b pb-4 text-2xl font-bold">
@@ -906,36 +820,36 @@ export default function InvoiceDetailsPage() {
               </div>
             </Tab.Panel> */}
 
-<Tab.Panel>
+            <Tab.Panel>
+              <div className="rounded-lg bg-white p-6 shadow-lg">
+                <h2 className="mb-6 border-b pb-4 text-2xl font-bold">
+                  Activity Logs
+                </h2>
 
-
-<div className="rounded-lg bg-white p-6 shadow-lg">
-      <h2 className="mb-6 border-b pb-4 text-2xl font-bold">Activity Logs</h2>
-
-      <h3 className="mt-6 text-xl font-semibold">Invoice Reminders</h3>
-      {reminderError ? (
-        <p>{reminderError}</p>
-      ) : reminders.length > 0 ? (
-        <Timeline 
-          data={reminders.map((reminder) => ({
-            title: reminder.trigger_name,
-            text: reminder.email_subject,
-            date: reminder.reminder_date,
-            hightlightedText: `(${reminder.days_until_reminder} days until reminder)`,
-            status: reminder.days_until_reminder <= 0 ? 'success' : 'pending',
-          }))}
-          className="mt-8"
-        />
-      ) : (
-        <p>No reminders available.</p>
-      )}
-    </div>
-
-
-</Tab.Panel>
-
-
-
+                <h3 className="mt-6 text-xl font-semibold">
+                  Invoice Reminders
+                </h3>
+                {reminderError ? (
+                  <p>{reminderError}</p>
+                ) : reminders.length > 0 ? (
+                  <Timeline
+                    data={reminders.map((reminder) => ({
+                      title: reminder.trigger_name,
+                      text: reminder.email_subject,
+                      date: reminder.reminder_date,
+                      hightlightedText: `(${reminder.days_until_reminder} days until reminder)`,
+                      status:
+                        reminder.days_until_reminder <= 0
+                          ? 'success'
+                          : 'pending',
+                    }))}
+                    className="mt-8"
+                  />
+                ) : (
+                  <p>No reminders available.</p>
+                )}
+              </div>
+            </Tab.Panel>
           </Tab.Panels>
         </Tab>
       </div>
