@@ -6,7 +6,6 @@ import { metaObject } from '@/config/site.config';
 import PageHeader from '@/app/shared/page-header';
 import CreateOrder from '@/app/shared/ecommerce/order/create-order';
 import { orderData } from '@/app/shared/ecommerce/order/order-form/form-utils';
-export const runtime = 'edge';
 
 type Props = {
   params: { id: string };

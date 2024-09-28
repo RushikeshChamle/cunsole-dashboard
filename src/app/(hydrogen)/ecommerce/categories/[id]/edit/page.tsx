@@ -10,7 +10,6 @@ type Props = {
   params: { id: string };
 };
 
-export const runtime = 'edge';
 /**
  * for dynamic metadata
  * @link: https://nextjs.org/docs/app/api-reference/functions/generate-metadata#generatemetadata-function
