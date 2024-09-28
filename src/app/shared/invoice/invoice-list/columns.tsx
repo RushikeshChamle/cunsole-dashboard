@@ -101,13 +101,13 @@ export const getColumns = ({
     key: 'customer',
     width: 250,
 
-    render: (_: string, row: Invoice) => (
-      <AvatarCard
-        src={row.avatar}
-        name={row.name}
-        description={`INV-${row.id}`}
-      />
-    ),
+    // render: (_: string, row: Invoice) => (
+    //   <AvatarCard
+    //     src={row.avatar}
+    //     name={row.name}
+    //     description={`INV-${row.id}`}
+    //   />
+    // ),
   },
   {
     title: <HeaderCell title="Email" />,
