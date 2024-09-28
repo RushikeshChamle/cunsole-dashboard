@@ -3,7 +3,7 @@ import { routes } from '@/config/routes';
 import PageHeader from '@/app/shared/page-header';
 import Link from 'next/link';
 import OrderView from '@/app/shared/ecommerce/order/order-view';
-
+export const runtime = 'edge';
 export default function OrderDetailsPage({ params }: any) {
   const pageHeader = {
     title: `Order #${params.id}`,

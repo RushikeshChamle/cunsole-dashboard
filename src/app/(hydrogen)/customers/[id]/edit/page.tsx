@@ -15,6 +15,7 @@ type Props = {
  * for dynamic metadata
  * @link: https://nextjs.org/docs/app/api-reference/functions/generate-metadata#generatemetadata-function
  */
+export const runtime = 'edge';
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   // read route params

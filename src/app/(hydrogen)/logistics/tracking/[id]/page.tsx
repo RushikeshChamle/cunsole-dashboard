@@ -10,6 +10,7 @@ import { Metadata } from 'next';
 type Props = {
   params: { id: string };
 };
+export const runtime = 'edge';
 
 /**
  * for dynamic metadata

@@ -13,6 +13,7 @@ export const metadata = {
   ...metaObject('Shipment Details'),
 };
 
+export const runtime = 'edge';
 const pageHeader = {
   title: 'Shipment Details',
   breadcrumb: [
