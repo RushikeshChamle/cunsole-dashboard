@@ -38,7 +38,6 @@
 //   Checkbox,
 // } from "rizzui";
 
-
 // // Define TypeScript types for the API response
 // interface Invoice {
 //   id: number;
@@ -127,7 +126,6 @@
 //   if (loading) return <p>Loading...</p>;
 //   // if (error) return <p>Error loading data: {error}</p>;
 
-  
 //   return (
 //     <>
 //       <PageHeader title={pageHeader.title} breadcrumb={pageHeader.breadcrumb}>
@@ -138,7 +136,7 @@
 //             header="ID,Name,Email,Phone,Total Amount to Pay,Total Paid Amount"
 //           />
 //           {/* <Link href={routes.invoice.create} className="w-full @lg:w-auto"> */}
-//             <Button  
+//             <Button
 //           onClick={() =>
 //             setModalState((prevState) => ({
 //               ...prevState,
@@ -175,16 +173,14 @@
 //             </ActionIcon>
 //           </div>
 //           <div className="grid grid-cols-2 gap-y-6 gap-x-5 [&_label>span]:font-medium">
-       
-            
-       
+
 //             <Input label="ID *"  className="col-span-1" size="lg" />
 //             <Input label="Customer Name *"  size="lg"  className="col-span-3" />
 
 //             <Input label="Contact no *"  className="col-span-2"  size="lg" />
 //             <Input label="Email *" size="lg"className="col-span-2"/>
 //             <Input label="Address *"  className="col-span-4" size="lg" />
-            
+
 //             <Input label="City *" size="lg"/>
 //             <Input label="State *" size="lg" />
 //             <Input label="Postal Code *" size="lg" />
@@ -192,9 +188,6 @@
 //             <Input label="Credit Limit *" className="col-span-2" size="lg"/>
 //             <Input label="Payment Terms *" className="col-span-2" size="lg"/>
 
-           
-           
-            
 //             <Button
 //               type="submit"
 //               size="lg"
@@ -209,10 +202,9 @@
 //         </div>
 //       </Modal>
 
-
 //       <Table>
 //   <Table.Header>
-//     <Table.Row > 
+//     <Table.Row >
 //       <Table.Head>ID</Table.Head>
 //       <Table.Head>Customer Name</Table.Head>
 //       <Table.Head>Email</Table.Head>
@@ -231,8 +223,8 @@
 //       </Table.Row>
 //     ) : (
 //       customers.map((customer) => (
-//         <Table.Row key={customer.id} 
-        
+//         <Table.Row key={customer.id}
+
 //         style={{
 //           cursor: "pointer"
 //         }}>
@@ -256,15 +248,11 @@
 //   );
 // }
 
-
-
-"use client"
-
+'use client';
 
 interface ErrorResponse {
   error: string;
 }
-
 
 const pageHeader = {
   title: 'Customers List',
@@ -283,8 +271,8 @@ const pageHeader = {
   ],
 };
 import { Alert } from 'rizzui'; // Adjust the import based on your project structure
-import { RxCross2 } from "react-icons/rx";
-import { Textarea } from "rizzui";
+import { RxCross2 } from 'react-icons/rx';
+import { Textarea } from 'rizzui';
 import { toast } from 'react-hot-toast';
 
 import Link from 'next/link';
@@ -295,15 +283,15 @@ import ExportButton from '@/app/shared/export-button';
 import { metaObject } from '@/config/site.config';
 import useSWR from 'swr';
 import { useEffect, useState } from 'react';
-import { Badge, Table } from "rizzui";
+import { Badge, Table } from 'rizzui';
 import { PiPlusBold } from 'react-icons/pi';
+import { Modal, Text, ActionIcon, Input, Checkbox } from 'rizzui';
+
 import {
-  Modal,
-  Text,
-  ActionIcon,
-  Input,
-  Checkbox,
-} from "rizzui";
+  MagnifyingGlassIcon,
+  ArrowRightIcon,
+  CurrencyDollarIcon,
+} from '@heroicons/react/24/outline';
 
 // Define TypeScript types for the API response
 interface Customer {
@@ -331,13 +319,13 @@ export default function CustomersListPage() {
   const [customers, setCustomers] = useState<Customer[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
+  const [searchTerm, setSearchTerm] = useState<string>(''); // For search input
 
   const [errorMessage, setErrorMessage] = useState('');
 
-
   const [modalState, setModalState] = useState({
     isOpen: false,
-    size: "md",
+    size: 'md',
   });
 
   // Modal form state
@@ -365,12 +353,15 @@ export default function CustomersListPage() {
         return;
       }
 
-      const response = await fetch('http://localhost:9000/customers/cutomerinvoices/', {
-        headers: {
-          'Authorization': `Bearer ${token}`,
-          'Content-Type': 'application/json',
-        },
-      });
+      const response = await fetch(
+        'http://localhost:9000/customers/cutomerinvoices/',
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            'Content-Type': 'application/json',
+          },
+        }
+      );
 
       if (!response.ok) {
         const errorData: any = await response.json();
@@ -378,7 +369,7 @@ export default function CustomersListPage() {
       }
 
       // const data: ApiResponse[] = await response.json();
-      const data = await response.json() as ApiResponse[]; // Assert the type
+      const data = (await response.json()) as ApiResponse[]; // Assert the type
       // Extract customer data from the API response
       const customerData = data.map((customerData) => customerData.customer);
       setCustomers(customerData);
@@ -393,68 +384,78 @@ export default function CustomersListPage() {
     fetchData();
   }, []);
 
-
-
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
-    setFormData(prevData => ({
+    setFormData((prevData) => ({
       ...prevData,
       [name]: value,
     }));
   };
-  
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     const token = getCookie('access_token');
     if (!token) {
       toast.error('No access token found');
       return;
     }
-  
+
     try {
-      const response = await fetch('http://localhost:9000/customers/create_customer/', {
-        method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${token}`,
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(formData),
-      });
-  
+      const response = await fetch(
+        'http://localhost:9000/customers/create_customer/',
+        {
+          method: 'POST',
+          headers: {
+            Authorization: `Bearer ${token}`,
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(formData),
+        }
+      );
+
       if (!response.ok) {
         // const { error } = await response.json();
         // throw new Error(error || 'Failed to create customer');
         const errorData: any = await response.json(); // Use 'any' temporarily
-       throw new Error(errorData.error || 'Failed to create customer');
+        throw new Error(errorData.error || 'Failed to create customer');
       }
-  
+
       toast.success('Customer created successfully');
-      setModalState(prevState => ({ ...prevState, isOpen: false }));
-      await fetchData();  // Refresh customer data after form submission
+      setModalState((prevState) => ({ ...prevState, isOpen: false }));
+      await fetchData(); // Refresh customer data after form submission
     } catch (error: any) {
       toast.error(error.message);
     }
   };
-  
+
+  const filteredCustomers = customers.filter(
+    (customer) =>
+      customer.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      customer.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      customer.phone.includes(searchTerm)
+  );
 
   if (loading) return <p>Loading...</p>;
 
   return (
     <>
-      <PageHeader title={pageHeader.title} breadcrumb={pageHeader.breadcrumb as any}>
+      <PageHeader
+        title={pageHeader.title}
+        breadcrumb={pageHeader.breadcrumb as any}
+      >
         <div className="mt-4 flex items-center gap-3 @lg:mt-0">
           <ExportButton
             data={customers}
             fileName="customer_data"
             header="ID,Name,Email,Phone,Total Amount to Pay,Total Paid Amount"
           />
-          <Button  
+          <Button
             onClick={() =>
               setModalState((prevState) => ({
                 ...prevState,
                 isOpen: true,
-                size: "xl",
+                size: 'xl',
               }))
             }
             className="w-full @lg:w-auto"
@@ -472,9 +473,9 @@ export default function CustomersListPage() {
           setModalState((prevState) => ({ ...prevState, isOpen: false }))
         }
       >
-        <div className="m-auto px-7 pt-6 pb-8">
+        <div className="m-auto px-7 pb-8 pt-6">
           <div className="mb-7 flex items-center justify-between">
-            <Text as="strong" >Create Customer</Text>
+            <Text as="strong">Create Customer</Text>
             <ActionIcon
               size="sm"
               variant="text"
@@ -486,114 +487,128 @@ export default function CustomersListPage() {
             </ActionIcon>
           </div>
 
+          <form
+            onSubmit={handleSubmit}
+            className="grid grid-cols-4 gap-4 [&_label>span]:font-medium"
+          >
+            <Input
+              name="name"
+              value={formData.name}
+              onChange={handleInputChange}
+              label="Customer Name *"
+              // size="lg"
+              className="col-span-4"
+            />
+            <Input
+              name="email"
+              value={formData.email}
+              onChange={handleInputChange}
+              label="Email *"
+              // size="lg"
+              className="col-span-2"
+            />
+            <Input
+              name="phone"
+              value={formData.phone}
+              onChange={handleInputChange}
+              label="Contact no *"
+              // size="lg"
+              className="col-span-2"
+            />
+            <Input
+              name="address"
+              value={formData.address}
+              onChange={handleInputChange}
+              label="Address "
+              // size="lg"
+              className="col-span-4"
+            />
+            <Input
+              name="city"
+              value={formData.city}
+              onChange={handleInputChange}
+              label="City "
+              // size="lg"
+              className="col-span-2"
+            />
+            <Input
+              name="state"
+              value={formData.state}
+              onChange={handleInputChange}
+              label="State "
+              // size="lg"
+              className="col-span-2"
+            />
+            <Input
+              name="postalcode"
+              value={formData.postalcode}
+              onChange={handleInputChange}
+              label="Postal Code "
+              // size="lg"
+              className="col-span-2"
+            />
+            <Input
+              name="country"
+              value={formData.country}
+              onChange={handleInputChange}
+              label="Country "
+              // size="lg"
+              className="col-span-2"
+            />
+            <Input
+              name="creditlimit"
+              value={formData.creditlimit}
+              onChange={handleInputChange}
+              label="Credit Limit "
+              // size="lg"
+              className="col-span-2"
+            />
+            <Input
+              name="paymentterms"
+              value={formData.paymentterms}
+              onChange={handleInputChange}
+              label="Payment Terms "
+              // size="lg"
+              className="col-span-2"
+            />
 
-       
-
-<form onSubmit={handleSubmit} className="grid grid-cols-4 gap-4 [&_label>span]:font-medium">
-  <Input
-    name="name"
-    value={formData.name}
-    onChange={handleInputChange}
-    label="Customer Name *"
-    // size="lg"
-    className="col-span-4"
-  />
-  <Input
-    name="email"
-    value={formData.email}
-    onChange={handleInputChange}
-    label="Email *"
-    // size="lg"
-    className="col-span-2"
-  />
-  <Input
-    name="phone"
-    value={formData.phone}
-    onChange={handleInputChange}
-    label="Contact no *"
-    // size="lg"
-    className="col-span-2"
-  />
-  <Input
-    name="address"
-    value={formData.address}
-    onChange={handleInputChange}
-    label="Address "
-    // size="lg"
-    className="col-span-4"
-  />
-  <Input
-    name="city"
-    value={formData.city}
-    onChange={handleInputChange}
-    label="City "
-    // size="lg"
-    className="col-span-2"
-  />
-  <Input
-    name="state"
-    value={formData.state}
-    onChange={handleInputChange}
-    label="State "
-    // size="lg"
-    className="col-span-2"
-  />
-  <Input
-    name="postalcode"
-    value={formData.postalcode}
-    onChange={handleInputChange}
-    label="Postal Code "
-    // size="lg"
-    className="col-span-2"
-  />
-  <Input
-    name="country"
-    value={formData.country}
-    onChange={handleInputChange}
-    label="Country "
-    // size="lg"
-    className="col-span-2"
-  />
-  <Input
-    name="creditlimit"
-    value={formData.creditlimit}
-    onChange={handleInputChange}
-    label="Credit Limit "
-    // size="lg"
-    className="col-span-2"
-  />
-  <Input
-    name="paymentterms"
-    value={formData.paymentterms}
-    onChange={handleInputChange}
-    label="Payment Terms "
-    // size="lg"
-    className="col-span-2"
-  />
-
-
-  {/* <Input 
+            {/* <Input 
     name="id"
     label="ID *"  
     // size="lg"
     className="col-span-4"
   /> */}
-  <Button
-    type="submit"
-    // size="lg"
-    className="col-span-4 mt-2"
-  >
-    Create Customer
-  </Button>
-</form>
+            <Button
+              type="submit"
+              // size="lg"
+              className="col-span-4 mt-2"
+            >
+              Create Customer
+            </Button>
+          </form>
         </div>
       </Modal>
 
-
+      {/* Search Bar */}
+      <div
       
+        style={{
+          position: 'relative',
+          width: '17rem',
+        }}
+      >
+        <Input
+          className="mb-2"
+          prefix={<MagnifyingGlassIcon className="w-4" />}
+          placeholder="Search"
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+        />
+      </div>
+
       <Table>
         <Table.Header>
-          <Table.Row> 
+          <Table.Row>
             <Table.Head>ID</Table.Head>
             <Table.Head>Customer Name</Table.Head>
             <Table.Head>Email</Table.Head>
@@ -603,7 +618,7 @@ export default function CustomersListPage() {
             <Table.Head></Table.Head>
           </Table.Row>
         </Table.Header>
-        <Table.Body>
+        {/* <Table.Body>
           {customers.length === 0 ? (
             <Table.Row>
               <Table.Cell colSpan={7} className="text-center">No customers found</Table.Cell>
@@ -625,8 +640,35 @@ export default function CustomersListPage() {
               </Table.Row>
             ))
           )}
+        </Table.Body> */}
+        <Table.Body>
+          {filteredCustomers.length === 0 ? (
+            <Table.Row>
+              <Table.Cell colSpan={6} className="text-center">
+                No customers found
+              </Table.Cell>
+            </Table.Row>
+          ) : (
+            filteredCustomers.map((customer) => (
+              <Table.Row key={customer.id}>
+                <Table.Cell>{customer.id}</Table.Cell>
+                <Table.Cell>{customer.name}</Table.Cell>
+                <Table.Cell>{customer.email}</Table.Cell>
+                <Table.Cell>{customer.phone}</Table.Cell>
+                <Table.Cell>{customer.total_amount_to_pay}</Table.Cell>
+                <Table.Cell>{customer.total_paid_amount}</Table.Cell>
+                <Table.Cell>
+                  <Link href={`/customers/${customer.id}`}>
+                    <Button size='sm' variant="outline">Details</Button>
+                  </Link>
+                </Table.Cell>
+              </Table.Row>
+            ))
+          )}
         </Table.Body>
       </Table>
     </>
   );
 }
+
+

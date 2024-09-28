@@ -81,41 +81,52 @@ export default function ProfileSettingsView() {
     >
       {({ register, formState: { errors } }) => (
         <>
+        
           <FormGroup
-            title="Account Info"
-            description="View and edit your account details"
+            title="User Info"
+            description="View and edit your details"
             className="pt-7 @2xl:pt-9 @3xl:grid-cols-12 @3xl:pt-11"
           />
+         
 
           <div className="mb-10 grid gap-7 divide-y divide-dashed divide-gray-200 @2xl:gap-9 @3xl:gap-11">
-            <Controller
-              control={control}
-              name="accounts"
-              render={({ field }) => (
-                <FormGroup
-                  title="Accounts"
-                  className="pt-7 @2xl:pt-9 @3xl:grid-cols-12 @3xl:pt-11"
-                >
-                  {field.value?.map((account, index) => (
-                    <div key={account.id} className="mb-4">
-                      <Input
-                        label="Name"
-                        {...register(`accounts.${index}.name` as const)}
-                        disabled={!isEditable}
-                        error={errors.accounts?.[index]?.name?.message}
-                        className="mb-2"
-                      />
-                      <Input
-                        label="Active"
-                        value={account.is_active ? 'Yes' : 'No'}
-                        disabled
-                        className="mb-2"
-                      />
-                    </div>
-                  ))}
-                </FormGroup>
-              )}
-            />
+
+
+<Controller
+  control={control}
+  name="users"
+  render={({ field }) => (
+    <FormGroup
+      title="User"
+      className="pt-7 @2xl:pt-9 @3xl:grid-cols-12 @3xl:pt-11"
+    >
+      {field.value?.map((User, index) => (
+        <div key={User.id} className="mb-4">
+          <Input
+            label="Name"
+            value={field.value[index]?.name || ''}
+            {...register(`users.${index}.name` as const)}
+            disabled={!isEditable}
+            error={errors.accounts?.[index]?.name?.message}
+            className="mb-2"
+          />
+          <Input
+            label="Email"
+            value={User.email}
+            disabled
+            className="mb-2"
+          />  <Input
+            label="Contact"
+            value={User.contact}
+            disabled
+            className="mb-2"
+          />
+        </div>
+      ))}
+    </FormGroup>
+  )}
+/>
+
           </div>
 
           <div className="flex justify-end space-x-4 pt-5">
