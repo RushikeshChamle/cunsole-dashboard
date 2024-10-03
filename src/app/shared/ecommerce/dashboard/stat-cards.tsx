@@ -187,24 +187,25 @@ const eComDashboardStatData = [
     fill: '#a87ac7',
     chart: revenueData,
   },
-  {
-    id: '4',
-    icon: <PiClockCountdownDuotone className="h-6 w-6" />,
-    title: 'DSO',
-    metric: '7 Days',
-    increased: true,
-    decreased: false,
-    percentage: '+32.40',
-    style: 'text-[#f7c59f]',
-    fill: '#f7c59f',
-    chart: revenueData,
-  },
+  // {
+  //   id: '4',
+  //   icon: <PiClockCountdownDuotone className="h-6 w-6" />,
+  //   title: 'DSO',
+  //   metric: '7 Days',
+  //   increased: true,
+  //   decreased: false,
+  //   percentage: '+32.40',
+  //   style: 'text-[#f7c59f]',
+  //   fill: '#f7c59f',
+  //   chart: revenueData,
+  // },
 ];
 
 export default function StatCards({ className }: { className?: string }) {
   return (
     <div
-      className={cn('grid grid-cols-1 gap-5 3xl:gap-8 4xl:gap-9', className)}
+      // className={cn('grid grid-cols-1 gap-5 3xl:gap-8 4xl:gap-9', className)}
+      className={cn('grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 3xl:gap-8 4xl:gap-9', className)}
     >
       {eComDashboardStatData.map((stat) => (
         <MetricCard

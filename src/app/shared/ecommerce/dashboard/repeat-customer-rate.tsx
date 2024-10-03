@@ -295,7 +295,7 @@ export default function SalesOverview({
       className={className}
     >
       <SimpleBar>
-        <div className="h-[480px] w-full pt-9">
+        <div className="h-[400px] w-full pt-9">
           <ResponsiveContainer
             width="100%"
             height="100%"
