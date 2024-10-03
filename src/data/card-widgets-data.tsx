@@ -42,27 +42,27 @@ export const widgetData = [
     color: '#3872FA',
     stat: widgetCardStat,
   },
-  {
-    name: 'Profit',
-    color: '#10b981',
-    statTitle: 'Profit',
-    statMetric: '$2780.00',
-    stat: widgetCardStat,
-  },
-  {
-    name: 'Customer',
-    color: '#f1416c',
-    statTitle: 'Overdue Invoices',
-    statMetric: '$2780.00',
-    stat: widgetCardStat,
-  },
-  {
-    name: 'Inventory',
-    color: '#7928ca',
-    statTitle: 'Expense',
-    statMetric: '$2780.00',
-    stat: widgetCardStat,
-  },
+  // {
+  //   name: 'Profit',
+  //   color: '#10b981',
+  //   statTitle: 'Profit',
+  //   statMetric: '$2780.00',
+  //   stat: widgetCardStat,
+  // },
+  // {
+  //   name: 'Customer',
+  //   color: '#f1416c',
+  //   statTitle: 'Overdue Invoices',
+  //   statMetric: '$2780.00',
+  //   stat: widgetCardStat,
+  // },
+  // {
+  //   name: 'Inventory',
+  //   color: '#7928ca',
+  //   statTitle: 'Expense',
+  //   statMetric: '$2780.00',
+  //   stat: widgetCardStat,
+  // },
 ];
 
 export const chartData = [

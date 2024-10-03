@@ -1,0 +1,499 @@
+
+
+// "use client"
+
+// import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, Cell, LabelList } from 'recharts'
+// import { AlertCircle, TrendingUp, TrendingDown } from 'lucide-react'
+// import { Tooltip as RizzuiTooltip, Text } from "rizzui"
+
+// const data = [
+//   { name: 'Current', value: 3250000, color: '#10b981', category: 'due' },
+//   { name: 'Overdue', value: 1750000, color: '#ef4444', category: 'overdue' },
+//   { name: '1-30 days', value: 950000, color: '#eab308', category: 'aging' },
+//   { name: '31-60 days', value: 450000, color: '#f97316', category: 'aging' },
+//   { name: '61-90 days', value: 200000, color: '#ec4899', category: 'aging' },
+//   { name: '> 90 days', value: 150000, color: '#7c3aed', category: 'aging' },
+// ]
+
+// function CustomTooltipContent({ active, payload }) {
+//   if (active && payload && payload.length) {
+//     const data = payload[0].payload
+//     return (
+//       <div className="bg-white p-2 shadow-lg border rounded-md">
+//         <p className="text-sm font-semibold">{data.name}</p>
+//         <p className="text-sm">${(data.value / 1000000).toFixed(2)}M</p>
+//         <p className="text-xs text-gray-600">{((data.value / totalValue) * 100).toFixed(1)}% of total</p>
+//       </div>
+//     )
+//   }
+//   return null
+// }
+
+// function CustomContent() {
+//   return (
+//     <div className="w-64 text-start">
+//       <Text className="text-sm font-light">
+//         Moderate overdue percentage. Review collection strategies to reduce overdue accounts and improve cash flow.
+//       </Text>
+//     </div>
+//   )
+// }
+
+// const totalValue = data.reduce((sum, item) => sum + item.value, 0)
+// const overdueValue = data.find(item => item.name === 'Overdue').value
+// const overduePercentage = (overdueValue / totalValue) * 100
+
+// const agingData = data.filter(item => item.category === 'aging')
+// const weightedDaysOverdue = agingData.reduce((sum, item, index) => {
+//   const midpoint = [15, 45, 75, 105][index]
+//   return sum + item.value * midpoint
+// }, 0)
+// const averageDaysOverdue = weightedDaysOverdue / overdueValue
+
+// const annualRevenue = 50000000 // $50 million annual revenue
+// const dso = (totalValue / (annualRevenue / 365)).toFixed(1)
+
+// // New metrics
+// const collectionEfficiency = ((data[0].value / totalValue) * 100).toFixed(1)
+// const badDebtRatio = ((data[5].value / totalValue) * 100).toFixed(2)
+
+// export default function PromotionalSales({ className }) {
+//   return (
+//     <div className={`w-full max-w-3xl p-6 bg-background border border-border rounded-lg shadow-sm ${className}`}>
+//       <div className="flex flex-row items-center justify-between space-y-0 pb-2">
+//         <h3 className="text-2xl font-bold">Accounts Receivable Status</h3>
+//         <RizzuiTooltip size="sm" shadow="lg" placement="left" content={<CustomContent />}>
+//           <AlertCircle className="h-5 w-5 text-muted-foreground" />
+//         </RizzuiTooltip>
+//       </div>
+//       <div className="mt-4">
+//         <div className="grid grid-cols-3 gap-4 mb-6">
+//           <MetricCard
+//             title="Total Receivables"
+//             value={`$${(totalValue / 1000000).toFixed(2)}M`}
+//             subValue={`DSO: ${dso} days`}
+//             trend={dso < 45 ? "down" : "up"}
+//           />
+//           <MetricCard
+//             title="Overdue Percentage"
+//             value={`${overduePercentage.toFixed(1)}%`}
+//             subValue={`Avg. ${averageDaysOverdue.toFixed(1)} days overdue`}
+//             trend={overduePercentage < 30 ? "down" : "up"}
+//           />
+//           <MetricCard
+//             title="Collection Efficiency"
+//             value={`${collectionEfficiency}%`}
+//             subValue={`Bad Debt: ${badDebtRatio}%`}
+//             trend={collectionEfficiency > 70 ? "up" : "down"}
+//           />
+//         </div>
+//         <div className="h-80">
+//           <ResponsiveContainer width="100%" height="100%">
+//             <BarChart data={data} barSize={32} margin={{ top: 20, right: 30, left: 20, bottom: 5 }}>
+//               <XAxis
+//                 dataKey="name"
+//                 stroke="#888888"
+//                 fontSize={12}
+//                 tickLine={false}
+//                 axisLine={false}
+//               />
+//               <YAxis
+//                 stroke="#888888"
+//                 fontSize={12}
+//                 tickLine={false}
+//                 axisLine={false}
+//                 tickFormatter={(value) => `$${value / 1000000}M`}
+//               />
+//               <Tooltip content={<CustomTooltipContent />} />
+//               <Bar dataKey="value" radius={[4, 4, 0, 0]}>
+//                 {data.map((entry, index) => (
+//                   <Cell key={`cell-${index}`} fill={entry.color} />
+//                 ))}
+//                 <LabelList dataKey="value" position="top" formatter={(value) => `$${(value / 1000000).toFixed(1)}M`} />
+//               </Bar>
+//             </BarChart>
+//           </ResponsiveContainer>
+//         </div>
+//       </div>
+//     </div>
+//   )
+// }
+
+// function MetricCard({ title, value, subValue, trend }) {
+//   return (
+//     <div className="bg-secondary/20 p-4 rounded-lg">
+//       <h3 className="text-sm font-medium text-muted-foreground mb-2">{title}</h3>
+//       <div className="flex items-baseline space-x-2">
+//         <p className="text-2xl font-bold">{value}</p>
+//         {trend === "up" ? (
+//           <TrendingUp className="h-4 w-4 text-red-500" />
+//         ) : (
+//           <TrendingDown className="h-4 w-4 text-green-500" />
+//         )}
+//       </div>
+//       <p className="text-sm text-muted-foreground mt-1">{subValue}</p>
+//     </div>
+//   )
+// }
+
+
+// "use client"
+
+// import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, Cell, LabelList } from 'recharts';
+// import { AlertCircle, TrendingUp, TrendingDown } from 'lucide-react';
+// import { Tooltip as RizzuiTooltip, Text } from "rizzui";
+
+// const data = [
+//   { name: 'Current', value: 3250000, color: '#10b981', category: 'due' },
+//   { name: 'Overdue', value: 1750000, color: '#ef4444', category: 'overdue' },
+//   { name: '1-30 days', value: 950000, color: '#eab308', category: 'aging' },
+//   { name: '31-60 days', value: 450000, color: '#f97316', category: 'aging' },
+//   { name: '61-90 days', value: 200000, color: '#ec4899', category: 'aging' },
+//   { name: '> 90 days', value: 150000, color: '#7c3aed', category: 'aging' },
+// ];
+
+// function CustomTooltipContent({ active, payload }) {
+//   if (active && payload && payload.length) {
+//     const data = payload[0].payload;
+//     return (
+//       <div className="bg-white p-2 shadow-lg border rounded-md">
+//         <p className="text-sm font-semibold">{data.name}</p>
+//         <p className="text-sm">${(data.value / 1000000).toFixed(2)}M</p>
+//         <p className="text-xs text-gray-600">{((data.value / totalValue) * 100).toFixed(1)}% of total</p>
+//       </div>
+//     );
+//   }
+//   return null;
+// }
+
+// function CustomContent() {
+//   return (
+//     <div className="w-64 text-start">
+//       <Text className="text-sm font-light">
+//         Moderate overdue percentage. Review collection strategies to reduce overdue accounts and improve cash flow.
+//       </Text>
+//     </div>
+//   );
+// }
+
+// const totalValue = data.reduce((sum, item) => sum + item.value, 0);
+// const overdueValue = data.find(item => item.name === 'Overdue').value;
+// const overduePercentage = (overdueValue / totalValue) * 100;
+
+// const agingData = data.filter(item => item.category === 'aging');
+// const weightedDaysOverdue = agingData.reduce((sum, item, index) => {
+//   const midpoint = [15, 45, 75, 105][index];
+//   return sum + item.value * midpoint;
+// }, 0);
+// const averageDaysOverdue = weightedDaysOverdue / overdueValue;
+
+// const annualRevenue = 50000000; // $50 million annual revenue
+// const dso = (totalValue / (annualRevenue / 365)).toFixed(1);
+
+// // New metrics
+// const collectionEfficiency = ((data[0].value / totalValue) * 100).toFixed(1);
+// const badDebtRatio = ((data[5].value / totalValue) * 100).toFixed(2);
+
+// export default function PromotionalSales({ className }) {
+//   return (
+//     <div className={`w-full max-w-3xl p-6 bg-background border border-border rounded-lg shadow-sm ${className}`}>
+//       <div className="flex flex-row items-center justify-between space-y-0 pb-2">
+//         <h3 className="text-2xl font-bold">Accounts Receivable Status</h3>
+//         <RizzuiTooltip size="sm" shadow="lg" placement="left" content={<CustomContent />}>
+//           <AlertCircle className="h-5 w-5 text-muted-foreground" />
+//         </RizzuiTooltip>
+//       </div>
+//       <div className="mt-4">
+//         <div className="grid grid-cols-3 gap-4 mb-6">
+//           <MetricCard
+//             title="Total Receivables"
+//             value={`$${(totalValue / 1000000).toFixed(2)}M`}
+//             subValue={`DSO: ${dso} days`}
+//             trend={dso < 45 ? "down" : "up"}
+//           />
+//           <MetricCard
+//             title="Overdue Percentage"
+//             value={`${overduePercentage.toFixed(1)}%`}
+//             subValue={`Avg. ${averageDaysOverdue.toFixed(1)} days overdue`}
+//             trend={overduePercentage < 30 ? "down" : "up"}
+//           />
+//           <MetricCard
+//             title="Collection Efficiency"
+//             value={`${collectionEfficiency}%`}
+//             subValue={`Bad Debt: ${badDebtRatio}%`}
+//             trend={collectionEfficiency > 70 ? "up" : "down"}
+//           />
+//         </div>
+//         <div className="h-80">
+//           <ResponsiveContainer width="100%" height="100%">
+//             <BarChart data={data} barSize={32} margin={{ top: 20, right: 30, left: 20, bottom: 5 }}>
+//               <XAxis
+//                 dataKey="name"
+//                 stroke="#888888"
+//                 fontSize={12}
+//                 tickLine={false}
+//                 axisLine={false}
+//               />
+//               <YAxis
+//                 stroke="#888888"
+//                 fontSize={12}
+//                 tickLine={false}
+//                 axisLine={false}
+//                 tickFormatter={(value) => `$${value / 1000000}M`}
+//               />
+//               <Tooltip content={<CustomTooltipContent />} />
+//               <Bar dataKey="value" radius={[4, 4, 0, 0]}>
+//                 {data.map((entry, index) => (
+//                   <Cell key={`cell-${index}`} fill={entry.color} />
+//                 ))}
+//                 <LabelList dataKey="value" position="top" formatter={(value) => `$${(value / 1000000).toFixed(1)}M`} />
+//               </Bar>
+//             </BarChart>
+//           </ResponsiveContainer>
+//         </div>
+//       </div>
+//     </div>
+//   );
+// }
+
+// function MetricCard({ title, value, subValue, trend }) {
+//   return (
+//     <div className="bg-white p-4 rounded-lg shadow-sm">
+//       <h3 className="text-sm font-medium text-muted-foreground mb-2">{title}</h3>
+//       <div className="flex items-baseline space-x-2">
+//         <p className="text-2xl font-bold">{value}</p>
+//         {trend === "up" ? (
+//           <TrendingUp className="h-4 w-4 text-red-500" />
+//         ) : (
+//           <TrendingDown className="h-4 w-4 text-green-500" />
+//         )}
+//       </div>
+//       <p className="text-sm text-muted-foreground mt-1">{subValue}</p>
+//     </div>
+//   );
+// }
+
+
+
+
+// Added with efficiency
+
+// "use client"
+
+// import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, Cell } from 'recharts'
+// import { AlertCircle } from 'lucide-react'
+// import { Tooltip as RizzuiTooltip, Text } from "rizzui"
+
+// const data = [
+//   { name: 'Due', value: 3250000, color: '#10b981', category: 'due' },
+//   { name: 'Overdue', value: 1750000, color: '#ef4444', category: 'overdue' },
+//   { name: '1-30 days', value: 950000, color: '#eab308', category: 'aging' },
+//   { name: '31-60 days', value: 450000, color: '#f97316', category: 'aging' },
+//   { name: '61-90 days', value: 200000, color: '#ec4899', category: 'aging' },
+//   { name: '> 90 days', value: 150000, color: '#7c3aed', category: 'aging' },
+// ]
+
+// function CustomContent() {
+//   return (
+//     <div className="w-40 text-start">
+//       <div className="inline-flex items-center gap-2 text-base mb-1.5">
+//         <Text className="text-sm font-light">Moderate overdue percentage. Review collection strategies to reduce overdue accounts</Text>
+//       </div>
+//     </div>
+//   )
+// }
+
+// export default function PromotionalSales({ className }) {
+//   const totalValue = data.reduce((sum, item) => sum + item.value, 0)
+//   const overdueValue = data.find(item => item.name === 'Overdue').value
+//   const overduePercentage = (overdueValue / totalValue) * 100
+
+//   const agingData = data.filter(item => item.category === 'aging')
+//   const weightedDaysOverdue = agingData.reduce((sum, item, index) => {
+//     const midpoint = [15, 45, 75, 105][index] // Midpoints of each aging category
+//     return sum + item.value * midpoint
+//   }, 0)
+//   const averageDaysOverdue = weightedDaysOverdue / overdueValue
+
+//   const annualRevenue = 50000000 // $50 million annual revenue
+//   const dso = 49.3 // Using the provided DSO value
+//   const collectionEfficiency = 48.1 // Using the provided Collection Efficiency value
+//   const badDebtRatio = 2.22 // Using the provided Bad Debt Ratio value
+
+//   return (
+//     <div className={`w-full max-w-2xl p-6 bg-background border border-border rounded-lg shadow-sm ${className}`}>
+//       <div className="flex flex-row items-center justify-between space-y-0 pb-2">
+//         <h3 className="text-lg font-semibold">Accounts Receivable Status</h3>
+//         <RizzuiTooltip size="sm" shadow="lg" placement="left" content={<CustomContent />}>
+//           <AlertCircle className="h-4 w-4 text-muted-foreground" />
+//         </RizzuiTooltip>
+//       </div>
+//       <div className="mt-4">
+//         <div className="grid grid-cols-3 gap-4 mb-4">
+//           <div className="space-y-2">
+//             <p className="text-sm font-medium text-muted-foreground">Total Receivables</p>
+//             <p className="text-2xl font-bold text-primary">$6.75M</p>
+//             <p className="text-sm text-muted-foreground">DSO: {dso} days</p>
+//           </div>
+//           <div className="space-y-2">
+//             <p className="text-sm font-medium text-muted-foreground">Overdue Percentage</p>
+//             <p className="text-2xl font-bold text-primary">25.9%</p>
+//             <p className="text-sm text-muted-foreground">Avg. 37.3 days overdue</p>
+//           </div>
+//           <div className="space-y-2">
+//             <p className="text-sm font-medium text-muted-foreground">Collection Efficiency</p>
+//             <p className="text-2xl font-bold text-primary">{collectionEfficiency}%</p>
+//             <p className="text-sm text-muted-foreground">Bad Debt: {badDebtRatio}%</p>
+//           </div>
+//         </div>
+//         <div className="h-80">
+//           <ResponsiveContainer width="100%" height="100%">
+//             <BarChart data={data} barSize={24}>
+//               <XAxis 
+//                 dataKey="name" 
+//                 stroke="#888888" 
+//                 fontSize={12} 
+//                 tickLine={false} 
+//                 axisLine={false}
+//               />
+//               <YAxis
+//                 stroke="#888888"
+//                 fontSize={12}
+//                 tickLine={false}
+//                 axisLine={false}
+//                 tickFormatter={(value) => `$${value / 1000000}M`}
+//               />
+//               <Tooltip
+//                 contentStyle={{
+//                   background: 'rgba(255, 255, 255, 0.8)',
+//                   border: 'none',
+//                   borderRadius: '4px',
+//                   boxShadow: '0 4px 6px rgba(0,0,0,0.1)'
+//                 }}
+//                 formatter={(value) => [`$${(value / 1000000).toFixed(2)}M`, 'Amount']}
+//               />
+//               <Bar dataKey="value" radius={[4, 4, 0, 0]}>
+//                 {data.map((entry, index) => (
+//                   <Cell key={`cell-${index}`} fill={entry.color} />
+//                 ))}
+//               </Bar>
+//             </BarChart>
+//           </ResponsiveContainer>
+//         </div>
+//       </div>
+//     </div>
+//   )
+// }
+
+
+
+
+
+// // Smaller text version /////
+
+// "use client"
+
+// import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, Cell } from 'recharts'
+// import { AlertCircle } from 'lucide-react'
+// import { Tooltip as RizzuiTooltip, Text } from "rizzui"
+
+// const data = [
+//   { name: 'Due', value: 3250000, color: '#10b981', category: 'due' },
+//   { name: 'Overdue', value: 1750000, color: '#ef4444', category: 'overdue' },
+//   { name: '1-30 days', value: 950000, color: '#eab308', category: 'aging' },
+//   { name: '31-60 days', value: 450000, color: '#f97316', category: 'aging' },
+//   { name: '61-90 days', value: 200000, color: '#ec4899', category: 'aging' },
+//   { name: '> 90 days', value: 150000, color: '#7c3aed', category: 'aging' },
+// ]
+
+// function CustomContent() {
+//   return (
+//     <div className="w-40 text-start">
+//       <div className="inline-flex items-center gap-2 text-base mb-1.5">
+//         <Text className="text-sm font-light">Moderate overdue percentage. Review collection strategies to reduce overdue accounts</Text>
+//       </div>
+//     </div>
+//   )
+// }
+
+// export default function PromotionalSales({ className }) {
+//   const totalValue = data.reduce((sum, item) => sum + item.value, 0)
+//   const overdueValue = data.find(item => item.name === 'Overdue').value
+//   const overduePercentage = (overdueValue / totalValue) * 100
+
+//   const agingData = data.filter(item => item.category === 'aging')
+//   const weightedDaysOverdue = agingData.reduce((sum, item, index) => {
+//     const midpoint = [15, 45, 75, 105][index] // Midpoints of each aging category
+//     return sum + item.value * midpoint
+//   }, 0)
+//   const averageDaysOverdue = weightedDaysOverdue / overdueValue
+
+//   const annualRevenue = 50000000 // $50 million annual revenue
+//   const dso = 49.3 // Using the provided DSO value
+//   const collectionEfficiency = 48.1 // Using the provided Collection Efficiency value
+//   const badDebtRatio = 2.22 // Using the provided Bad Debt Ratio value
+
+//   return (
+//     <div className={`w-full max-w-2xl p-6 bg-background border border-border rounded-lg shadow-sm ${className}`}>
+//       <div className="flex flex-row items-center justify-between space-y-0 pb-2">
+//         <h3 className="text-lg font-semibold">Accounts Receivable Status</h3>
+//         <RizzuiTooltip size="sm" shadow="lg" placement="left" content={<CustomContent />}>
+//           <AlertCircle className="h-4 w-4 text-muted-foreground" />
+//         </RizzuiTooltip>
+//       </div>
+//       <div className="mt-4">
+//         <div className="grid grid-cols-3 gap-3 mb-4">
+//           <div className="space-y-1">
+//             <p className="text-xs font-medium text-muted-foreground">Total Receivables</p>
+//             <p className="text-lg font-bold text-primary">$6.75M</p>
+//             <p className="text-xs text-muted-foreground">DSO: {dso} days</p>
+//           </div>
+//           <div className="space-y-1">
+//             <p className="text-xs font-medium text-muted-foreground">Overdue Percentage</p>
+//             <p className="text-lg font-bold text-primary">25.9%</p>
+//             <p className="text-xs text-muted-foreground">Avg. 37.3 days overdue</p>
+//           </div>
+//           <div className="space-y-1">
+//             <p className="text-xs font-medium text-muted-foreground">Collection Efficiency</p>
+//             <p className="text-lg font-bold text-primary">{collectionEfficiency}%</p>
+//             <p className="text-xs text-muted-foreground">Bad Debt: {badDebtRatio}%</p>
+//           </div>
+//         </div>
+//         <div className="h-80">
+//           <ResponsiveContainer width="100%" height="100%">
+//             <BarChart data={data} barSize={24}>
+//               <XAxis 
+//                 dataKey="name" 
+//                 stroke="#888888" 
+//                 fontSize={12} 
+//                 tickLine={false} 
+//                 axisLine={false}
+//               />
+//               <YAxis
+//                 stroke="#888888"
+//                 fontSize={12}
+//                 tickLine={false}
+//                 axisLine={false}
+//                 tickFormatter={(value) => `$${value / 1000000}M`}
+//               />
+//               <Tooltip
+//                 contentStyle={{
+//                   background: 'rgba(255, 255, 255, 0.8)',
+//                   border: 'none',
+//                   borderRadius: '4px',
+//                   boxShadow: '0 4px 6px rgba(0,0,0,0.1)'
+//                 }}
+//                 formatter={(value) => [`$${(value / 1000000).toFixed(2)}M`, 'Amount']}
+//               />
+//               <Bar dataKey="value" radius={[4, 4, 0, 0]}>
+//                 {data.map((entry, index) => (
+//                   <Cell key={`cell-${index}`} fill={entry.color} />
+//                 ))}
+//               </Bar>
+//             </BarChart>
+//           </ResponsiveContainer>
+//         </div>
+//       </div>
+//     </div>
+//   )
+// }
