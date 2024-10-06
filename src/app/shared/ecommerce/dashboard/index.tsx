@@ -246,7 +246,7 @@ import { Button } from 'rizzui';
 import WelcomeBanner from '@components/banners/welcome';
 import StatCards from '@/app/shared/ecommerce/dashboard/stat-cards';
 import ProfitWidget from '@/app/shared/ecommerce/dashboard/profit-widget';
-import SalesReport from '@/app/shared/ecommerce/dashboard/sales-report';
+import CreditSalesChart from '@/app/shared/ecommerce/dashboard/sales-report';
 import RepeatCustomerRate from '@/app/shared/ecommerce/dashboard/repeat-customer-rate';
 import PromotionalSales from '@/app/shared/ecommerce/dashboard/promotional-sales';
 import { PiArrowRightBold } from 'react-icons/pi';
@@ -315,7 +315,7 @@ export default function EcommerceDashboard() {
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-1 gap-4 sm:gap-5">
-          <SalesReport className="w-full" />
+          <CreditSalesChart className="w-full" />
         </div>
       </div>
     </div>
