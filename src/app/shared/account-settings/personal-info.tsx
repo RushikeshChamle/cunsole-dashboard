@@ -42,7 +42,7 @@ export default function PersonalInfoView() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axiosInstance.get("http://localhost:9000/users/accounts_users/");
+        const response = await axiosInstance.get("/users/accounts_users/");
         reset({
           accounts: response.data.accounts,
           users: response.data.users

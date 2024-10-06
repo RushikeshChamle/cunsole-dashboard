@@ -4,8 +4,10 @@ import GoogleProvider from 'next-auth/providers/google';
 import { env } from '@/env.mjs';
 import isEqual from 'lodash/isEqual';
 import { pagesOptions } from './pages-options';
-
 export const authOptions: NextAuthOptions = {
+
+
+
   // debug: true,
   pages: {
     ...pagesOptions,
