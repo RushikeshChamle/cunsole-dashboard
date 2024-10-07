@@ -114,6 +114,7 @@ function CustomYAxisTick({ x, y, payload }: any) {
   );
 }
 
+
 export default function StorageReport({ className }: { className?: string }) {
   const isMobile = useMedia('(max-width: 768px)', false);
   const isDesktop = useMedia('(max-width: 1440px)', false);

@@ -38,24 +38,53 @@ export default function ProfileSettingsView() {
     mode: 'onChange',
   });
 
+  // useEffect(() => {
+  //   const fetchData = async () => {
+  //     try {
+  //       const response = await axiosInstance.get("http://localhost:9000/users/accounts_users/");
+  //       reset({
+  //         accounts: response.data.accounts,
+  //         users: response.data.users
+  //       });
+  //       setLoading(false);
+  //     } catch (error) {
+  //       setError('Failed to fetch data');
+  //       setLoading(false);
+  //     }
+  //   };
+
+  //   fetchData();
+  // }, [reset]);
+
+  
   useEffect(() => {
     const fetchData = async () => {
+      setLoading(true);  // Set loading state before making the request
+      setError(null);    // Clear any previous errors
+  
       try {
-        const response = await axiosInstance.get("http://localhost:9000/users/accounts_users/");
+        const response = await axiosInstance.get("/users/accounts_users/");
+        
+        // Reset form values with fetched data (accounts, users)
         reset({
           accounts: response.data.accounts,
-          users: response.data.users
+          users: response.data.users,
         });
-        setLoading(false);
-      } catch (error) {
-        setError('Failed to fetch data');
-        setLoading(false);
+        
+      } catch (error: any) {
+        // Enhanced error handling
+        setError(error.response?.data?.error || 'Failed to fetch data');
+        
+      } finally {
+        setLoading(false); // Ensure loading state is updated after the request completes
       }
     };
-
+  
     fetchData();
-  }, [reset]);
-
+  }, [reset]); // Keep reset in the dependency array to reset form data properly
+  
+ 
+  
   const handleEdit = () => {
     setIsEditable(true);
   };

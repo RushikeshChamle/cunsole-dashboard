@@ -256,7 +256,7 @@ import useSWR from 'swr';
 import { useEffect, useState } from 'react';
 import { Badge, Table, Input } from 'rizzui';
 import { PiPlusBold } from 'react-icons/pi';
-
+import axiosInstance from '@/axiosInstance';
 // Define TypeScript types for the API response
 interface Invoice {
   id: number;
@@ -302,39 +302,64 @@ export default function CustomersListPage() {
   const [error, setError] = useState<string | null>(null);
   const [searchTerm, setSearchTerm] = useState<string>(''); // New state for search term
 
+  // useEffect(() => {
+  //   async function fetchData() {
+  //     setLoading(true);
+  //     setError(null);
+  //     try {
+  //       const token = getCookie('access_token');
+  //       if (!token) {
+  //         setError('No access token found');
+  //         return;
+  //       }
+
+  //       const response = await fetch(
+  //         'http://localhost:9000/customers/cutomerinvoices/',
+  //         {
+  //           headers: {
+  //             Authorization: `Bearer ${token}`,
+  //             'Content-Type': 'application/json',
+  //           },
+  //         }
+  //       );
+
+  //       if (!response.ok) {
+  //         const errorData: any = await response.json();
+  //         throw new Error(errorData.error || 'Network response was not ok');
+  //       }
+
+  //       const data = (await response.json()) as ApiResponse[]; // Assert the type
+  //       setCustomersData(data); // Ensure you are setting the correct state here
+  //     } catch (error: unknown) {
+  //       if (error instanceof Error) {
+  //         setError(error.message);
+  //       } else {
+  //         setError('An unknown error occurred');
+  //       }
+  //     } finally {
+  //       setLoading(false);
+  //     }
+  //   }
+
+  //   fetchData();
+  // }, []);
+
+
+  // new with updated axio prod routing
   useEffect(() => {
     async function fetchData() {
       setLoading(true);
       setError(null);
       try {
-        const token = getCookie('access_token');
-        if (!token) {
-          setError('No access token found');
-          return;
-        }
+        const response = await axiosInstance.get('/customers/customerinvoices/'); // Using axiosInstance
 
-        const response = await fetch(
-          'http://localhost:9000/customers/cutomerinvoices/',
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-              'Content-Type': 'application/json',
-            },
-          }
-        );
-
-        if (!response.ok) {
-          const errorData: any = await response.json();
-          throw new Error(errorData.error || 'Network response was not ok');
-        }
-
-        const data = (await response.json()) as ApiResponse[]; // Assert the type
-        setCustomersData(data); // Ensure you are setting the correct state here
-      } catch (error: unknown) {
-        if (error instanceof Error) {
-          setError(error.message);
+        const data = response.data as ApiResponse[]; // Type assertion
+        setCustomersData(data); // Set customer data in state
+      } catch (error: any) {
+        if (error.response && error.response.data) {
+          setError(error.response.data.error || 'Failed to fetch customer data');
         } else {
-          setError('An unknown error occurred');
+          setError(error.message || 'An unknown error occurred');
         }
       } finally {
         setLoading(false);
