@@ -11,12 +11,15 @@ import { loginSchema, LoginSchema } from '@/validators/login.schema';
 import axios from 'axios';
 import { message } from 'antd';
 import { toast } from 'react-hot-toast';
+import axiosInstance from '@/axiosInstance';
+
 
 // const initialValues: LoginSchema = {
 //   email: 'admin@admin.com',
 //   password: 'admin',
 //   rememberMe: true,
 // };
+
 
 export default function SignInForm() {
 
@@ -25,13 +28,63 @@ export default function SignInForm() {
   const isMedium = useMedia('(max-width: 1200px)', false);
   const [messageApi, contextHolder] = message.useMessage();
 
+  // const onSubmit: SubmitHandler<LoginSchema> = async (data) => {
+  //   setLoading(true);
+  //   setError(null);
+  //   try {
+  //     const response = await axios.post('http://localhost:9000/users/signin/', data);
+
+      
+  //     // Handle the response from the backend
+  //     if (response.data.access && response.data.refresh) {
+  //       // Store the access and refresh tokens in cookies
+  //       const accessExpiration = new Date(new Date().getTime() + 24 * 60 * 60 * 1000); // 24 hours
+  //       const refreshExpiration = new Date(new Date().getTime() + 7 * 24 * 60 * 60 * 1000); // 7 days
+  //       document.cookie = `access_token=${response.data.access}; expires=${accessExpiration.toUTCString()}; path=/; Secure; SameSite=None`;
+  //       document.cookie = `refresh_token=${response.data.refresh}; expires=${refreshExpiration.toUTCString()}; path=/; Secure; SameSite=None`;
+  //       // Redirect to the dashboard or any other protected route
+
+  //      // Retrieve CSRF token from the response
+  //     //  const csrfToken = response.data.csrf_token || response.headers['x-csrf-token'];
+  //     //  if (csrfToken) {
+  //     //    document.cookie = `csrf_token=${csrfToken}; path=/; Secure; SameSite=None`;
+  //     //  }
+
+  //     toast.success('Login successful!', {
+  //       duration: 2000,
+  //       position: 'top-center',
+  //     });
+
+  //       window.location.href = '/invoice';
+  //     } else {
+  //       setError('Invalid credentials. Please try again.');
+  //     }
+  //   } catch (err) {
+  //     let errorMessage = 'An error occurred. Please try again.';
+
+  //     // Handle the error
+  //     if (axios.isAxiosError(err) && err.response) {
+  //       setError(err.response.data.error || 'An error occurred. Please try again.');
+  //     } else {
+  //       setError('An error occurred. Please try again.');
+  //     }
+
+  //     toast.error(errorMessage, {
+  //       duration: 1000,
+  //       position: 'top-center',
+  //     });
+      
+  //   } finally {
+  //     setLoading(false);
+  //   }
+  // };
+
   const onSubmit: SubmitHandler<LoginSchema> = async (data) => {
     setLoading(true);
     setError(null);
     try {
-      const response = await axios.post('http://localhost:9000/users/signin/', data);
-
-      
+      const response = await axiosInstance.post('/users/signin/', data);
+  
       // Handle the response from the backend
       if (response.data.access && response.data.refresh) {
         // Store the access and refresh tokens in cookies
@@ -39,42 +92,35 @@ export default function SignInForm() {
         const refreshExpiration = new Date(new Date().getTime() + 7 * 24 * 60 * 60 * 1000); // 7 days
         document.cookie = `access_token=${response.data.access}; expires=${accessExpiration.toUTCString()}; path=/; Secure; SameSite=None`;
         document.cookie = `refresh_token=${response.data.refresh}; expires=${refreshExpiration.toUTCString()}; path=/; Secure; SameSite=None`;
-        // Redirect to the dashboard or any other protected route
-
-       // Retrieve CSRF token from the response
-      //  const csrfToken = response.data.csrf_token || response.headers['x-csrf-token'];
-      //  if (csrfToken) {
-      //    document.cookie = `csrf_token=${csrfToken}; path=/; Secure; SameSite=None`;
-      //  }
-
-      toast.success('Login successful!', {
-        duration: 2000,
-        position: 'top-center',
-      });
-
-        window.location.href = '/invoice';
+  
+        // Notify user and redirect
+        toast.success('Login successful!', {
+          duration: 2000,
+          position: 'top-center',
+        });
+        window.location.href = '/invoice'; // Redirect to the dashboard or any other protected route
       } else {
         setError('Invalid credentials. Please try again.');
       }
     } catch (err) {
       let errorMessage = 'An error occurred. Please try again.';
-
+  
       // Handle the error
       if (axios.isAxiosError(err) && err.response) {
         setError(err.response.data.error || 'An error occurred. Please try again.');
       } else {
         setError('An error occurred. Please try again.');
       }
-
+  
       toast.error(errorMessage, {
         duration: 1000,
         position: 'top-center',
       });
-      
     } finally {
       setLoading(false);
     }
   };
+  
 
   return (
     <>
