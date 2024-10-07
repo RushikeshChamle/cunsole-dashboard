@@ -7,6 +7,8 @@ import { Text, Input, Select, Textarea, Button } from 'rizzui';
 import FormFooter from '@components/form-footer';
 import { toast } from 'react-hot-toast';
 import { z } from 'zod';
+import axiosInstance from '@/axiosInstance'; // Import axiosInstance
+
 
 import { zodResolver } from '@hookform/resolvers/zod';
 
@@ -54,13 +56,25 @@ const emailTriggerFormSchema = z.object({
   isactive: z.boolean(),
 });
 
-// export default function CreateEmailTrigger({ id, record }: { id?: string; record?: any }) { // Change record type to any
+
+// export default function CreateEmailTrigger({
+//   id,
+//   record,
+// }: {
+//   id?: string;
+//   record?: any;
+// }) {
 //   const [reset, setReset] = useState({});
 //   const [isLoading, setLoading] = useState(false);
 //   const [error, setError] = useState<string | null>(null);
 
-//   const { handleSubmit, register, control, formState: { errors } } = useForm<any>({
-//     resolver: zodResolver(emailTriggerFormSchema), // Use resolver for validation
+//   const {
+//     handleSubmit,
+//     register,
+//     control,
+//     formState: { errors },
+//   } = useForm<any>({
+//     resolver: zodResolver(emailTriggerFormSchema),
 //     defaultValues: {
 //       ...record,
 //       condition_type: record?.condition_type || 0,
@@ -69,21 +83,14 @@ const emailTriggerFormSchema = z.object({
 //     },
 //   });
 
-//   // const onSubmit: SubmitHandler<EmailTriggerFormInput> = async (data ) => {
-//   //   const formattedData = {
-//   //     ...data,
-//   //     condition_type: data.condition_type !== null ? parseInt(data.condition_type, 10) : null,
-//   //     days_offset: Number(data.days_offset),
-//   //   };
-
 //   const onSubmit: SubmitHandler<EmailTriggerFormInput> = async (data) => {
 //     const formattedData = {
 //       ...data,
-//       condition_type: data.condition_type !== null ? String(data.condition_type) : null, // Convert to string
-//       days_offset: Number(data.days_offset), // Ensure this is a number
+//       condition_type:
+//         data.condition_type !== null ? String(data.condition_type) : null,
+//       days_offset: Number(data.days_offset),
 //     };
 //     console.log(formattedData);
-//   };
 
 //     setLoading(true);
 //     setError(null);
@@ -96,19 +103,24 @@ const emailTriggerFormSchema = z.object({
 //         return;
 //       }
 
-//         const response = await axios.post('http://localhost:9000/customers/create_email_trigger/', formattedData, {
-
-//         headers: {
-//           'Authorization': `Bearer ${token}`,
-//           'x-csrftoken': csrfToken || '',
-//         },
-//         withCredentials: true
-//       });
+//       const response = await axios.post(
+//         'http://localhost:9000/customers/create_email_trigger/',
+//         formattedData,
+//         {
+//           headers: {
+//             Authorization: `Bearer ${token}`,
+//             'x-csrftoken': csrfToken || '',
+//           },
+//           withCredentials: true,
+//         }
+//       );
 
 //       if (response.data) {
-//         const result = response.data
+//         const result = response.data;
 //         toast.success(
-//           <Text as="b">Email trigger successfully {id ? 'updated' : 'created'}</Text>
+//           <Text as="b">
+//             Email trigger successfully {id ? 'updated' : 'created'}
+//           </Text>
 //         );
 //         setReset({
 //           name: '',
@@ -117,18 +129,22 @@ const emailTriggerFormSchema = z.object({
 //           email_body: '',
 //           days_offset: 1,
 //           isactive: true,
-
 //         });
 //       } else {
-//         const errorData = response.data
+//         const errorData = response.data;
 //         setError(errorData.error || 'Failed to create email trigger');
-//         toast.error(<Text as="b">{errorData.error || 'Failed to create email trigger'}</Text>);
+//         toast.error(
+//           <Text as="b">
+//             {errorData.error || 'Failed to create email trigger'}
+//           </Text>
+//         );
 //       }
-
 //     } catch (error) {
 //       console.error('Error creating email trigger:', error);
 //       setError('An error occurred while creating the email trigger');
-//       toast.error(<Text as="b">An error occurred while creating the email trigger</Text>);
+//       toast.error(
+//         <Text as="b">An error occurred while creating the email trigger</Text>
+//       );
 //     } finally {
 //       setLoading(false);
 //     }
@@ -173,31 +189,25 @@ export default function CreateEmailTrigger({
     setError(null);
 
     try {
-      const token = getCookie('access_token');
-      const csrfToken = getCookie('csrftoken');
-      if (!token) {
-        setError('No access token found');
-        return;
-      }
+      const csrfToken = getCookie('csrftoken'); // Still fetching CSRF token manually if needed
 
-      const response = await axios.post(
-        'http://localhost:9000/customers/create_email_trigger/',
+      const response = await axiosInstance.post(
+        '/customers/create_email_trigger/',
         formattedData,
         {
           headers: {
-            Authorization: `Bearer ${token}`,
             'x-csrftoken': csrfToken || '',
           },
-          withCredentials: true,
+          withCredentials: true, // Ensure cookies are sent
         }
       );
 
       if (response.data) {
         const result = response.data;
         toast.success(
-          <Text as="b">
+          <strong>
             Email trigger successfully {id ? 'updated' : 'created'}
-          </Text>
+          </strong>
         );
         setReset({
           name: '',
@@ -211,16 +221,20 @@ export default function CreateEmailTrigger({
         const errorData = response.data;
         setError(errorData.error || 'Failed to create email trigger');
         toast.error(
-          <Text as="b">
+          <strong>
             {errorData.error || 'Failed to create email trigger'}
-          </Text>
+          </strong>
         );
       }
-    } catch (error) {
+    } catch (error: any) {
       console.error('Error creating email trigger:', error);
-      setError('An error occurred while creating the email trigger');
+      setError(
+        error.response?.data?.error || 'An error occurred while creating the email trigger'
+      );
       toast.error(
-        <Text as="b">An error occurred while creating the email trigger</Text>
+        <strong>
+          {error.response?.data?.error || 'An error occurred while creating the email trigger'}
+        </strong>
       );
     } finally {
       setLoading(false);

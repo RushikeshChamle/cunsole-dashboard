@@ -25,7 +25,7 @@ import { Alert } from 'rizzui'; // Adjust the import based on your project struc
 import { RxCross2 } from 'react-icons/rx';
 import { Textarea } from 'rizzui';
 import { toast } from 'react-hot-toast';
-
+import axiosInstance from '@/axiosInstance';
 import Link from 'next/link';
 import { routes } from '@/config/routes';
 import { Button } from 'rizzui';
@@ -94,38 +94,61 @@ export default function CustomersListPage() {
   });
 
   // Define fetchData function
+  // async function fetchData() {
+  //   setLoading(true);
+  //   setError(null);
+  //   try {
+  //     const token = getCookie('access_token');
+  //     if (!token) {
+  //       setError('No access token found');
+  //       return;
+  //     }
+
+  //     const response = await fetch(
+  //       'http://localhost:9000/customers/cutomerinvoices/',
+  //       {
+  //         headers: {
+  //           Authorization: `Bearer ${token}`,
+  //           'Content-Type': 'application/json',
+  //         },
+  //       }
+  //     );
+
+  //     if (!response.ok) {
+  //       const errorData: any = await response.json();
+  //       throw new Error(errorData.error || 'Network response was not ok');
+  //     }
+
+  //     // const data: ApiResponse[] = await response.json();
+  //     const data = (await response.json()) as ApiResponse[]; // Assert the type
+  //     // Extract customer data from the API response
+  //     const customerData = data.map((customerData) => customerData.customer);
+  //     setCustomers(customerData);
+  //   } catch (error) {
+  //     setError((error as Error).message); // Safely casting error to Error
+  //   } finally {
+  //     setLoading(false);
+  //   }
+  // }
+
+  // useEffect(() => {
+  //   fetchData();
+  // }, []);
+
+
+  // Define fetchData function
   async function fetchData() {
     setLoading(true);
     setError(null);
     try {
-      const token = getCookie('access_token');
-      if (!token) {
-        setError('No access token found');
-        return;
-      }
+      const response = await axiosInstance.get('/customers/customerinvoices/');
+      const data = response.data as ApiResponse[]; // Type assertion
 
-      const response = await fetch(
-        'http://localhost:9000/customers/cutomerinvoices/',
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-            'Content-Type': 'application/json',
-          },
-        }
-      );
-
-      if (!response.ok) {
-        const errorData: any = await response.json();
-        throw new Error(errorData.error || 'Network response was not ok');
-      }
-
-      // const data: ApiResponse[] = await response.json();
-      const data = (await response.json()) as ApiResponse[]; // Assert the type
       // Extract customer data from the API response
       const customerData = data.map((customerData) => customerData.customer);
       setCustomers(customerData);
-    } catch (error) {
-      setError((error as Error).message); // Safely casting error to Error
+    } catch (error: any) {
+      setError(error.message || 'Failed to fetch customer data');
     } finally {
       setLoading(false);
     }
@@ -134,7 +157,6 @@ export default function CustomersListPage() {
   useEffect(() => {
     fetchData();
   }, []);
-
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setFormData((prevData) => ({
@@ -143,40 +165,58 @@ export default function CustomersListPage() {
     }));
   };
 
+  // const handleSubmit = async (e: React.FormEvent) => {
+  //   e.preventDefault();
+
+  //   const token = getCookie('access_token');
+  //   if (!token) {
+  //     toast.error('No access token found');
+  //     return;
+  //   }
+
+  //   try {
+  //     const response = await fetch(
+  //       'http://localhost:9000/customers/create_customer/',
+  //       {
+  //         method: 'POST',
+  //         headers: {
+  //           Authorization: `Bearer ${token}`,
+  //           'Content-Type': 'application/json',
+  //         },
+  //         body: JSON.stringify(formData),
+  //       }
+  //     );
+
+  //     if (!response.ok) {
+  //       // const { error } = await response.json();
+  //       // throw new Error(error || 'Failed to create customer');
+  //       const errorData: any = await response.json(); // Use 'any' temporarily
+  //       throw new Error(errorData.error || 'Failed to create customer');
+  //     }
+
+  //     toast.success('Customer created successfully');
+  //     setModalState((prevState) => ({ ...prevState, isOpen: false }));
+  //     await fetchData(); // Refresh customer data after form submission
+  //   } catch (error: any) {
+  //     toast.error(error.message);
+  //   }
+  // };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    const token = getCookie('access_token');
-    if (!token) {
-      toast.error('No access token found');
-      return;
-    }
-
     try {
-      const response = await fetch(
-        'http://localhost:9000/customers/create_customer/',
-        {
-          method: 'POST',
-          headers: {
-            Authorization: `Bearer ${token}`,
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify(formData),
-        }
-      );
+      const response = await axiosInstance.post('/customers/create_customer/', formData);
 
-      if (!response.ok) {
-        // const { error } = await response.json();
-        // throw new Error(error || 'Failed to create customer');
-        const errorData: any = await response.json(); // Use 'any' temporarily
-        throw new Error(errorData.error || 'Failed to create customer');
+      if (response.status === 201) {
+        toast.success('Customer created successfully');
+        setModalState((prevState) => ({ ...prevState, isOpen: false }));
+        await fetchData(); // Refresh customer data after form submission
+      } else {
+        throw new Error('Failed to create customer');
       }
-
-      toast.success('Customer created successfully');
-      setModalState((prevState) => ({ ...prevState, isOpen: false }));
-      await fetchData(); // Refresh customer data after form submission
     } catch (error: any) {
-      toast.error(error.message);
+      toast.error(error.message || 'Failed to create customer');
     }
   };
 
