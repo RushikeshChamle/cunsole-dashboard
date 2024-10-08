@@ -15,23 +15,23 @@ import CarbonIcon from './carbon-icon';
 const layoutOptions = [
   {
     icon: HydrogenIcon,
-    value: LAYOUT_OPTIONS.HYDROGEN,
+    value: LAYOUT_OPTIONS.CARBON,
   },
   {
     icon: HeliumIcon,
-    value: LAYOUT_OPTIONS.HELIUM,
+    value: LAYOUT_OPTIONS.CARBON,
   },
   {
     icon: LithiumIcon,
-    value: LAYOUT_OPTIONS.LITHIUM,
+    value: LAYOUT_OPTIONS.CARBON,
   },
   {
     icon: BerylliumIcon,
-    value: LAYOUT_OPTIONS.BERYLLIUM,
+    value: LAYOUT_OPTIONS.CARBON,
   },
   {
     icon: BoronIcon,
-    value: LAYOUT_OPTIONS.BORON,
+    value: LAYOUT_OPTIONS.CARBON,
   },
   {
     icon: CarbonIcon,
@@ -43,8 +43,8 @@ export default function LayoutSwitcher() {
   const { layout, setLayout } = useLayout();
 
   return (
-    <DrawerBlock title="Layout">
-      <RadioGroup
+    <DrawerBlock title="">
+      {/* <RadioGroup
         value={layout}
         setValue={(selectedLayout: any) => setLayout(selectedLayout)}
         className="grid grid-cols-2 gap-4 sm:grid-cols-3"
@@ -69,7 +69,7 @@ export default function LayoutSwitcher() {
             </span>
           </RadioBox>
         ))}
-      </RadioGroup>
+      </RadioGroup> */}
     </DrawerBlock>
   );
 }

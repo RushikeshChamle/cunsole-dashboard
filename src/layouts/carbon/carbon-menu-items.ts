@@ -347,17 +347,17 @@ export const carbonMenuItems: MenuItemsType[] = [
         icon: PiHouseLineDuotone,
         badge: '',
       },
-      {
-        name: 'Flight Booking',
-        href: routes.searchAndFilter.flight,
-        icon: PiAirplaneTiltDuotone,
-      },
-      {
-        name: 'NFT',
-        href: routes.searchAndFilter.nft,
-        icon: PiPokerChipDuotone,
-        badge: '',
-      },
+      // {
+      //   name: 'Flight Booking',
+      //   href: routes.searchAndFilter.flight,
+      //   icon: PiAirplaneTiltDuotone,
+      // },
+      // {
+      //   name: 'NFT',
+      //   href: routes.searchAndFilter.nft,
+      //   icon: PiPokerChipDuotone,
+      //   badge: '',
+      // },
     ],
   },
   {
@@ -372,21 +372,21 @@ export const carbonMenuItems: MenuItemsType[] = [
         href: routes.actions.home,
         icon: PiSquaresFourDuotone,
       },
-      {
-        name: 'Icons',
-        href: routes.widgets.icons,
-        icon: PiFeatherDuotone,
-      },
-      {
-        name: 'Charts',
-        href: routes.widgets.charts,
-        icon: PiChartLineUpDuotone,
-      },
-      {
-        name: 'Maps',
-        href: routes.widgets.maps,
-        icon: PiMapPinLineDuotone,
-      },
+      // {
+      //   name: 'Icons',
+      //   href: routes.widgets.icons,
+      //   icon: PiFeatherDuotone,
+      // },
+      // {
+      //   name: 'Charts',
+      //   href: routes.widgets.charts,
+      //   icon: PiChartLineUpDuotone,
+      // },
+      // {
+      //   name: 'Maps',
+      //   href: routes.widgets.maps,
+      //   icon: PiMapPinLineDuotone,
+      // },
     ],
   },
   {
@@ -400,32 +400,32 @@ export const carbonMenuItems: MenuItemsType[] = [
         href: routes.forms.profileSettings,
         icon: PiUserGearDuotone,
       },
-      {
-        name: 'Notification Preference',
-        href: routes.forms.notificationPreference,
-        icon: PiBellSimpleRingingDuotone,
-        badge: '',
-      },
-      {
-        name: 'Personal Information',
-        href: routes.forms.personalInformation,
-        icon: PiUserCircleDuotone,
-      },
-      {
-        name: 'Newsletter',
-        href: routes.forms.newsletter,
-        icon: PiEnvelopeSimpleOpenDuotone,
-      },
-      {
-        name: 'Multi Step',
-        href: routes.multiStep,
-        icon: PiStepsDuotone,
-      },
-      {
-        name: 'Payment Checkout',
-        href: routes.eCommerce.checkout,
-        icon: PiCreditCardDuotone,
-      },
+      // {
+      //   name: 'Notification Preference',
+      //   href: routes.forms.notificationPreference,
+      //   icon: PiBellSimpleRingingDuotone,
+      //   badge: '',
+      // },
+      // {
+      //   name: 'Personal Information',
+      //   href: routes.forms.personalInformation,
+      //   icon: PiUserCircleDuotone,
+      // },
+      // {
+      //   name: 'Newsletter',
+      //   href: routes.forms.newsletter,
+      //   icon: PiEnvelopeSimpleOpenDuotone,
+      // },
+      // {
+      //   name: 'Multi Step',
+      //   href: routes.multiStep,
+      //   icon: PiStepsDuotone,
+      // },
+      // {
+      //   name: 'Payment Checkout',
+      //   href: routes.eCommerce.checkout,
+      //   icon: PiCreditCardDuotone,
+      // },
     ],
   },
   {
@@ -439,62 +439,62 @@ export const carbonMenuItems: MenuItemsType[] = [
         href: routes.tables.basic,
         icon: PiGridFourDuotone,
       },
-      {
-        name: 'Collapsible',
-        href: routes.tables.collapsible,
-        icon: PiCaretCircleUpDownDuotone,
-      },
-      {
-        name: 'Enhanced',
-        href: routes.tables.enhanced,
-        icon: PiTableDuotone,
-      },
-      {
-        name: 'Sticky Header',
-        href: routes.tables.stickyHeader,
-        icon: PiBrowserDuotone,
-      },
-      {
-        name: 'Pagination',
-        href: routes.tables.pagination,
-        icon: PiListNumbersDuotone,
-      },
-      {
-        name: 'Search',
-        href: routes.tables.search,
-        icon: PiHourglassSimpleDuotone,
-      },
-      {
-        name: 'TanStack Table',
-        href: routes.tables.tanTable,
-        icon: PiTableDuotone,
-        subMenuItems: [
-          {
-            name: 'Basic',
-            href: routes.tables.tanTable,
-          },
-          {
-            name: 'Resizable',
-            href: routes.tables.tanTableResizable,
-          },
-          {
-            name: 'Collapsible',
-            href: routes.tables.tanTableCollapsible,
-          },
-          {
-            name: 'Drag & Drop',
-            href: routes.tables.tanTableDnD,
-          },
-          {
-            name: 'Pinning',
-            href: routes.tables.tanTablePinning,
-          },
-          {
-            name: 'Enhanced',
-            href: routes.tables.tanTableEnhanced,
-          },
-        ],
-      },
+      // {
+      //   name: 'Collapsible',
+      //   href: routes.tables.collapsible,
+      //   icon: PiCaretCircleUpDownDuotone,
+      // },
+      // {
+      //   name: 'Enhanced',
+      //   href: routes.tables.enhanced,
+      //   icon: PiTableDuotone,
+      // },
+      // {
+      //   name: 'Sticky Header',
+      //   href: routes.tables.stickyHeader,
+      //   icon: PiBrowserDuotone,
+      // },
+      // {
+      //   name: 'Pagination',
+      //   href: routes.tables.pagination,
+      //   icon: PiListNumbersDuotone,
+      // },
+      // {
+      //   name: 'Search',
+      //   href: routes.tables.search,
+      //   icon: PiHourglassSimpleDuotone,
+      // },
+      // {
+      //   name: 'TanStack Table',
+      //   href: routes.tables.tanTable,
+      //   icon: PiTableDuotone,
+      //   subMenuItems: [
+      //     {
+      //       name: 'Basic',
+      //       href: routes.tables.tanTable,
+      //     },
+      //     {
+      //       name: 'Resizable',
+      //       href: routes.tables.tanTableResizable,
+      //     },
+      //     {
+      //       name: 'Collapsible',
+      //       href: routes.tables.tanTableCollapsible,
+      //     },
+      //     {
+      //       name: 'Drag & Drop',
+      //       href: routes.tables.tanTableDnD,
+      //     },
+      //     {
+      //       name: 'Pinning',
+      //       href: routes.tables.tanTablePinning,
+      //     },
+      //     {
+      //       name: 'Enhanced',
+      //       href: routes.tables.tanTableEnhanced,
+      //     },
+      //   ],
+      // },
     ],
   },
   // {
