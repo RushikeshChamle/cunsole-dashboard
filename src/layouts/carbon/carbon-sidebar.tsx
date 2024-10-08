@@ -3,12 +3,15 @@
 import cn from '@utils/class-names';
 import Link from 'next/link';
 import Logo from '@components/logo';
+
 import ProfileCardMenu from '@/layouts/carbon/profile-card-menu';
 import { PiDotsThreeVerticalBold, PiHeadsetBold } from 'react-icons/pi';
 import dynamic from 'next/dynamic';
 import SimpleBar from 'simplebar-react';
 import WorkSpaceSwitcher from '@/layouts/carbon/work-space-switcher';
 import { CarbonSidebarMenu } from './carbon-sidebar-menu';
+
+import {Title} from "rizzui";
 
 const NeedSupport = dynamic(() => import('@/layouts/carbon/need-support'), {
   ssr: false,
@@ -28,7 +31,9 @@ export function CarbonSidebar({ className }: { className?: string }) {
           aria-label="Site Logo"
           className="text-gray-800 hover:text-gray-900"
         >
-          <Logo className="max-w-[155px]" />
+          {/* <Logo className="max-w-[155px]" /> */}
+
+          <Title>Cunsole</Title>
         </Link>
       </div>
 

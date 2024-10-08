@@ -12,8 +12,12 @@ export default function AppDirection() {
   const { direction, setDirection } = useDirection();
 
   return (
-    <DrawerBlock title="Direction">
-      <RadioGroup
+    <DrawerBlock 
+    
+    title=""
+    
+    >
+      {/* <RadioGroup
         value={direction ?? 'ltr'}
         // @ts-ignore
         setValue={setDirection}
@@ -37,7 +41,7 @@ export default function AppDirection() {
             </span>
           </RadioBox>
         ))}
-      </RadioGroup>
+      </RadioGroup> */}
     </DrawerBlock>
   );
 }
