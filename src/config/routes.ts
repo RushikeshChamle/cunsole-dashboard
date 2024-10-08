@@ -86,7 +86,7 @@ export const routes = {
   rolesPermissions: '/roles-permissions',
   invoice: {
     home: '/invoice',
-    create: 'ecommerce/products/create',
+    create: 'invoice/create',
     details: (id: string) => `/invoice/${id}`,
     edit: (id: string) => `/invoice/${id}/edit`,
     builder: '/invoice/builder',

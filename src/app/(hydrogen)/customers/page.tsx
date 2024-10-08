@@ -137,6 +137,7 @@ export default function CustomersListPage() {
 
 
   // Define fetchData function
+  
   async function fetchData() {
     setLoading(true);
     setError(null);
