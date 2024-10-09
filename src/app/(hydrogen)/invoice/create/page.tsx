@@ -9,7 +9,7 @@ export const metadata = {
 };
 
 const pageHeader = {
-  title: 'Create Invoice',
+  title: 'Create Invoices Page',
   breadcrumb: [
     {
       href: routes.eCommerce.dashboard,
