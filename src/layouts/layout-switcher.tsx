@@ -44,7 +44,7 @@ export default function LayoutSwitcher() {
 
   return (
     <DrawerBlock title="">
-      {/* <RadioGroup
+      <RadioGroup
         value={layout}
         setValue={(selectedLayout: any) => setLayout(selectedLayout)}
         className="grid grid-cols-2 gap-4 sm:grid-cols-3"
@@ -69,7 +69,7 @@ export default function LayoutSwitcher() {
             </span>
           </RadioBox>
         ))}
-      </RadioGroup> */}
+      </RadioGroup>
     </DrawerBlock>
   );
 }
