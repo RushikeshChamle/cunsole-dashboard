@@ -75,7 +75,9 @@ export default function InvoiceEditPage({ params }: any) {
         <ImportButton title="Upload File" className="mt-4 @lg:mt-0" />
       </PageHeader>
 
-      <CreateInvoice id={params.id} record={invoiceData} />
+     
+      <CreateInvoice />
+
     </>
   );
 }
