@@ -11,13 +11,13 @@ import {
   statusOptions,
   renderOptionDisplayValue,
 } from '@/app/shared/invoice/form-utils';
-import { AddInvoiceItems } from '@/app/shared/invoice/add-invoice-items';
+// import { AddInvoiceItems } from '@/app/shared/invoice/add-invoice-items';
 import FormFooter from '@components/form-footer';
 import { toast } from 'react-hot-toast';
-import {
-  InvoiceFormInput,
-  invoiceFormSchema,
-} from '@/validators/create-invoice.schema';
+// import {
+
+//   invoiceFormSchema,
+// } from '@/validators/create-invoice.schema';
 
 // const invoiceItems = [
 //   { item: '', description: '', quantity: 1, price: undefined },
@@ -327,7 +327,7 @@ export default function CreateInvoice({
 
   return (
     <Form<InvoiceFormInput>
-      validationSchema={invoiceFormSchema}
+      // validationSchema={invoiceFormSchema}
       resetValues={reset}
       onSubmit={onSubmit}
       useFormProps={{
@@ -559,12 +559,12 @@ export default function CreateInvoice({
                 </div>
               </FormBlockWrapper>
 
-              <AddInvoiceItems
+              {/* <AddInvoiceItems
                 watch={watch}
                 control={control}
                 register={register}
                 errors={errors}
-              />
+              /> */}
             </div>
           </div>
 
