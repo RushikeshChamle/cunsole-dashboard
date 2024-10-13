@@ -65,7 +65,7 @@ export default function AuthWrapperFour({
         >
           <div className="flex flex-col items-center">
             <Link href={'/'} className="mb-7 inline-block max-w-[64px] lg:mb-9">
-              <Image src={siteConfig.icon} alt={siteConfig.title} />
+              {/* <Image src={siteConfig.icon} alt={siteConfig.title} /> */}
             </Link>
             <Title
               as="h2"
@@ -112,6 +112,12 @@ function AuthHeader() {
           alt={siteConfig.title}
           className="dark:invert"
           priority
+
+          style={{
+            width:"11rem"
+
+
+          }}
         />
       </Link>
       <div className="flex items-center space-x-2 md:space-x-4">
@@ -147,12 +153,12 @@ function AuthFooter() {
   return (
     <footer className="flex flex-col-reverse items-center justify-between px-4 py-5 lg:flex-row lg:px-16 lg:py-6 2xl:px-24 2xl:py-10">
       <div className="text-center leading-relaxed text-gray-500 lg:text-start">
-        © Copyright 2023. Theme by{' '}
+        © Copyright 2023. Cunsole
         <Link
-          href="https://redq.io/"
+          href="https://cunsole.com/"
           className="font-medium transition-colors hover:text-primary"
         >
-          RedQ
+          
         </Link>
         , all rights reserved.
       </div>

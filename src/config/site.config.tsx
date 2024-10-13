@@ -1,8 +1,11 @@
 import { Metadata } from 'next';
-import logoImg from '@public/logo.svg';
+import logoImg from '@public/Cunsole Logo.svg';
 import { LAYOUT_OPTIONS } from '@/config/enums';
-import logoIconImg from '@public/logo-short.svg';
+// import logoIconImg from '@public/logo-short.svg';
+import logoIconImg from '@public/Cunsol Small Icon.svg';
 import { OpenGraph } from 'next/dist/lib/metadata/types/opengraph-types';
+
+
 
 enum MODE {
   DARK = 'dark',
@@ -34,7 +37,7 @@ export const metaObject = (
       siteName: 'Isomorphic Furyroad', // https://developers.google.com/search/docs/appearance/site-names
       images: {
         url: 'https://s3.amazonaws.com/redqteam.com/isomorphic-furyroad/itemdep/isobanner.png',
-        width: 1200,
+        width: 12000,
         height: 630,
       },
       locale: 'en_US',
