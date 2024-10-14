@@ -386,6 +386,8 @@ import { PiPlusBold } from 'react-icons/pi';
 import { MagnifyingGlassIcon } from '@heroicons/react/24/outline';
 
 
+
+
 const pageHeader = {
   title: 'Email Triggers List',
   breadcrumb: [

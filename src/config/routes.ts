@@ -157,7 +157,7 @@ export const routes = {
     signIn1: '/auth/sign-in-1',
     signIn2: '/auth/sign-in-2',
     signIn3: '/auth/sign-in-3',
-    signIn4: '/auth/sign-in-4',
+    signIn4: '/auth/signin',
     signIn5: '/auth/sign-in-5',
     // forgot password
     forgotPassword1: '/auth/forgot-password-1',

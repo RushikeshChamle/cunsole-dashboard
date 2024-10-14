@@ -123,7 +123,7 @@ function DropdownMenu() {
   
       // Redirect to the login page after a short delay
       setTimeout(() => {
-        router.push('/auth/sign-in-4');
+        router.push('/auth/signin');
       }, 2000);
     } catch (error) {
       console.error('Error during sign out:', error);
@@ -136,7 +136,7 @@ function DropdownMenu() {
   
       // Redirect to login page even if there's an error, but with a longer delay
       setTimeout(() => {
-        router.push('/auth/sign-in-4');
+        router.push('/auth/signin');
       }, 3000);
     }
   };
