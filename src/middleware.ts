@@ -7,7 +7,7 @@ export function middleware(request: NextRequest) {
   
   if (!token) {
     // If there's no token, redirect to the signin page
-    return NextResponse.redirect(new URL('/auth/sign-in-4', request.url));
+    return NextResponse.redirect(new URL('/auth/signin', request.url));
   }
 
   // You might want to add some basic validation here

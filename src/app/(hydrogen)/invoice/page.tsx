@@ -251,7 +251,7 @@ import { routes } from '@/config/routes';
 import { Button, Loader } from 'rizzui';
 import PageHeader from '@/app/shared/page-header';
 import ExportButton from '@/app/shared/export-button';
-import { metaObject } from '@/config/site.config';
+
 import useSWR from 'swr';
 import { useEffect, useState } from 'react';
 import { Badge, Table, Input } from 'rizzui';
@@ -287,6 +287,13 @@ interface ApiResponse {
   customer: Customer;
   invoices: Invoice[];
 }
+
+import { metaObject } from '@/config/site.config';
+
+// export const metadata = {
+//   ...metaObject('E-Commerce'),
+// };
+
 
 // Function to get cookie value by name
 function getCookie(name: string): string | null {
