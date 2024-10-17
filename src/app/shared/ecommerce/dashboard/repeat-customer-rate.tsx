@@ -1,3 +1,4 @@
+
 // 'use client';
 
 // import { useState } from 'react';
@@ -20,67 +21,67 @@
 // const data = [
 //   {
 //     month: 'Jan',
-//     newCustomer: 2000,
-//     oldCustomer: 1000,
+//     invoiceTotal: 2000,
+//     collectedAmount: 1000,
 //   },
 //   {
 //     month: 'Feb',
-//     newCustomer: 4200,
-//     oldCustomer: 2798,
+//     invoiceTotal: 4200,
+//     collectedAmount: 2798,
 //   },
 //   {
 //     month: 'Mar',
-//     newCustomer: 5000,
-//     oldCustomer: 4000,
+//     invoiceTotal: 5000,
+//     collectedAmount: 4000,
 //   },
 //   {
 //     month: 'Apr',
-//     newCustomer: 5780,
-//     oldCustomer: 3908,
+//     invoiceTotal: 5780,
+//     collectedAmount: 3908,
 //   },
 //   {
 //     month: 'May',
-//     newCustomer: 4890,
-//     oldCustomer: 2500,
+//     invoiceTotal: 4890,
+//     collectedAmount: 2500,
 //   },
 //   {
 //     month: 'Jun',
-//     newCustomer: 8000,
-//     oldCustomer: 5200,
+//     invoiceTotal: 8000,
+//     collectedAmount: 5200,
 //   },
 //   {
 //     month: 'Jul',
-//     newCustomer: 4890,
-//     oldCustomer: 6500,
+//     invoiceTotal: 4890,
+//     collectedAmount: 6500,
 //   },
 //   {
 //     month: 'Aug',
-//     newCustomer: 3780,
-//     oldCustomer: 4908,
+//     invoiceTotal: 3780,
+//     collectedAmount: 4908,
 //   },
 //   {
 //     month: 'Sep',
-//     newCustomer: 7800,
-//     oldCustomer: 2800,
+//     invoiceTotal: 7800,
+//     collectedAmount: 2800,
 //   },
 //   {
 //     month: 'Oct',
-//     newCustomer: 5780,
-//     oldCustomer: 1908,
+//     invoiceTotal: 5780,
+//     collectedAmount: 1908,
 //   },
 //   {
 //     month: 'Nov',
-//     newCustomer: 2780,
-//     oldCustomer: 3908,
+//     invoiceTotal: 2780,
+//     collectedAmount: 3908,
 //   },
 //   {
 //     month: 'Dec',
-//     newCustomer: 7500,
-//     oldCustomer: 3000,
+//     invoiceTotal: 7500,
+//     collectedAmount: 3000,
 //   },
 // ];
 
-// export default function RepeatCustomerRate({
+// export default function SalesOverview({
 //   className,
 // }: {
 //   className?: string;
@@ -89,16 +90,16 @@
 //   const [startDate, setStartDate] = useState<Date>(new Date());
 //   return (
 //     <WidgetCard
-//       title={'Repeat Customer Rate'}
+//       title={'Payment Details'}
 //       description={
 //         <>
-//           <Badge renderAsDot className=" ms-1 bg-[#10b981]" /> New
+//           <Badge renderAsDot className="ms-1 bg-[#10b981]" /> 
 //           <Text as="span" className="hidden xs:inline-flex">
-//             Customer
+//             Total Invoice Amount
 //           </Text>
-//           <Badge renderAsDot className="me-1 ms-4 bg-[#0470f2]" /> Old{' '}
+//           <Badge renderAsDot className="me-1 ms-4 bg-[#0470f2]" /> Collected{' '}
 //           <Text as="span" className="hidden xs:inline-flex">
-//             Customer
+//             Amount
 //           </Text>
 //         </>
 //       }
@@ -118,7 +119,7 @@
 //       className={className}
 //     >
 //       <SimpleBar>
-//         <div className="h-[480px] w-full pt-9">
+//         <div className="h-[400px] w-full pt-9">
 //           <ResponsiveContainer
 //             width="100%"
 //             height="100%"
@@ -132,11 +133,11 @@
 //               className="[&_.recharts-cartesian-axis-tick-value]:fill-gray-500 rtl:[&_.recharts-cartesian-axis.yAxis]:-translate-x-12 [&_.recharts-cartesian-grid-vertical]:opacity-0"
 //             >
 //               <defs>
-//                 <linearGradient id="newCustomer" x1="0" y1="0" x2="0" y2="1">
+//                 <linearGradient id="invoiceTotal" x1="0" y1="0" x2="0" y2="1">
 //                   <stop offset="5%" stopColor="#ffdadf" stopOpacity={0.1} />
 //                   <stop offset="95%" stopColor="#10b981" stopOpacity={0} />
 //                 </linearGradient>
-//                 <linearGradient id="oldCustomer" x1="0" y1="0" x2="0" y2="1">
+//                 <linearGradient id="collectedAmount" x1="0" y1="0" x2="0" y2="1">
 //                   <stop offset="5%" stopColor="#dbeafe" stopOpacity={0.1} />
 //                   <stop offset="95%" stopColor="#3872FA" stopOpacity={0} />
 //                 </linearGradient>
@@ -152,19 +153,19 @@
 //               <Tooltip content={<CustomTooltip />} />
 //               <Area
 //                 type="natural"
-//                 dataKey="newCustomer"
+//                 dataKey="invoiceTotal"
 //                 stroke="#10b981"
 //                 strokeWidth={2.3}
 //                 fillOpacity={1}
-//                 fill="url(#newCustomer)"
+//                 fill="url(#invoiceTotal)"
 //               />
 //               <Area
 //                 type="natural"
-//                 dataKey="oldCustomer"
+//                 dataKey="collectedAmount"
 //                 stroke="#3872FA"
 //                 strokeWidth={2.3}
 //                 fillOpacity={1}
-//                 fill="url(#oldCustomer)"
+//                 fill="url(#collectedAmount)"
 //               />
 //             </AreaChart>
 //           </ResponsiveContainer>
@@ -174,10 +175,9 @@
 //   );
 // }
 
-
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import WidgetCard from '@components/cards/widget-card';
 import { DatePicker } from '@ui/datepicker';
 import { Badge, Text } from 'rizzui';
@@ -189,94 +189,94 @@ import {
   ResponsiveContainer,
   AreaChart,
   Area,
+  ReferenceLine,
 } from 'recharts';
 import { CustomTooltip } from '@components/charts/custom-tooltip';
 import { useMedia } from '@hooks/use-media';
 import SimpleBar from '@ui/simplebar';
+import axios from '@/axiosInstance'; // Custom Axios instance with token configuration
 
-const data = [
-  {
-    month: 'Jan',
-    invoiceTotal: 2000,
-    collectedAmount: 1000,
-  },
-  {
-    month: 'Feb',
-    invoiceTotal: 4200,
-    collectedAmount: 2798,
-  },
-  {
-    month: 'Mar',
-    invoiceTotal: 5000,
-    collectedAmount: 4000,
-  },
-  {
-    month: 'Apr',
-    invoiceTotal: 5780,
-    collectedAmount: 3908,
-  },
-  {
-    month: 'May',
-    invoiceTotal: 4890,
-    collectedAmount: 2500,
-  },
-  {
-    month: 'Jun',
-    invoiceTotal: 8000,
-    collectedAmount: 5200,
-  },
-  {
-    month: 'Jul',
-    invoiceTotal: 4890,
-    collectedAmount: 6500,
-  },
-  {
-    month: 'Aug',
-    invoiceTotal: 3780,
-    collectedAmount: 4908,
-  },
-  {
-    month: 'Sep',
-    invoiceTotal: 7800,
-    collectedAmount: 2800,
-  },
-  {
-    month: 'Oct',
-    invoiceTotal: 5780,
-    collectedAmount: 1908,
-  },
-  {
-    month: 'Nov',
-    invoiceTotal: 2780,
-    collectedAmount: 3908,
-  },
-  {
-    month: 'Dec',
-    invoiceTotal: 7500,
-    collectedAmount: 3000,
-  },
-];
+interface Invoice {
+  id: number;
+  issuedate: string;
+  total_amount: number;
+}
 
-export default function SalesOverview({
-  className,
-}: {
-  className?: string;
-}) {
+interface Payment {
+  id: number;
+  amount: number;
+  payment_date: string;
+}
+
+interface ApiResponse {
+  invoices: Invoice[];
+  payments: Payment[];
+}
+
+export default function SalesOverview({ className }: { className?: string }) {
   const isTablet = useMedia('(max-width: 820px)', false);
   const [startDate, setStartDate] = useState<Date>(new Date());
+  const [data, setData] = useState<any[]>([]);
+
+  useEffect(() => {
+    fetchInvoicePaymentData();
+  }, []);
+
+  const fetchInvoicePaymentData = async () => {
+    try {
+      const response = await axios.get<ApiResponse>('/invoices/invoice_payment_card/');
+      const { invoices, payments } = response.data;
+
+      // Grouping invoices and payments by month
+      const chartData = transformData(invoices, payments);
+      setData(chartData);
+    } catch (error) {
+      console.error('Error fetching invoice/payment data:', error);
+    }
+  };
+
+  const transformData = (invoices: Invoice[], payments: Payment[]) => {
+    const monthNames = [
+      'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
+      'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec',
+    ];
+
+    const monthlyTotals: Record<string, { invoiceTotal: number; collectedAmount: number }> = {};
+
+    // Initialize each month with 0 values
+    monthNames.forEach((month) => {
+      monthlyTotals[month] = { invoiceTotal: 0, collectedAmount: 0 };
+    });
+
+    // Aggregate invoices, ensuring no negative values
+    invoices.forEach((invoice) => {
+      const month = monthNames[new Date(invoice.issuedate).getMonth()];
+      monthlyTotals[month].invoiceTotal += Math.max(invoice.total_amount, 0);
+    });
+
+    // Aggregate payments, ensuring no negative values
+    payments.forEach((payment) => {
+      const month = monthNames[new Date(payment.payment_date).getMonth()];
+      monthlyTotals[month].collectedAmount += Math.max(payment.amount, 0);
+    });
+
+    // Convert to chart-compatible format
+    return monthNames.map((month) => ({
+      month,
+      invoiceTotal: monthlyTotals[month].invoiceTotal,
+      collectedAmount: monthlyTotals[month].collectedAmount,
+    }));
+  };
+
   return (
     <WidgetCard
-      title={'Payment Details'}
+      title="Payment Details"
       description={
         <>
-          <Badge renderAsDot className="ms-1 bg-[#10b981]" /> 
-          <Text as="span" className="hidden xs:inline-flex">
-            Total Invoice Amount
-          </Text>
-          <Badge renderAsDot className="me-1 ms-4 bg-[#0470f2]" /> Collected{' '}
-          <Text as="span" className="hidden xs:inline-flex">
-            Amount
-          </Text>
+          <Badge renderAsDot className="ms-1 bg-[#10b981]" />
+          <Text as="span" className="hidden xs:inline-flex">Total Invoice Amount</Text>
+          <Badge renderAsDot className="me-1 ms-4 bg-[#0470f2]" /> 
+          <Text as="span" className="hidden xs:inline-flex">Collected Amount</Text>
         </>
       }
       descriptionClassName="text-gray-500 mt-1.5"
@@ -303,9 +303,7 @@ export default function SalesOverview({
           >
             <AreaChart
               data={data}
-              margin={{
-                left: -16,
-              }}
+              margin={{ left: -16 }}
               className="[&_.recharts-cartesian-axis-tick-value]:fill-gray-500 rtl:[&_.recharts-cartesian-axis.yAxis]:-translate-x-12 [&_.recharts-cartesian-grid-vertical]:opacity-0"
             >
               <defs>
@@ -319,16 +317,12 @@ export default function SalesOverview({
                 </linearGradient>
               </defs>
               <CartesianGrid strokeDasharray="8 10" strokeOpacity={0.435} />
-              <XAxis
-                dataKey="month"
-                axisLine={false}
-                tickLine={false}
-                className=" "
-              />
-              <YAxis axisLine={false} tickLine={false} className=" " />
+              <XAxis dataKey="month" axisLine={false} tickLine={false} />
+              <YAxis axisLine={false} tickLine={false} domain={[0, 'auto']} />
               <Tooltip content={<CustomTooltip />} />
+              <ReferenceLine y={0} stroke="#000" strokeDasharray="3 3" />
               <Area
-                type="natural"
+                type="monotone"
                 dataKey="invoiceTotal"
                 stroke="#10b981"
                 strokeWidth={2.3}
@@ -336,7 +330,7 @@ export default function SalesOverview({
                 fill="url(#invoiceTotal)"
               />
               <Area
-                type="natural"
+                type="monotone"
                 dataKey="collectedAmount"
                 stroke="#3872FA"
                 strokeWidth={2.3}
@@ -350,4 +344,3 @@ export default function SalesOverview({
     </WidgetCard>
   );
 }
-

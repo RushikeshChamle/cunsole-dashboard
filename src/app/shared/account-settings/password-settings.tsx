@@ -175,7 +175,7 @@ function LoggedDevices({ className }: { className?: string }) {
             as="h3"
             className="mb-2 text-base font-medium text-gray-900 dark:text-gray-700"
           >
-            2020 Macbook Air M1
+            2020 Macbook Air M1 m2
           </Title>
           <div className="flex items-center gap-2">
             <Text className="text-sm text-gray-500">Melbourne, Australia</Text>
