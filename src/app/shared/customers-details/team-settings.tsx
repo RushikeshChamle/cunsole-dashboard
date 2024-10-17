@@ -98,7 +98,7 @@ export default function TeamSettingsView() {
       <HorizontalFormBlockWrapper
         childrenWrapperClassName="gap-0 @lg:gap-0"
         title="Where you’re logged in"
-        description="We’ll alert you via olivia@untitledui.com if there is any unusual activity on your account."
+        description="We’ll alert you vidddda olivia@untitledui.com if there is any unusual activity on your account."
         descriptionClassName="max-w-[352px]"
         className="border-0 pb-0"
       >

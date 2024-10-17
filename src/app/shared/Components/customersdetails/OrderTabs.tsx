@@ -23,14 +23,15 @@ export default function OrderTabs({ params }: any ) {
         <Tab.ListItem>Invoices</Tab.ListItem>
         <Tab.ListItem>Transactions</Tab.ListItem>
         <Tab.ListItem>Customer details</Tab.ListItem>
-        <Tab.ListItem>Activiy Logs</Tab.ListItem>
+        {/* <Tab.ListItem>Activiy Logs</Tab.ListItem> */}
       </Tab.List>
 
 
       <Tab.Panels>
         <Tab.Panel>
           <CartProvider>
-            <Overviewtab customerId={customerId}  />
+            {/* <Overviewtab customerId={customerId}  /> */}
+            <Details customerId={customerId}/>
           </CartProvider>
        
         </Tab.Panel>
@@ -54,11 +55,11 @@ export default function OrderTabs({ params }: any ) {
 
 
         </Tab.Panel>
-        <Tab.Panel>
+        {/* <Tab.Panel>
         <ActivityLogs customerId={customerId}/>
 
 
-        </Tab.Panel>
+        </Tab.Panel> */}
       </Tab.Panels>
     </Tab>
   );
