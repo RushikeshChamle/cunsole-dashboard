@@ -377,18 +377,32 @@ export default function CustomersListPage() {
   }, []);
 
   // Filter invoices based on the search term
+  // const filteredData = customersData
+  //   .map((customerData) => ({
+  //     ...customerData,
+  //     invoices: customerData.invoices.filter((invoice) => {
+  //       return (
+  //         invoice.customid.toLowerCase().includes(searchTerm.toLowerCase()) ||
+  //         customerData.customer.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+  //         customerData.customer.email.toLowerCase().includes(searchTerm.toLowerCase())
+  //       );
+  //     }),
+  //   }))
+  //   .filter((customerData) => customerData.invoices.length > 0);
+
   const filteredData = customersData
-    .map((customerData) => ({
-      ...customerData,
-      invoices: customerData.invoices.filter((invoice) => {
-        return (
-          invoice.customid.toLowerCase().includes(searchTerm.toLowerCase()) ||
-          customerData.customer.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-          customerData.customer.email.toLowerCase().includes(searchTerm.toLowerCase())
-        );
-      }),
-    }))
-    .filter((customerData) => customerData.invoices.length > 0);
+  .map((customerData) => ({
+    ...customerData,
+    invoices: customerData.invoices.filter((invoice) => {
+      const customIdMatch = invoice.customid && invoice.customid.toLowerCase().includes(searchTerm.toLowerCase());
+      const customerNameMatch = customerData.customer.name && customerData.customer.name.toLowerCase().includes(searchTerm.toLowerCase());
+      const customerEmailMatch = customerData.customer.email && customerData.customer.email.toLowerCase().includes(searchTerm.toLowerCase());
+
+      return customIdMatch || customerNameMatch || customerEmailMatch;
+    }),
+  }))
+  .filter((customerData) => customerData.invoices.length > 0);
+
 
   if (loading) {
     return (

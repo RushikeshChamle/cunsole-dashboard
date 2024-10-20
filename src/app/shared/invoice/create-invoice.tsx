@@ -1,59 +1,496 @@
+// 'use client';
+
+// import { useState, useEffect } from 'react';
+// import { SubmitHandler, Controller } from 'react-hook-form';
+// import { Form } from '@ui/form';
+// import { Input, Textarea, Select, Text } from 'rizzui';
+// import { PhoneNumber } from '@ui/phone-input';
+// import { toast } from 'react-hot-toast';
+// import axiosInstance from '@/axiosInstance';
+// import FormFooter from '@components/form-footer';
+// import { z } from 'zod';
+// import { FormBlockWrapper } from '@/app/shared/invoice/form-utils';
+// import { DatePicker } from '@ui/datepicker';
+
+// export const invoiceFormSchema = z.object({
+//   customid: z.string().min(1, 'Invoice Number is required'),
+//   issuedate: z.date(),
+//   duedate: z.date(),
+//   customerid: z.string().min(1, 'Customer is required'),
+//   toAddress: z.string().min(1, 'Customer Address is required'),
+//   toPhone: z.string().optional(),
+//   total_amount: z.string().min(1, 'Total amount is required'),
+//   paid_amount: z.string().optional(),
+//   reference: z.string().optional(),
+// });
+
+// export type InvoiceFormInput = z.infer<typeof invoiceFormSchema>;
+
+// export default function CreateInvoice({
+//   id,
+//   record,
+// }: {
+//   id?: string;
+//   record?: InvoiceFormInput;
+// }) {
+//   const [customers, setCustomers] = useState([]);
+//   const [selectedCustomer, setSelectedCustomer] = useState(null);
+//   const [isLoading, setLoading] = useState(false);
+//   const [reset, setReset] = useState({});
+
+//   // Fetch customers from backend API
+//   useEffect(() => {
+//     axiosInstance
+//       .get('/customers/getcustomers/')
+//       .then((response) => {
+//         const customerOptions = response.data.map((customer) => ({
+//           label: customer.name,
+//           value: customer.id,
+//           company: customer.companyname,
+//           phone: customer.phone,
+//           address: customer.address,
+//         }));
+//         setCustomers(customerOptions);
+//       })
+//       .catch((error) => console.error('Error fetching customers:', error));
+//   }, []);
+
+//   const handleCustomerChange = (selected) => {
+//     setSelectedCustomer(selected);
+//   };
+
+//   const onSubmit: SubmitHandler<InvoiceFormInput> = async (data) => {
+//     setLoading(true);
+//     try {
+//       await axiosInstance.post('/invoices/createinvoices/', data);
+//       toast.success(`Invoice ${id ? 'updated' : 'created'} successfully!`);
+//       setReset({ ...data, customid: '', total_amount: '', paid_amount: '' });
+//     } catch (error) {
+//       toast.error('Failed to create invoice.');
+//       console.error('Invoice creation error:', error);
+//     } finally {
+//       setLoading(false);
+//     }
+//   };
+
+//   return (
+//     <Form<InvoiceFormInput>
+//       validationSchema={invoiceFormSchema}
+//       resetValues={reset}
+//       onSubmit={onSubmit}
+//       useFormProps={{
+//         defaultValues: {
+//           ...record,
+//           // customid: 'INV-0071',
+//           issuedate: new Date(),
+//           duedate: new Date(),
+//           toPhone: selectedCustomer?.phone || '',
+//           toAddress: selectedCustomer?.address || '',
+//         },
+//       }}
+//       className="flex flex-grow flex-col @container [&_label]:font-medium"
+//     >
+//       {({ register, control, setValue, formState: { errors } }) => (
+//         <>
+//           <div className="grid grid-cols-1 gap-8">
+//             <FormBlockWrapper title="Invoice Details">
+//               <Input
+//                 label="Invoice Number"
+//                 {...register('customid')}
+//                 error={errors.customid?.message}
+//               />
+//               <Controller
+//                 name="issuedate"
+//                 control={control}
+//                 render={({ field: { value, onChange } }) => (
+//                   <DatePicker
+//                     inputProps={{ label: 'Issue Date' }}
+//                     placeholderText="Select Issue Date"
+//                     selected={value}
+//                     onChange={onChange}
+//                   />
+//                 )}
+//               />
+//               <Controller
+//                 name="duedate"
+//                 control={control}
+//                 render={({ field: { value, onChange } }) => (
+//                   <DatePicker
+//                     inputProps={{ label: 'Due Date' }}
+//                     placeholderText="Select Due Date"
+//                     selected={value}
+//                     onChange={onChange}
+//                   />
+//                 )}
+//               />
+//             </FormBlockWrapper>
+
+//             <FormBlockWrapper title="Recipient Information">
+//               <Controller
+//                 name="customerid"
+//                 control={control}
+//                 render={({ field }) => (
+//                   <Select
+//                     label="Customer Name"
+//                     options={customers}
+//                     value={customers.find((c) => c.value === field.value) || null}
+//                     onChange={(selected) => {
+//                       field.onChange(selected?.value);
+//                       handleCustomerChange(selected);
+//                       setValue('toPhone', selected?.phone || '');
+//                       setValue('toAddress', selected?.address || '');
+//                     }}
+//                     searchable
+//                     displayValue={(value) => renderDisplayValue(value)}
+//                     getOptionDisplayValue={(option) =>
+//                       renderOptionDisplayValue(option)
+//                     }
+//                     clearable
+//                     onClear={() => {
+//                       field.onChange('');
+//                       setValue('toPhone', '');
+//                       setValue('toAddress', '');
+//                     }}
+//                     error={errors.customerid?.message} // Adjusted from customerId to customerid
+//                   />
+//                 )}
+//               />
+//               <Controller
+//                 name="toPhone"
+//                 control={control}
+//                 render={({ field }) => (
+//                   <PhoneNumber label="Phone" country="us" {...field} />
+//                 )}
+//               />
+//               <Textarea
+//                 label="Customer Address"
+//                 {...register('toAddress')}
+//                 error={errors.toAddress?.message}
+//                 textareaClassName="h-25"
+//                 className="col-span-2"
+//               />
+//             </FormBlockWrapper>
+
+//             <FormBlockWrapper title="Financial Details">
+//               <Input
+//                 label="Total Amount"
+//                 {...register('total_amount')} // Adjusted to total_amount
+//                 error={errors.total_amount?.message} // Adjusted from totalAmount to total_amount
+//               />
+//               {/* <Input
+//                 label="Paid Amount"
+//                 {...register('paid_amount')} // Adjusted to paid_amount
+//                 error={errors.paid_amount?.message} // Adjusted from paidAmount to paid_amount
+//               /> */}
+//             </FormBlockWrapper>
+
+//             <FormBlockWrapper title="Additional Details">
+//               <Input
+//                 label="Reference"
+//                 {...register('reference')}
+//                 error={errors.reference?.message}
+//               />
+//             </FormBlockWrapper>
+
+//             <FormFooter
+//               isLoading={isLoading}
+//               submitBtnText={id ? 'Update Invoice' : 'Create Invoice'}
+//             />
+//           </div>
+//         </>
+//       )}
+//     </Form>
+//   );
+// }
+
+// function renderDisplayValue(value) {
+//   return (
+//     <span className="flex items-center gap-2">
+//       <Text fontWeight="medium">{value?.label}</Text>
+//     </span>
+//   );
+// }
+
+// function renderOptionDisplayValue(option) {
+//   return (
+//     <div className="flex items-center gap-3">
+//       <div>
+//         <Text fontWeight="medium">{option.label}</Text>
+//         <Text className="text-sm text-gray-500" style={{ fontSize: '0.875rem' }}>
+//           {option.company}
+//         </Text>
+//       </div>
+//     </div>
+//   );
+// }
+
+
+// 'use client';
+
+// import { useState, useEffect } from 'react';
+// import { SubmitHandler, Controller } from 'react-hook-form';
+// import { Form } from '@ui/form';
+// import { Input, Textarea, Select, Text } from 'rizzui';
+// import { PhoneNumber } from '@ui/phone-input';
+// import { toast } from 'react-hot-toast';
+// import axiosInstance from '@/axiosInstance';
+// import FormFooter from '@components/form-footer';
+// import { z } from 'zod';
+// import { FormBlockWrapper } from '@/app/shared/invoice/form-utils';
+// import { DatePicker } from '@ui/datepicker';
+
+// export const invoiceFormSchema = z.object({
+//   customid: z.string().min(1, 'Invoice Number is required'),
+//   issuedate: z.date(),
+//   duedate: z.date(),
+//   customerid: z.string().min(1, 'Customer is required'),
+//   toAddress: z.string().min(1, 'Customer Address is required'),
+//   toPhone: z.string().optional(),
+//   total_amount: z.string().min(1, 'Total amount is required'),
+//   paid_amount: z.string().optional(),
+//   reference: z.string().optional(),
+// });
+
+// export type InvoiceFormInput = z.infer<typeof invoiceFormSchema>;
+
+// type Customer = {
+//   value: string;
+//   phone: string;
+//   address: string;
+//   company: string;
+//   label: string;
+// };
+
+// export default function CreateInvoice({
+//   id,
+//   record,
+// }: {
+//   id?: string;
+//   record?: InvoiceFormInput;
+// }) {
+//   const [customers, setCustomers] = useState<Customer[]>([]);
+//   const [selectedCustomer, setSelectedCustomer] = useState<Customer | null>(null);
+//   const [isLoading, setLoading] = useState(false);
+//   const [reset, setReset] = useState<Partial<InvoiceFormInput>>({});
+
+//   // Fetch customers from backend API
+//   useEffect(() => {
+//     axiosInstance
+//       .get('/customers/getcustomers/')
+//       .then((response) => {
+//         const customerOptions = response.data.map((customer: any) => ({
+//           label: customer.name,
+//           value: customer.id,
+//           company: customer.companyname,
+//           phone: customer.phone,
+//           address: customer.address,
+//         }));
+//         setCustomers(customerOptions);
+//       })
+//       .catch((error) => console.error('Error fetching customers:', error));
+//   }, []);
+
+//   const handleCustomerChange = (selected: Customer | null) => {
+//     setSelectedCustomer(selected);
+//   };
+
+  
+//   const onSubmit: SubmitHandler<InvoiceFormInput> = async (data) => {
+//     setLoading(true);
+//     try {
+//       await axiosInstance.post('/invoices/createinvoices/', data);
+//       toast.success(`Invoice ${id ? 'updated' : 'created'} successfully!`);
+//       setReset({ ...data, customid: '', total_amount: '', paid_amount: '' });
+//     } catch (error) {
+//       toast.error('Failed to create invoice.');
+//       console.error('Invoice creation error:', error);
+//     } finally {
+//       setLoading(false);
+//     }
+//   };
+
+//   return (
+//     <Form<InvoiceFormInput>
+//       validationSchema={invoiceFormSchema}
+//       resetValues={reset}
+//       onSubmit={onSubmit}
+//       useFormProps={{
+//         defaultValues: {
+//           ...record,
+//           issuedate: new Date(),
+//           duedate: new Date(),
+//           toPhone: selectedCustomer?.phone || '',
+//           toAddress: selectedCustomer?.address || '',
+//         },
+//       }}
+//       className="flex flex-grow flex-col @container [&_label]:font-medium"
+//     >
+//       {({ register, control, setValue, formState: { errors } }) => (
+//         <>
+//           <div className="grid grid-cols-1 gap-8">
+//             <FormBlockWrapper title="Invoice Details">
+//               <Input
+//                 label="Invoice Number"
+//                 {...register('customid')}
+//                 error={errors.customid?.message}
+//               />
+//               <Controller
+//                 name="issuedate"
+//                 control={control}
+//                 render={({ field: { value, onChange } }) => (
+//                   <DatePicker
+//                     inputProps={{ label: 'Issue Date' }}
+//                     placeholderText="Select Issue Date"
+//                     selected={value}
+//                     onChange={onChange}
+//                   />
+//                 )}
+//               />
+//               <Controller
+//                 name="duedate"
+//                 control={control}
+//                 render={({ field: { value, onChange } }) => (
+//                   <DatePicker
+//                     inputProps={{ label: 'Due Date' }}
+//                     placeholderText="Select Due Date"
+//                     selected={value}
+//                     onChange={onChange}
+//                   />
+//                 )}
+//               />
+//             </FormBlockWrapper>
+
+//             <FormBlockWrapper title="Recipient Information">
+//               <Controller
+//                 name="customerid"
+//                 control={control}
+//                 render={({ field }) => (
+//                   <Select
+//                     label="Customer Name"
+//                     options={customers}
+//                     value={customers.find((c) => c.value === field.value) || null}
+//                     onChange={(selected) => {
+//                       field.onChange(selected?.value);
+//                       handleCustomerChange(selected);
+//                       setValue('toPhone', selected?.phone || '');
+//                       setValue('toAddress', selected?.address || '');
+//                     }}
+//                     searchable
+//                     displayValue={(value) => renderDisplayValue(value)}
+//                     getOptionDisplayValue={(option) =>
+//                       renderOptionDisplayValue(option)
+//                     }
+//                     clearable
+//                     onClear={() => {
+//                       field.onChange('');
+//                       setValue('toPhone', '');
+//                       setValue('toAddress', '');
+//                     }}
+//                     error={errors.customerid?.message}
+//                   />
+//                 )}
+//               />
+//               <Controller
+//                 name="toPhone"
+//                 control={control}
+//                 render={({ field }) => (
+//                   <PhoneNumber label="Phone" country="us" {...field} />
+//                 )}
+//               />
+//               <Textarea
+//                 label="Customer Address"
+//                 {...register('toAddress')}
+//                 error={errors.toAddress?.message}
+//                 textareaClassName="h-25"
+//                 className="col-span-2"
+//               />
+//             </FormBlockWrapper>
+
+//             <FormBlockWrapper title="Financial Details">
+//               <Input
+//                 label="Total Amount"
+//                 {...register('total_amount')}
+//                 error={errors.total_amount?.message}
+//               />
+//             </FormBlockWrapper>
+
+//             <FormBlockWrapper title="Additional Details">
+//               <Input
+//                 label="Reference"
+//                 {...register('reference')}
+//                 error={errors.reference?.message}
+//               />
+//             </FormBlockWrapper>
+
+//             <FormFooter
+//               isLoading={isLoading}
+//               submitBtnText={id ? 'Update Invoice' : 'Create Invoice'}
+//             />
+//           </div>
+//         </>
+//       )}
+//     </Form>
+//   );
+// }
+
+// function renderDisplayValue(value: { label: string } | null) {
+//   return (
+//     <span className="flex items-center gap-2">
+//       <Text fontWeight="medium">{value?.label}</Text>
+//     </span>
+//   );
+// }
+
+// function renderOptionDisplayValue(option: { label: string; company: string }) {
+//   return (
+//     <div className="flex items-center gap-3">
+//       <div>
+//         <Text fontWeight="medium">{option.label}</Text>
+//         <Text className="text-sm text-gray-500" style={{ fontSize: '0.875rem' }}>
+//           {option.company}
+//         </Text>
+//       </div>
+//     </div>
+//   );
+// }
+
+
+
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { SubmitHandler, Controller } from 'react-hook-form';
 import { Form } from '@ui/form';
-import { Text, Input, Select, Textarea } from 'rizzui';
+import { Input, Textarea, Select, Text } from 'rizzui';
 import { PhoneNumber } from '@ui/phone-input';
-import { DatePicker } from '@ui/datepicker';
-import { z } from 'zod';
-
-import {
-  FormBlockWrapper,
-  statusOptions,
-  renderOptionDisplayValue,
-} from '@/app/shared/invoice/form-utils';
-// import { AddInvoiceItems } from '@/app/shared/invoice/add-invoice-items';
-import FormFooter from '@components/form-footer';
 import { toast } from 'react-hot-toast';
-// import {
+import axiosInstance from '@/axiosInstance';
+import FormFooter from '@components/form-footer';
+import { z } from 'zod';
+import { FormBlockWrapper } from '@/app/shared/invoice/form-utils';
+import { DatePicker } from '@ui/datepicker';
 
-
-
-// Zod schema for invoice form
 export const invoiceFormSchema = z.object({
-  // Invoice Details
-  invoiceNumber: z.string().min(1, 'Invoice Number is required'),
-  customId: z.string(),
-  externalId: z.string(),
-  name: z.string().min(1, 'Invoice name is required'),
-  status: z.string().min(1, 'Status is required'),
-  issueDate: z.date(),
-  dueDate: z.date(),
-  
-  // From (Sender) Details
-  fromName: z.string().min(1, 'From Name is required'),
-  fromAddress: z.string().min(1, 'From Address is required'),
-  fromPhone: z.string().optional(),
-  
-  // To (Recipient) Details
-  toName: z.string().min(1, 'To Name is required'),
-  toAddress: z.string().min(1, 'To Address is required'),
+  customid: z.string().min(1, 'Invoice Number is required'),
+  issuedate: z.date(),
+  duedate: z.date(),
+  customerid: z.string().min(1, 'Customer is required'),
+  toAddress: z.string().min(1, 'Customer Address is required'),
   toPhone: z.string().optional(),
-  customerId: z.string(),
-  
-  // Financial Details
-  currency: z.string().min(1, 'Currency is required'),
-  currencyCode: z.string().min(1, 'Currency code is required'),
-  totalAmount: z.string().min(1, 'Total amount is required'),
-  paidAmount: z.string().min(1, 'Paid amount is required'),
-  
-  // Additional Details
-  reference: z.string(),
-  createDate: z.date(),
+  total_amount: z.string().min(1, 'Total amount is required'),
+  paid_amount: z.string().optional(),
+  reference: z.string().optional(),
 });
 
 export type InvoiceFormInput = z.infer<typeof invoiceFormSchema>;
+
+type Customer = {
+  value: string;
+  phone: string;
+  address: string;
+  company: string;
+  label: string;
+};
 
 export default function CreateInvoice({
   id,
@@ -62,40 +499,44 @@ export default function CreateInvoice({
   id?: string;
   record?: InvoiceFormInput;
 }) {
-  const [reset, setReset] = useState({});
+  const [customers, setCustomers] = useState<Customer[]>([]);
+  const [selectedCustomer, setSelectedCustomer] = useState<Customer | null>(null);
   const [isLoading, setLoading] = useState(false);
+  const [reset, setReset] = useState<Partial<InvoiceFormInput>>({});
 
-  const onSubmit: SubmitHandler<InvoiceFormInput> = (data) => {
-    toast.success(
-      <span className="font-bold">Invoice successfully {id ? 'updated' : 'created'}</span>
-    );
+  // Fetch customers from backend API
+  useEffect(() => {
+    axiosInstance
+      .get('/customers/getcustomers/')
+      .then((response) => {
+        const customerOptions = response.data.map((customer: any): Customer => ({
+          label: customer.name,
+          value: customer.id,
+          company: customer.companyname,
+          phone: customer.phone,
+          address: customer.address,
+        }));
+        setCustomers(customerOptions);
+      })
+      .catch((error) => console.error('Error fetching customers:', error));
+  }, []);
+
+  const handleCustomerChange = (selected: Customer | null) => {
+    setSelectedCustomer(selected);
+  };
+
+  const onSubmit: SubmitHandler<InvoiceFormInput> = async (data) => {
     setLoading(true);
-    setTimeout(() => {
+    try {
+      await axiosInstance.post('/invoices/createinvoices/', data);
+      toast.success(`Invoice ${id ? 'updated' : 'created'} successfully!`);
+      setReset({ ...data, customid: '', total_amount: '', paid_amount: '' });
+    } catch (error) {
+      toast.error('Failed to create invoice.');
+      console.error('Invoice creation error:', error);
+    } finally {
       setLoading(false);
-      console.log('createInvoice data ->', data);
-      setReset({
-        invoiceNumber: '',
-        customId: '',
-        externalId: '',
-        name: '',
-        status: 'draft',
-        issueDate: new Date(),
-        dueDate: new Date(),
-        fromName: '',
-        fromAddress: '',
-        fromPhone: '',
-        toName: '',
-        toAddress: '',
-        toPhone: '',
-        customerId: '',
-        currency: '',
-        currencyCode: '',
-        totalAmount: '',
-        paidAmount: '',
-        reference: '',
-        createDate: new Date(),
-      });
-    }, 600);
+    }
   };
 
   return (
@@ -106,250 +547,142 @@ export default function CreateInvoice({
       useFormProps={{
         defaultValues: {
           ...record,
-          invoiceNumber: 'INV-0071',
-          createDate: new Date(),
-          status: 'draft',
-          customId: 'INV-' + Math.floor(100000 + Math.random() * 900000),
-          issueDate: new Date(),
+          issuedate: new Date(),
+          duedate: new Date(),
+          toPhone: selectedCustomer?.phone || '',
+          toAddress: selectedCustomer?.address || '',
         },
       }}
       className="flex flex-grow flex-col @container [&_label]:font-medium"
     >
-      {({ register, control, formState: { errors } }) => (
+      {({ register, control, setValue, formState: { errors } }) => (
         <>
-          <div className="flex-grow pb-10">
-            <div className="grid grid-cols-1 gap-8 divide-y divide-dashed divide-gray-200 @2xl:gap-10 @3xl:gap-12">
-              {/* Invoice Details section */}
-              <FormBlockWrapper
-                title={'Invoice Details:'}
-                description={'Enter the invoice details'}
-                className="pt-7 @2xl:pt-9 @3xl:pt-11"
-              >
-                <Input
-                  label="Invoice Number"
-                  placeholder="Enter invoice number"
-                  {...register('invoiceNumber')}
-                  readOnly
-                  error={errors.invoiceNumber?.message}
-                />
-                {/* <Input
-                  label="Custom ID"
-                  placeholder="Enter custom ID"
-                  {...register('customId')}
-                  error={errors.customId?.message}
-                /> */}
-                {/* <Input
-                  label="External ID"
-                  placeholder="Enter external ID"
-                  {...register('externalId')}
-                  error={errors.externalId?.message}
-                /> */}
-                {/* <Input
-                  label="Invoice Name"
-                  placeholder="Enter invoice name"
-                  {...register('name')}
-                  error={errors.name?.message}
-                /> */}
-                {/* <Controller
-                  name="status"
-                  control={control}
-                  render={({ field: { name, onChange, value } }) => (
-                    // <Select
-                    //   dropdownClassName="!z-10 h-auto"
-                    //   inPortal={false}
-                    //   options={statusOptions}
-                    //   value={value}
-                    //   onChange={onChange}
-                    //   name={name}
-                    //   label="Status"
-                    //   error={errors?.status?.message}
-                    //   getOptionValue={(option) => option.value}
-                    //   getOptionDisplayValue={(option) =>
-                    //     renderOptionDisplayValue(option.value as string)
-                    //   }
-                    //   displayValue={(selected: string) =>
-                    //     renderOptionDisplayValue(selected)
-                    //   }
-                    // />
-                  )}
-                /> */}
-                <div className="[&>.react-datepicker-wrapper]:w-full">
-                  <Controller
-                    name="issueDate"
-                    control={control}
-                    render={({ field: { value, onChange } }) => (
-                      <DatePicker
-                        inputProps={{ label: 'Issue Date' }}
-                        placeholderText="Select Date"
-                        selected={value}
-                        onChange={onChange}
-                      />
-                    )}
+          <div className="grid grid-cols-1 gap-8">
+            <FormBlockWrapper title="Invoice Details">
+              <Input
+                label="Invoice Number"
+                {...register('customid')}
+                error={errors.customid?.message}
+              />
+              <Controller
+                name="issuedate"
+                control={control}
+                render={({ field: { value, onChange } }) => (
+                  <DatePicker
+                    inputProps={{ label: 'Issue Date' }}
+                    placeholderText="Select Issue Date"
+                    selected={value}
+                    onChange={onChange}
                   />
-                </div>
-                <div className="[&>.react-datepicker-wrapper]:w-full">
-                  <Controller
-                    name="dueDate"
-                    control={control}
-                    render={({ field: { value, onChange } }) => (
-                      <DatePicker
-                        inputProps={{
-                          label: 'Due Date',
-                          error: errors?.dueDate?.message,
-                        }}
-                        placeholderText="Select Date"
-                        selected={value}
-                        onChange={onChange}
-                      />
-                    )}
+                )}
+              />
+              <Controller
+                name="duedate"
+                control={control}
+                render={({ field: { value, onChange } }) => (
+                  <DatePicker
+                    inputProps={{ label: 'Due Date' }}
+                    placeholderText="Select Due Date"
+                    selected={value}
+                    onChange={onChange}
                   />
-                </div>
-              </FormBlockWrapper>
+                )}
+              />
+            </FormBlockWrapper>
 
-              {/* From section */}
-              {/* <FormBlockWrapper
-                title={'From:'}
-                description={'From he who sending this invoice'}
-              >
-                <Input
-                  label="Name"
-                  placeholder="Enter your name"
-                  {...register('fromName')}
-                  error={errors.fromName?.message}
-                />
-                <Textarea
-                  label="Address"
-                  placeholder="Enter your address"
-                  {...register('fromAddress')}
-                  error={errors.fromAddress?.message}
-                  textareaClassName="h-20"
-                  className="col-span-2"
-                />
-                <Controller
-                  name="fromPhone"
-                  control={control}
-                  render={({ field: { value, onChange } }) => (
-                    <PhoneNumber
-                      label="Phone Number"
-                      country="us"
-                      value={value}
-                      onChange={onChange}
-                    />
-                  )}
-                />
-              </FormBlockWrapper> */}
+            <FormBlockWrapper title="Recipient Information">
+    
 
-              {/* To section */}
-              <FormBlockWrapper
-                title={'To:'}
-                description={'To he who will receive this invoice'}
-                className="pt-7 @2xl:pt-9 @3xl:pt-11"
-              >
-                <Input
-                  label="Name"
-                  placeholder="Enter Customer's name"
-                  {...register('toName')}
-                  error={errors.toName?.message}
-                />
-                <Textarea
-                  label="Address"
-                  placeholder="Enter recipient's address"
-                  {...register('toAddress')}
-                  error={errors.toAddress?.message}
-                  textareaClassName="h-20"
-                  className="col-span-2"
-                />
-                <Controller
-                  name="toPhone"
-                  control={control}
-                  render={({ field: { value, onChange } }) => (
-                    <PhoneNumber
-                      label="Phone Number"
-                      country="us"
-                      value={value}
-                      onChange={onChange}
-                    />
-                  )}
-                />
-                <Input
-                  label="Customer ID"
-                  placeholder="Enter customer ID"
-                  {...register('customerId')}
-                  error={errors.customerId?.message}
-                />
-             
-              </FormBlockWrapper>
+<Controller
+  name="customerid"
+  control={control}
+  render={({ field }) => (
+    <Select
+      label="Customer Name"
+      options={customers}
+      value={customers.find((c) => c.value === field.value) || null}
+      onChange={(selected: Customer | null) => {
+        field.onChange(selected?.value || '');
+        handleCustomerChange(selected);
+        setValue('toPhone', selected?.phone ?? '');
+        setValue('toAddress', selected?.address ?? '');
+      }}
+      searchable
+      displayValue={(value: { label: string } | null) => renderDisplayValue(value)} // Updated typing here
+      getOptionDisplayValue={(option) => renderOptionDisplayValue(option)}
+      clearable
+      onClear={() => {
+        field.onChange('');
+        setValue('toPhone', '');
+        setValue('toAddress', '');
+      }}
+      error={errors.customerid?.message}
+    />
+  )}
+/>
 
-              {/* Financial Details section */}
-              <FormBlockWrapper
-                title={'Financial Details:'}
-                description={'Enter the financial details of the invoice'}
-                className="pt-7 @2xl:pt-9 @3xl:pt-11"
-              >
-                {/* <Input
-                  label="Currency"
-                  placeholder="Enter currency"
-                  {...register('currency')}
-                  error={errors.currency?.message}
-                />
-                <Input
-                  label="Currency Code"
-                  placeholder="Enter currency code"
-                  {...register('currencyCode')}
-                  error={errors.currencyCode?.message}
-                /> */}
-                <Input
-                  label="Total Amount"
-                  type="text"
-                  placeholder="Enter total amount"
-                  {...register('totalAmount')}
-                  error={errors.totalAmount?.message}
-                />
-                <Input
-                  label="Paid Amount"
-                  type="text"
-                  placeholder="Enter paid amount"
-                  {...register('paidAmount')}
-                  error={errors.paidAmount?.message}
-                />
-              </FormBlockWrapper>
+              <Controller
+                name="toPhone"
+                control={control}
+                render={({ field }) => (
+                  <PhoneNumber label="Phone" country="us" {...field} />
+                )}
+              />
+              <Textarea
+                label="Customer Address"
+                {...register('toAddress')}
+                error={errors.toAddress?.message}
+                textareaClassName="h-25"
+                className="col-span-2"
+              />
+            </FormBlockWrapper>
 
-              {/* Additional Details section */}
-              <FormBlockWrapper
-                title={'Additional Details:'}
-                description={'Any additional information for the invoice'}
-                className="pt-7 @2xl:pt-9 @3xl:pt-11"
-              >
-                <Input
-                  label="Reference"
-                  placeholder="Enter reference"
-                  {...register('reference')}
-                  error={errors.reference?.message}
-                />
-                <div className="[&>.react-datepicker-wrapper]:w-full">
-                  {/* <Controller
-                    name="createDate"
-                    control={control}
-                    render={({ field: { value, onChange } }) => (
-                      <DatePicker
-                        inputProps={{ label: 'Date Created' }}
-                        placeholderText="Select Date"
-                        selected={value}
-                        onChange={onChange}
-                      />
-                    )}
-                  /> */}
-                </div>
-              </FormBlockWrapper>
-            </div>
+            <FormBlockWrapper title="Financial Details">
+              <Input
+                label="Total Amount"
+                {...register('total_amount')}
+                error={errors.total_amount?.message}
+              />
+            </FormBlockWrapper>
+
+            <FormBlockWrapper title="Additional Details">
+              <Input
+                label="Reference"
+                {...register('reference')}
+                error={errors.reference?.message}
+              />
+            </FormBlockWrapper>
+
+            <FormFooter
+              isLoading={isLoading}
+              submitBtnText={id ? 'Update Invoice' : 'Create Invoice'}
+            />
           </div>
-
-          <FormFooter
-            isLoading={isLoading}
-            submitBtnText={id ? 'Update Invoice' : 'Create Invoice'}
-          />
         </>
       )}
     </Form>
   );
 }
+
+function renderDisplayValue(value: { label: string } | null) {
+  return (
+    <span className="flex items-center gap-2">
+      <Text fontWeight="medium">{value?.label}</Text>
+    </span>
+  );
+}
+
+function renderOptionDisplayValue(option: { label: string; company: string }) {
+  return (
+    <div className="flex items-center gap-3">
+      <div>
+        <Text fontWeight="medium">{option.label}</Text>
+        <Text className="text-sm text-gray-500" style={{ fontSize: '0.875rem' }}>
+          {option.company}
+        </Text>
+      </div>
+    </div>
+  );
+}
+
+

@@ -1,50 +1,23 @@
-
 'use client';
+
+import React, { useEffect, useState } from 'react';
+import { toast } from 'react-hot-toast';
+import axiosInstance from '@/axiosInstance';
+import Link from 'next/link';
+import { routes } from '@/config/routes';
+import PageHeader from '@/app/shared/page-header';
+import ExportButton from '@/app/shared/export-button';
+import { Button, Dropdown, Modal, Text, ActionIcon, Input, Table, Badge } from 'rizzui';
+import { RxCross2, RxUpload } from 'react-icons/rx';
+import { PiPlusBold } from 'react-icons/pi';
+import { CalendarIcon, ChevronDownIcon } from "@heroicons/react/24/outline";
+import { MagnifyingGlassIcon, ArrowRightIcon, CurrencyDollarIcon } from '@heroicons/react/24/outline';
 
 interface ErrorResponse {
   error: string;
 }
 
-const pageHeader = {
-  title: 'Customers List',
-  breadcrumb: [
-    {
-      href: routes.customers,
-      name: 'Home',
-    },
-    {
-      href: routes.customers.home,
-      name: 'Customers',
-    },
-    {
-      name: 'List',
-    },
-  ],
-};
-import { Alert } from 'rizzui'; // Adjust the import based on your project structure
-import { RxCross2 } from 'react-icons/rx';
-import { Textarea } from 'rizzui';
-import { toast } from 'react-hot-toast';
-import axiosInstance from '@/axiosInstance';
-import Link from 'next/link';
-import { routes } from '@/config/routes';
-import { Button } from 'rizzui';
-import PageHeader from '@/app/shared/page-header';
-import ExportButton from '@/app/shared/export-button';
-import { metaObject } from '@/config/site.config';
-import useSWR from 'swr';
-import { useEffect, useState } from 'react';
-import { Badge, Table } from 'rizzui';
-import { PiPlusBold } from 'react-icons/pi';
-import { Modal, Text, ActionIcon, Input, Checkbox } from 'rizzui';
 
-import {
-  MagnifyingGlassIcon,
-  ArrowRightIcon,
-  CurrencyDollarIcon,
-} from '@heroicons/react/24/outline';
-
-// Define TypeScript types for the API response
 interface Customer {
   id: string;
   name: string;
@@ -58,96 +31,65 @@ interface ApiResponse {
   customer: Customer;
 }
 
-// Function to get cookie value by name
-function getCookie(name: string): string | null {
-  const value = `; ${document.cookie}`;
-  const parts = value.split(`; ${name}=`);
-  if (parts.length === 2) return parts.pop()?.split(';').shift() || null;
-  return null;
-}
+
+
+// const pageHeader = {
+//   title: 'Customers List',
+//   breadcrumb: [
+//     {
+//       href: routes.customers,
+//       name: 'Home',
+//     },
+//     {
+//       href: routes.customers.home,
+//       name: 'Customers',
+//     },
+//     {
+//       name: 'List',
+//     },
+//   ],
+// };
+
+
+const pageHeader = {
+  title: 'Customers List',
+  breadcrumb: [
+    {
+      href: routes.customers.home, // Assuming this is a string
+      name: 'Home',
+    },
+    {
+      href: routes.customers.home, // Ensure this is a valid string route
+      name: 'Customers',
+    },
+    {
+      name: 'List', // No href, which is fine since href is optional
+    },
+  ],
+};
+
 
 export default function CustomersListPage() {
   const [customers, setCustomers] = useState<Customer[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
-  const [searchTerm, setSearchTerm] = useState<string>(''); // For search input
-
-  const [errorMessage, setErrorMessage] = useState('');
-
-  const [modalState, setModalState] = useState({
-    isOpen: false,
-    size: 'md',
-  });
-
-  // Modal form state
-  const [formData, setFormData] = useState({
-    name: '',
-    email: '',
-    phone: '',
-    address: '',
-    city: '',
-    state: '',
-    postalcode: '',
-    country: '',
-    creditlimit: '',
-    paymentterms: '',
-  });
-
-  // Define fetchData function
-  // async function fetchData() {
-  //   setLoading(true);
-  //   setError(null);
-  //   try {
-  //     const token = getCookie('access_token');
-  //     if (!token) {
-  //       setError('No access token found');
-  //       return;
-  //     }
-
-  //     const response = await fetch(
-  //       'http://localhost:9000/customers/cutomerinvoices/',
-  //       {
-  //         headers: {
-  //           Authorization: `Bearer ${token}`,
-  //           'Content-Type': 'application/json',
-  //         },
-  //       }
-  //     );
-
-  //     if (!response.ok) {
-  //       const errorData: any = await response.json();
-  //       throw new Error(errorData.error || 'Network response was not ok');
-  //     }
-
-  //     // const data: ApiResponse[] = await response.json();
-  //     const data = (await response.json()) as ApiResponse[]; // Assert the type
-  //     // Extract customer data from the API response
-  //     const customerData = data.map((customerData) => customerData.customer);
-  //     setCustomers(customerData);
-  //   } catch (error) {
-  //     setError((error as Error).message); // Safely casting error to Error
-  //   } finally {
-  //     setLoading(false);
-  //   }
-  // }
-
-  // useEffect(() => {
-  //   fetchData();
-  // }, []);
-
-
-  // Define fetchData function
+  const [searchTerm, setSearchTerm] = useState<string>('');
+  const [file, setFile] = useState<File | null>(null);
+  const [createModalState, setCreateModalState] = useState({ isOpen: false, size: 'xl' });
+  const [importModalState, setImportModalState] = useState({ isOpen: false, size: 'lg' });
   
+  const [formDataC, setFormDataC] = useState({
+    name: '', email: '', phone: '', address: '', city: '', state: '',
+    postalcode: '', country: '', creditlimit: '', paymentterms: '',
+  });
+
   async function fetchData() {
     setLoading(true);
     setError(null);
     try {
       const response = await axiosInstance.get('/customers/customerinvoices/');
-      const data = response.data as ApiResponse[]; // Type assertion
-
-      // Extract customer data from the API response
-      const customerData = data.map((customerData) => customerData.customer);
-      setCustomers(customerData);
+      const data = response.data as ApiResponse[];
+      setCustomers(data.map((customerData) => customerData.customer));
     } catch (error: any) {
       setError(error.message || 'Failed to fetch customer data');
     } finally {
@@ -158,61 +100,98 @@ export default function CustomersListPage() {
   useEffect(() => {
     fetchData();
   }, []);
+
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
-    setFormData((prevData) => ({
-      ...prevData,
-      [name]: value,
-    }));
+    setFormDataC((prevData) => ({ ...prevData, [name]: value }));
   };
 
-  // const handleSubmit = async (e: React.FormEvent) => {
-  //   e.preventDefault();
 
-  //   const token = getCookie('access_token');
-  //   if (!token) {
-  //     toast.error('No access token found');
-  //     return;
-  //   }
 
-  //   try {
-  //     const response = await fetch(
-  //       'http://localhost:9000/customers/create_customer/',
-  //       {
-  //         method: 'POST',
-  //         headers: {
-  //           Authorization: `Bearer ${token}`,
-  //           'Content-Type': 'application/json',
-  //         },
-  //         body: JSON.stringify(formData),
-  //       }
-  //     );
 
-  //     if (!response.ok) {
-  //       // const { error } = await response.json();
-  //       // throw new Error(error || 'Failed to create customer');
-  //       const errorData: any = await response.json(); // Use 'any' temporarily
-  //       throw new Error(errorData.error || 'Failed to create customer');
-  //     }
+const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  console.log('File input changed'); // Check if the input change event is fired
+  const selectedFile = e.target.files?.[0];
 
-  //     toast.success('Customer created successfully');
-  //     setModalState((prevState) => ({ ...prevState, isOpen: false }));
-  //     await fetchData(); // Refresh customer data after form submission
-  //   } catch (error: any) {
-  //     toast.error(error.message);
-  //   }
-  // };
+  if (selectedFile) {
+      console.log('Selected file:', selectedFile); // Log the selected file
+      if (selectedFile.size > 10 * 1024 * 1024) {
+          toast.error('File size should not exceed 10MB');
+          return;
+      }
+      const fileExtension = selectedFile.name.split('.').pop()?.toLowerCase();
+      if (fileExtension && ['csv', 'xlsx', 'xls'].includes(fileExtension)) {
+          setFile(selectedFile);
+          toast.success(`File ${selectedFile.name} selected.`);
+      } else {
+          toast.error('Please select a CSV or Excel file.');
+      }
+  } else {
+      console.log('No file selected'); // Log if no file is detected
+  }
+};
+
+
+
+  const handleImport = async () => {
+    if (!file) {
+      toast.error('Please select a file to import.');
+      return;
+    }
+
+    console.log('File to be uploaded:', file); // Log before sending
+
+
+    const formData = new FormData();
+
+    formData.append('file', file);
+
+    try {
+      const response = await axiosInstance.post('/customers/bulk_create_customers/', formData);
+      toast.success('Import completed successfully!');
+      await fetchData();
+      setImportModalState((prevState) => ({ ...prevState, isOpen: false }));
+    } catch (error: any) {
+      console.error('Import error:', error.response?.data || error);
+      toast.error(error.response?.data?.error || 'Failed to import customers. Please try again.');
+    }
+  };
+
+  
+  const handleDownloadTemplate = () => {
+    const columns = [
+      'externalid', 'name', 'email', 'phone', 'address', 'city', 'state', 'country', 
+      'postalcode', 'taxid', 'companyname', 'industrytype', 'paymentterms', 'creditlimit', 
+      'notes', 'isactive', 'website', 'currency', 'discount', 'account_balance', 
+      'customer_category', 'risk_level', 'erp_system', 'crm_id', 'referral_source'
+    ];
+    
+    const csvContent = columns.join(',');
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const link = document.createElement('a');
+    if (link.download !== undefined) {
+      const url = URL.createObjectURL(blob);
+      link.setAttribute('href', url);
+      link.setAttribute('download', 'customer_import_template.csv');
+      link.style.visibility = 'hidden';
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    }
+    
+    toast.success('CSV template downloaded successfully!');
+  };
+  
+
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-
     try {
-      const response = await axiosInstance.post('/customers/create_customer/', formData);
-
+      const response = await axiosInstance.post('/customers/create_customer/', formDataC);
       if (response.status === 201) {
         toast.success('Customer created successfully');
-        setModalState((prevState) => ({ ...prevState, isOpen: false }));
-        await fetchData(); // Refresh customer data after form submission
+        setCreateModalState((prevState) => ({ ...prevState, isOpen: false }));
+        await fetchData();
       } else {
         throw new Error('Failed to create customer');
       }
@@ -232,24 +211,27 @@ export default function CustomersListPage() {
 
   return (
     <>
-      <PageHeader
-        title={pageHeader.title}
-        breadcrumb={pageHeader.breadcrumb as any}
-      >
+      <PageHeader title={pageHeader.title} breadcrumb={pageHeader.breadcrumb}>
+
         <div className="mt-4 flex items-center gap-3 @lg:mt-0">
-          <ExportButton
-            data={customers}
-            fileName="customer_data"
-            header="ID,Name,Email,Phone,Total Amount to Pay,Total Paid Amount"
-          />
+          <Dropdown>
+            <Dropdown.Trigger>
+              <Button as="span" variant="outline">
+                Actions <ChevronDownIcon className="ml-2 w-5" />
+              </Button>
+            </Dropdown.Trigger>
+            <Dropdown.Menu>
+              <Dropdown.Item onClick={() => setImportModalState((prevState) => ({ ...prevState, isOpen: true }))}>
+                Import Customer
+              </Dropdown.Item>
+              <Dropdown.Item>
+                Export Data
+              </Dropdown.Item>
+            </Dropdown.Menu>
+          </Dropdown>
+
           <Button
-            onClick={() =>
-              setModalState((prevState) => ({
-                ...prevState,
-                isOpen: true,
-                size: 'xl',
-              }))
-            }
+            onClick={() => setCreateModalState((prevState) => ({ ...prevState, isOpen: true }))}
             className="w-full @lg:w-auto"
           >
             <PiPlusBold className="me-1.5 h-[17px] w-[17px]" />
@@ -258,12 +240,12 @@ export default function CustomersListPage() {
         </div>
       </PageHeader>
 
+      {/* Create Customer Modal */}
       <Modal
-        isOpen={modalState.isOpen}
-        size={modalState.size as any}
-        onClose={() =>
-          setModalState((prevState) => ({ ...prevState, isOpen: false }))
-        }
+        isOpen={createModalState.isOpen}
+        // size={createModalState.size}
+        size={createModalState.size as any}
+        onClose={() => setCreateModalState((prevState) => ({ ...prevState, isOpen: false }))}
       >
         <div className="m-auto px-7 pb-8 pt-6">
           <div className="mb-7 flex items-center justify-between">
@@ -271,137 +253,111 @@ export default function CustomersListPage() {
             <ActionIcon
               size="sm"
               variant="text"
-              onClick={() =>
-                setModalState((prevState) => ({ ...prevState, isOpen: false }))
-              }
+              onClick={() => setCreateModalState((prevState) => ({ ...prevState, isOpen: false }))}
             >
               <RxCross2 className="h-auto w-6" strokeWidth={1.8} />
             </ActionIcon>
           </div>
 
-          <form
-            onSubmit={handleSubmit}
-            className="grid grid-cols-4 gap-4 [&_label>span]:font-medium"
-          >
-            <Input
-              name="name"
-              value={formData.name}
-              onChange={handleInputChange}
-              label="Customer Name *"
-              // size="lg"
-              className="col-span-4"
-            />
-            <Input
-              name="email"
-              value={formData.email}
-              onChange={handleInputChange}
-              label="Email *"
-              // size="lg"
-              className="col-span-2"
-            />
-            <Input
-              name="phone"
-              value={formData.phone}
-              onChange={handleInputChange}
-              label="Contact no *"
-              // size="lg"
-              className="col-span-2"
-            />
-            <Input
-              name="address"
-              value={formData.address}
-              onChange={handleInputChange}
-              label="Address "
-              // size="lg"
-              className="col-span-4"
-            />
-            <Input
-              name="city"
-              value={formData.city}
-              onChange={handleInputChange}
-              label="City "
-              // size="lg"
-              className="col-span-2"
-            />
-            <Input
-              name="state"
-              value={formData.state}
-              onChange={handleInputChange}
-              label="State "
-              // size="lg"
-              className="col-span-2"
-            />
-            <Input
-              name="postalcode"
-              value={formData.postalcode}
-              onChange={handleInputChange}
-              label="Postal Code "
-              // size="lg"
-              className="col-span-2"
-            />
-            <Input
-              name="country"
-              value={formData.country}
-              onChange={handleInputChange}
-              label="Country "
-              // size="lg"
-              className="col-span-2"
-            />
-            <Input
-              name="creditlimit"
-              value={formData.creditlimit}
-              onChange={handleInputChange}
-              label="Credit Limit "
-              // size="lg"
-              className="col-span-2"
-            />
-            <Input
-              name="paymentterms"
-              value={formData.paymentterms}
-              onChange={handleInputChange}
-              label="Payment Terms "
-              // size="lg"
-              className="col-span-2"
-            />
-
-            {/* <Input 
-    name="id"
-    label="ID *"  
-    // size="lg"
-    className="col-span-4"
-  /> */}
-            <Button
-              type="submit"
-              // size="lg"
-              className="col-span-4 mt-2"
-            >
-              Create Customer
-            </Button>
+          <form onSubmit={handleSubmit} className="grid grid-cols-4 gap-4 [&_label>span]:font-medium">
+            <Input name="name" value={formDataC.name} onChange={handleInputChange} label="Customer Name *" className="col-span-4" />
+            <Input name="email" value={formDataC.email} onChange={handleInputChange} label="Email *" className="col-span-2" />
+            <Input name="phone" value={formDataC.phone} onChange={handleInputChange} label="Contact no *" className="col-span-2" />
+            <Input name="address" value={formDataC.address} onChange={handleInputChange} label="Address " className="col-span-4" />
+            <Input name="city" value={formDataC.city} onChange={handleInputChange} label="City " className="col-span-2" />
+            <Input name="state" value={formDataC.state} onChange={handleInputChange} label="State " className="col-span-2" />
+            <Input name="postalcode" value={formDataC.postalcode} onChange={handleInputChange} label="Postal Code " className="col-span-2" />
+            <Input name="country" value={formDataC.country} onChange={handleInputChange} label="Country " className="col-span-2" />
+            <Input name="creditlimit" value={formDataC.creditlimit} onChange={handleInputChange} label="Credit Limit " className="col-span-2" />
+            <Input name="paymentterms" value={formDataC.paymentterms} onChange={handleInputChange} label="Payment Terms " className="col-span-2" />
+            <Button type="submit" className="col-span-4 mt-2">Create Customer</Button>
           </form>
         </div>
       </Modal>
 
-      {/* Search Bar */}
-      <div
-      
-        style={{
-          position: 'relative',
-          width: '17rem',
-        }}
+      {/* Import Customer Modal */}
+      <Modal
+        isOpen={importModalState.isOpen}
+        // size={importModalState.size}
+        size={importModalState.size as any}
+        onClose={() => setImportModalState((prevState) => ({ ...prevState, isOpen: false }))}
       >
+        <div className="m-auto p-6">
+          <div className="mb-7 flex items-center justify-between">
+            <Text className="text-lg font-semibold">Import Customers</Text>
+            <ActionIcon
+              size="sm"
+              variant="text"
+              onClick={() => setImportModalState((prevState) => ({ ...prevState, isOpen: false }))}
+            >
+              <RxCross2 className="h-5 w-5" />
+            </ActionIcon>
+          </div>
+
+          <div className="mb-6">
+            <Text className="mb-2 text-sm font-medium">Step 1: Download Template</Text>
+            <Button onClick={handleDownloadTemplate} className="w-full" variant="outline">
+              Download CSV Template
+            </Button>
+            <Text className="mt-2 text-xs text-gray-500">
+              Download the CSV template with predefined columns for customer data.
+            </Text>
+          </div>
+
+          <div className="mb-6">
+            <Text className="mb-2 text-sm font-medium">Step 2: Upload Filled Template</Text>
+   
+
+<div className="border-2 border-dashed border-gray-300 rounded-lg p-4">
+            <div className="file-upload-container">
+  <input
+    type="file"
+    accept=".csv,.xlsx,.xls"
+    id="file-upload"
+    className="hidden"
+    // onChange={handleFileChange}
+    onChange={(e) => {
+      console.log("target files", e.target.files); // Debug to see if the file is detected
+      handleFileChange(e);
+    }}
+  />
+  <label htmlFor="file-upload" className="cursor-pointer block text-center">
+    <RxUpload className="mx-auto h-12 w-12 text-gray-400 mb-2" />
+    <Text className="text-sm font-medium">
+      {file ? file.name : 'Click to upload or drag and drop'}
+    </Text>
+    <Text className="mt-1 text-xs text-gray-500">
+      CSV or Excel files only, up to 10MB
+    </Text>
+  </label>
+</div>
+</div>
+
+          </div>
+
+          <Button onClick={handleImport} className="w-full" disabled={!file}>
+            Import Customers
+          </Button>
+        </div>
+      </Modal>
+
+      {/* Search Bar */}
+      <div style={{ position: 'relative', width: '17rem' }}>
         <Input
           className="mb-2"
           prefix={<MagnifyingGlassIcon className="w-4" />}
           placeholder="Search"
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
+      
+
+
         />
       </div>
 
       <Table>
         <Table.Header>
           <Table.Row>
-            <Table.Head>ID</Table.Head>
             <Table.Head>Customer Name</Table.Head>
             <Table.Head>Email</Table.Head>
             <Table.Head>Phone</Table.Head>
@@ -421,7 +377,6 @@ export default function CustomersListPage() {
           ) : (
             filteredCustomers.map((customer) => (
               <Table.Row key={customer.id}>
-                <Table.Cell>{customer.id}</Table.Cell>
                 <Table.Cell>{customer.name}</Table.Cell>
                 <Table.Cell>{customer.email}</Table.Cell>
                 <Table.Cell>{customer.phone}</Table.Cell>
@@ -440,5 +395,3 @@ export default function CustomersListPage() {
     </>
   );
 }
-
-
