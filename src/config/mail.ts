@@ -1,5 +1,6 @@
 import { env } from '@/env.mjs';
 
+
 export const MAIL = {
   service: 'gmail',
   name: env.SMTP_HOST || 'smtp.google.com',

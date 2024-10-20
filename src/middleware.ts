@@ -41,5 +41,7 @@ export const config = {
     '/forms/profile-settings/:path*',
     '/actions',
     '/actions:path*',
+    '/dashboard:path*',
+
   ],
 };

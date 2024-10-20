@@ -9,6 +9,7 @@ import SimpleBar from '@ui/simplebar';
 import { Empty, Title } from 'rizzui';
 import cn from '@utils/class-names';
 
+
 export default function OrderProducts({
   items,
   className,
@@ -34,6 +35,8 @@ export default function OrderProducts({
     );
   }
 
+
+  
   return (
     <SimpleBar className={cn('h-[calc(100vh_-_170px)] pb-3', className)}>
       <div className={cn('grid gap-3.5', className)}>
