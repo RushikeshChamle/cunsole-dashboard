@@ -36,8 +36,8 @@ import { stringify } from 'querystring';
 interface Invoice {
   customid: string;
   externalid: string;
-  issuedate: string;
-  duedate: string;
+  issuedate: string | null;
+  duedate: string | null;
   name: string;
   currency: string;
   total_amount: number;
@@ -328,11 +328,6 @@ export default function InvoiceDetailsPage() {
   const handleReferenceChange = (event: any) =>
     setReference(event.target.value);
 
-  // const handleReferenceChange = (
-  //   event: React.ChangeEvent<HTMLTextAreaElement>
-  // ) => {
-  //   setReference(event.target.value);
-  // };
 
   const memoizedFileViewer = useMemo(() => {
     return fileUrl ? <FileViewer url={fileUrl} /> : null;
@@ -751,16 +746,18 @@ export default function InvoiceDetailsPage() {
                         Issue Date:
                       </span>
                       <span className="font-semibold text-gray-800">
-                        {new Date(invoice.issuedate).toLocaleDateString()}
-                      </span>
+  {invoice.issuedate ? new Date(invoice.issuedate).toLocaleDateString() : 'N/A'}
+</span>
+
                     </div>
                     <div className="flex items-center justify-between border-b border-gray-100 pb-2">
                       <span className="font-medium text-gray-600">
                         Due Date:
                       </span>
                       <span className="font-semibold text-gray-800">
-                        {new Date(invoice.duedate).toLocaleDateString()}
-                      </span>
+  {invoice.duedate ? new Date(invoice.duedate).toLocaleDateString() : 'N/A'}
+</span>
+
                     </div>
                   </div>
                 </div>
