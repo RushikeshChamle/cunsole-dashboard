@@ -349,88 +349,7 @@ export default function InvoiceDetailsPage() {
 
   return (
     <>
-      {/* <PageHeader title={pageHeader.title} breadcrumb={pageHeader.breadcrumb}></PageHeader> */}
 
-      {/* <Modal isOpen={modalState} onClose={() => setModalState(false)}>
-        <div className="mx-auto max-w-2xl rounded-lg bg-white p-8 shadow-md">
-          <div className="mb-8 flex items-center justify-between">
-            <h3 className="text-2xl font-semibold text-gray-800">
-              Add Payment
-            </h3>
-            <button
-              onClick={() => setModalState(false)}
-              className="text-gray-500 hover:text-gray-700"
-            >
-              <RxCross2 className="h-6 w-6" />
-            </button>
-          </div>
-
-          <div className="mb-8 grid grid-cols-1 gap-8 md:grid-cols-2">
-            <p>
-              <span className="font-medium text-gray-700">Invoice Id:</span>{' '}
-              #4444
-            </p>
-            <p>
-              <span className="font-medium text-gray-700">Customer Name:</span>{' '}
-              Alice Beth
-            </p>
-            <p>
-              <span className="font-medium text-gray-700">Total Amount:</span>{' '}
-              INR 5000.00
-            </p>
-            <p>
-              <span className="font-medium text-gray-700">Paid Amount:</span>{' '}
-              INR 0.00
-            </p>
-            <p className="md:col-span-2">
-              <span className="font-medium text-gray-700">
-                Balance Remaining:
-              </span>{' '}
-              INR 5000.00
-            </p>
-          </div>
-
-          <form onSubmit={handleAddPayment}>
-            <div className="mb-6 grid grid-cols-1 gap-8">
-              <div>
-                <label className="text-sm font-medium text-gray-700">
-                  Amount
-                </label>
-                <Input
-                  type="number"
-                  placeholder="Enter Amount"
-                  value={amount}
-                  onChange={handleAmountChange}
-                />
-              </div>
-              <div>
-                <label className="text-sm font-medium text-gray-700">
-                  Payment Method
-                </label>
-                <Select options={options} onChange={handleMethodChange} />
-              </div>
-              <div>
-                <label className="text-sm font-medium text-gray-700">
-                  Reference
-                </label>
-                <TextArea
-                  placeholder="Payment for Invoice"
-                  value={reference}
-                  onChange={handleReferenceChange}
-                />
-              </div>
-            </div>
-            <div className="flex justify-end">
-              <Button
-                type="submit"
-                className="rounded-lg bg-blue-500 px-4 py-2 font-medium text-white hover:bg-blue-600"
-              >
-                Save Payment
-              </Button>
-            </div>
-          </form>
-        </div>
-      </Modal> */}
 
       <Modal isOpen={modalState} onClose={() => setModalState(false)}>
         <div className="mx-auto max-w-2xl rounded-lg bg-white p-8 shadow-md">
@@ -808,16 +727,8 @@ export default function InvoiceDetailsPage() {
               </div>
             </Tab.Panel>
 
-            {/* <Tab.Panel>
-              <div className="rounded-lg bg-white p-6 shadow-lg">
-                <h2 className="mb-6 border-b pb-4 text-2xl font-bold">
-                  Activity Logs
-                </h2>
-                <p>Activity logs will be displayed here.</p>
-              </div>
-            </Tab.Panel> */}
 
-            <Tab.Panel>
+            {/* <Tab.Panel>
               <div className="rounded-lg bg-white p-6 shadow-lg">
                 <h2 className="mb-6 border-b pb-4 text-2xl font-bold">
                   Activity Logs
@@ -846,7 +757,38 @@ export default function InvoiceDetailsPage() {
                   <p>No reminders available.</p>
                 )}
               </div>
-            </Tab.Panel>
+            </Tab.Panel>*/}
+
+<Tab.Panel>
+  <div className="rounded-lg bg-white p-6 shadow-lg">
+    <h2 className="mb-6 border-b pb-4 text-2xl font-bold">
+      Activity Logs
+    </h2>
+
+    <h3 className="mt-6 text-xl font-semibold">
+      Invoice Reminders
+    </h3>
+    {reminderError ? (
+      <p>{reminderError}</p>
+    ) : reminders && reminders.length > 0 ? (
+      <Timeline
+        data={reminders.map((reminder) => ({
+          title: reminder.trigger_name,
+          text: reminder.email_subject,
+          date: reminder.reminder_date,
+          hightlightedText: `(${reminder.days_until_reminder} days until reminder)`,
+          status:
+            reminder.days_until_reminder <= 0
+              ? 'success'
+              : 'pending',
+        }))}
+        className="mt-8"
+      />
+    ) : (
+      <p>No reminders available.</p>
+    )}
+  </div>
+</Tab.Panel>
           </Tab.Panels>
         </Tab>
       </div>
