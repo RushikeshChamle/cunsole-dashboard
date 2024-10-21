@@ -926,7 +926,7 @@ export default function CreateEmailTrigger({
       if (response.data) {
         toast.success(
           <strong>
-            Email trigger successfully {id ? 'updated' : 'created'}
+            Email trigger successfully {id ? 'Cancel' : 'created'}
           </strong>
         );
 
@@ -1032,7 +1032,7 @@ export default function CreateEmailTrigger({
           variant="outline"
 
           
-        > Update</Button>
+        > Cancel</Button>
                 </Link>
 
         <Button
