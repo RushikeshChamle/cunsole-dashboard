@@ -6,6 +6,7 @@ import CustomerInvoices from "@/app/shared/Components/customersdetails/invoiceme
 import Transactions from "@/app/shared/Components/customersdetails/transactions/transactions"
 import ActivityLogs from "@/app/shared/Components/customersdetails/activitylogs/ActivityLogs"
 import Details from "@/app/shared/Components/customersdetails/detailsmenu/Details"
+import { format } from 'date-fns'; // Import format function
 
 interface ActivityLogsProps {
   customerId: string | number; // Adjust the type according to your actual data

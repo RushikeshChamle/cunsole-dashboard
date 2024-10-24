@@ -361,8 +361,8 @@ const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
             <Table.Head>Customer Name</Table.Head>
             <Table.Head>Email</Table.Head>
             <Table.Head>Phone</Table.Head>
-            <Table.Head>Total Amount to Pay</Table.Head>
-            <Table.Head>Total Paid Amount</Table.Head>
+            <Table.Head>Total Amount</Table.Head>
+            <Table.Head>Paid Amount</Table.Head>
             <Table.Head></Table.Head>
           </Table.Row>
         </Table.Header>
