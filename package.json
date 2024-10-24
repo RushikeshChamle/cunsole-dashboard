@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "next dev",
     "lint": "next lint",
-    "build": "next build",
+    "build": "export NODE_OPTIONS=\"--max-old-space-size=4096\" && next build",
     "start": "next start",
     "clean": "rm -rf node_modules .next .cache .turbo",
     "generate-icons": "node generate-icons-data.js",
