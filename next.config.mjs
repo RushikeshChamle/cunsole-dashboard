@@ -52,22 +52,6 @@ const nextConfig = {
     ],
   },
   reactStrictMode: true,
-
-  webpack: (config, { isServer }) => {
-    config.optimization = {
-      ...config.optimization,
-      minimize: true
-    }
-    return config
-  },
-  experimental: {
-    optimizeCss: true,
-  }
-
-
-
-
-
 };
 
 export default withSentryConfig(nextConfig, {
