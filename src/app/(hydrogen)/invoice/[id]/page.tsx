@@ -17,7 +17,7 @@ import { PiCheckCircle, PiCaretDownBold } from 'react-icons/pi';
 import { Collapse } from 'rizzui';
 import cn from '@utils/class-names';
 import Timeline from '@/app/shared/logistics/tracking/timeline';
-
+import { format } from 'date-fns';
 import { RxCross2 } from 'react-icons/rx';
 
 import {
@@ -71,11 +71,15 @@ interface Payment {
   payment_date: string;
 }
 
+
+
 interface InvoiceDetails {
   invoice: Invoice; // Assuming this is the type for the invoice
   customer: Customer; // Replace with your actual Customer type
   payments: Payment[]; // Assuming payments is an array of Payment
 }
+
+
 
 const optionss: SelectProps['options'] = [];
 
@@ -665,7 +669,10 @@ export default function InvoiceDetailsPage() {
                         Issue Date:
                       </span>
                       <span className="font-semibold text-gray-800">
-  {invoice.issuedate ? new Date(invoice.issuedate).toLocaleDateString() : 'N/A'}
+                      {invoice.issuedate ? format(new Date(invoice.issuedate), 'd MMM, yyyy') : 'N/A'}
+
+                     
+  {/* {invoice.issuedate ? new Date(invoice.issuedate).toLocaleDateString() : 'N/A'} */}
 </span>
 
                     </div>
@@ -674,7 +681,8 @@ export default function InvoiceDetailsPage() {
                         Due Date:
                       </span>
                       <span className="font-semibold text-gray-800">
-  {invoice.duedate ? new Date(invoice.duedate).toLocaleDateString() : 'N/A'}
+  {/* {invoice.duedate ? new Date(invoice.duedate).toLocaleDateString() : 'N/A'} */}
+  {invoice.duedate ? format(new Date(invoice.duedate), 'd MMM, yyyy') : 'N/A'}
 </span>
 
                     </div>
@@ -714,7 +722,16 @@ export default function InvoiceDetailsPage() {
                           <Table.Cell>
                             {invoice.currency} {payment.amount}
                           </Table.Cell>
-                          <Table.Cell>{payment.payment_date} </Table.Cell>
+                          <Table.Cell>
+                            
+                            {/* {payment.payment_date}  */}
+ 
+                            {format(new Date(payment.payment_date), 'd MMM, yyyy')}
+                        
+                            
+                            
+                            </Table.Cell>
+                          
                           <Table.Cell>{payment.method}</Table.Cell>
                           <Table.Cell>{payment.reference}</Table.Cell>
                         </Table.Row>
