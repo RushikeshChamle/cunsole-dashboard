@@ -61,6 +61,14 @@ interface Customer {
   total_paid_amount: number;
 }
 
+interface EmailData {
+  subject: string;
+  message: string;
+  recipient_list: string[];
+  cc_list: string[];
+  tags: string[];
+}
+
 interface Payment {
   invoice: string;
   amount: number;
@@ -71,15 +79,11 @@ interface Payment {
   payment_date: string;
 }
 
-
-
 interface InvoiceDetails {
   invoice: Invoice; // Assuming this is the type for the invoice
   customer: Customer; // Replace with your actual Customer type
   payments: Payment[]; // Assuming payments is an array of Payment
 }
-
-
 
 const optionss: SelectProps['options'] = [];
 
@@ -194,6 +198,11 @@ export default function InvoiceDetailsPage() {
   const [sendTo, setSendTo] = useState('');
   const [addCC, setAddCC] = useState('');
   const [emailDescription, setEmailDescription] = useState('');
+
+  const [isEmailSending, setIsEmailSending] = useState(false);
+  const [emailError, setEmailError] = useState<string | null>(null);
+  const [selectedTags, setSelectedTags] = useState<string[]>([]);
+
   // const [reminders, setReminders] = useState([]); // State to store reminders
   const [reminders, setReminders] = useState<any[]>([]);
 
@@ -203,6 +212,78 @@ export default function InvoiceDetailsPage() {
   // const [value, setValue] = useState(null);
   const [value, setValue] = useState([]);
   // State hooks to manage form inputs
+
+  const handleSendEmail = async () => {
+    setIsEmailSending(true);
+    setEmailError(null);
+    try {
+      // Validate required fields
+      if (!subject || !sendTo || !emailDescription) {
+        throw new Error('Please fill in all required fields');
+      }
+      // Validate email format for primary recipient
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!emailRegex.test(sendTo)) {
+        throw new Error(
+          'Please enter a valid email address for the primary recipient'
+        );
+      }
+      // Process CC emails
+      let ccEmails: string[] = [];
+      if (addCC) {
+        // Split CC emails by comma and clean them
+        ccEmails = addCC
+          .split(',')
+          .map((email) => email.trim())
+          .filter((email) => email !== '');
+
+        // Validate CC email formats
+        const invalidCCEmails = ccEmails.filter(
+          (email) => !emailRegex.test(email)
+        );
+        if (invalidCCEmails.length > 0) {
+          throw new Error(
+            `Invalid CC email address(es): ${invalidCCEmails.join(', ')}`
+          );
+        }
+      }
+      // Prepare email data
+      const emailData: EmailData = {
+        subject,
+        message: emailDescription,
+        recipient_list: [sendTo],
+        cc_list: ccEmails,
+        tags: selectedTags,
+      };
+      // Send email using the API
+      const response = await axiosInstance.post(
+        'users/send_custom_email/',
+        emailData
+      );
+      if (response.data.status === 'success') {
+        // Clear form and close drawer on success
+        setSubject('');
+        setEmailDescription('');
+        setSelectedTags([]);
+        setSendTo(customerData.email);
+        setAddCC('');
+        setDrawerState(false);
+
+        // Optionally show success notification
+        // If you have a notification system, add it here
+      } else {
+        throw new Error(response.data.message || 'Failed to send email');
+      }
+    } catch (err: any) {
+      setEmailError(err.message || 'An error occurred while sending the email');
+    } finally {
+      setIsEmailSending(false);
+    }
+  };
+
+  const handleTagChange = (values: string[]) => {
+    setSelectedTags(values);
+  };
 
   const options = [
     { label: 'Credit Card', value: 'Credit Card' },
@@ -332,7 +413,6 @@ export default function InvoiceDetailsPage() {
   const handleReferenceChange = (event: any) =>
     setReference(event.target.value);
 
-
   const memoizedFileViewer = useMemo(() => {
     return fileUrl ? <FileViewer url={fileUrl} /> : null;
   }, [fileUrl]);
@@ -353,8 +433,6 @@ export default function InvoiceDetailsPage() {
 
   return (
     <>
-
-
       <Modal isOpen={modalState} onClose={() => setModalState(false)}>
         <div className="mx-auto max-w-2xl rounded-lg bg-white p-8 shadow-md">
           <div className="mb-8 flex items-center justify-between">
@@ -432,154 +510,6 @@ export default function InvoiceDetailsPage() {
           </Button>
 
           <Dropdown>
-            <Drawer
-              isOpen={drawerState}
-              size="lg"
-              onClose={() => setDrawerState(false)}
-            >
-              <div
-                style={{
-                  display: 'flex',
-                  flexDirection: 'column',
-                  height: '100%',
-                }}
-              >
-                <div
-                  style={{
-                    padding: '24px',
-                    flexGrow: 1,
-                    overflowY: 'auto',
-                    // backgroundColor: '#f9fafb', // Light gray background
-                  }}
-                >
-                  <Title className="mb-6 text-2xl font-bold">
-                    Send Manual Email to Customer
-                  </Title>
-
-                  <div
-                    style={{
-                      backgroundColor: '#ffffff', // White background
-                      padding: '16px',
-                      borderRadius: '8px',
-                      marginBottom: '24px',
-                      boxShadow: '0 2px 4px rgba(0,0,0,0.1)', // Subtle shadow
-                    }}
-                  >
-                    <Title as="h3" className="mb-3 text-lg font-semibold">
-                      Customer Details
-                    </Title>
-                    <div
-                      style={{
-                        display: 'grid',
-                        gridTemplateColumns: '1fr 1fr',
-                        gap: '12px',
-                      }}
-                    >
-                      <Text>
-                        <strong>Name:</strong> {customerData.name}
-                      </Text>
-                      <Text>
-                        <strong>Account Manager:</strong>{' '}
-                        {customerData.accountManager}
-                      </Text>
-                      <Text>
-                        <strong>Current Total Amount:</strong> $
-                        {customerData.totalAmount.toLocaleString()}
-                      </Text>
-                      <Text>
-                        <strong>Balance Remaining:</strong> $
-                        {customerData.balanceRemaining.toLocaleString()}
-                      </Text>
-                    </div>
-                  </div>
-
-                  <div
-                    style={{
-                      display: 'flex',
-                      flexDirection: 'column',
-                      gap: '16px',
-                    }}
-                  >
-                    <Input
-                      label="Subject"
-                      placeholder="Enter email subject"
-                      value={subject}
-                      onChange={(e) => setSubject(e.target.value)}
-                    />
-                    <Input
-                      label="Send Email to"
-                      placeholder="Enter recipient email"
-                      value={sendTo}
-                      onChange={(e) => setSendTo(e.target.value)}
-                      defaultValue={customerData.email}
-                    />
-                    <Input
-                      label="Add CC "
-                      placeholder="Enter recipient email"
-                      value={addCC}
-                      onChange={(e) => setAddCC(e.target.value)}
-                      defaultValue={customerData.cc}
-                    />
-                    <Textarea
-                      label="Email Description"
-                      placeholder="Enter email content"
-                      value={emailDescription}
-                      onChange={(e) => setEmailDescription(e.target.value)}
-                      style={{ height: '160px' }} // Fixed height for textarea
-                    />
-
-                    <Select
-                      mode="tags"
-                      style={{ width: '100%', borderColor: 'red' }}
-                      placeholder="Tags Mode"
-                      onChange={handleChange}
-                      options={optionss}
-                      size="large"
-                    />
-                  </div>
-                </div>
-
-                <div
-                  style={{
-                    padding: '12px',
-                    borderTop: '1px solid #e5e7eb', // Light gray border
-                    backgroundColor: '#ffffff', // White background
-                    boxShadow: '0 -2px 4px rgba(0,0,0,0.1)', // Subtle shadow
-                  }}
-                >
-                  <div
-                    style={{
-                      display: 'flex',
-                      justifyContent: 'flex-end',
-                      gap: '12px',
-                    }}
-                  >
-                    <Button
-                      variant="outline"
-                      onClick={() => setDrawerState(false)}
-                      style={{ borderColor: '#ddd', color: '#333' }} // Outline style
-                    >
-                      Cancel
-                    </Button>
-                    <Button
-                      variant="solid"
-                      onClick={() => {
-                        // Implement send email logic here
-                        console.log('Sending email:', {
-                          subject,
-                          sendTo,
-                          emailDescription,
-                        });
-                        setDrawerState(false);
-                      }}
-                      // Solid style
-                    >
-                      Send Email
-                    </Button>
-                  </div>
-                </div>
-              </div>
-            </Drawer>
             <Dropdown.Trigger>
               <Button as="span">
                 Actions <PiDownloadSimpleBold className="ml-2 w-5" />
@@ -595,6 +525,161 @@ export default function InvoiceDetailsPage() {
           </Dropdown>
         </div>
       </PageHeader>
+      {/* demo deta */}
+
+      <Drawer
+        isOpen={drawerState}
+        size="lg"
+        onClose={() => setDrawerState(false)}
+      >
+        <div
+          style={{
+            display: 'flex',
+            flexDirection: 'column',
+            height: '100%',
+          }}
+        >
+          <div
+            style={{
+              padding: '24px',
+              flexGrow: 1,
+              overflowY: 'auto',
+            }}
+          >
+            <Title className="mb-6 text-2xl font-bold">
+              Send Manual Email to Customer
+            </Title>
+
+            <div
+              style={{
+                backgroundColor: '#ffffff',
+                padding: '16px',
+                borderRadius: '8px',
+                marginBottom: '24px',
+                boxShadow: '0 2px 4px rgba(0,0,0,0.1)',
+              }}
+            >
+              <Title as="h3" className="mb-3 text-lg font-semibold">
+                Customer Details
+              </Title>
+              <div
+                style={{
+                  display: 'grid',
+                  gridTemplateColumns: '1fr 1fr',
+                  gap: '12px',
+                }}
+              >
+                <Text>
+                  <strong>Name:</strong> {customerData.name}
+                </Text>
+                <Text>
+                  <strong>Account Manager:</strong>{' '}
+                  {customerData.accountManager}
+                </Text>
+                <Text>
+                  <strong>Current Total Amount:</strong> $
+                  {customerData.totalAmount.toLocaleString()}
+                </Text>
+                <Text>
+                  <strong>Balance Remaining:</strong> $
+                  {customerData.balanceRemaining.toLocaleString()}
+                </Text>
+              </div>
+            </div>
+
+            {emailError && (
+              <div className="mb-4 rounded bg-red-50 p-3 text-red-600">
+                {emailError}
+              </div>
+            )}
+
+            <div
+              style={{
+                display: 'flex',
+                flexDirection: 'column',
+                gap: '16px',
+              }}
+            >
+              <Input
+                label="Subject"
+                placeholder="Enter email subject"
+                value={subject}
+                onChange={(e) => setSubject(e.target.value)}
+                required
+              />
+              <Input
+                label="Send Email to"
+                placeholder="Enter recipient email"
+                value={sendTo}
+                onChange={(e) => setSendTo(e.target.value)}
+                defaultValue={customerData.email}
+                required
+              />
+              {/* <Input
+               label="Add CC "
+               placeholder="Enter recipient email"
+               value={addCC}
+               onChange={(e) => setAddCC(e.target.value)}
+               defaultValue={customerData.cc}
+             /> */}
+
+              {/* <Input
+ label="Add CC (separate multiple emails with commas)"
+ placeholder="email1@example.com, email2@example.com"
+ value={addCC}
+ onChange={(e) => setAddCC(e.target.value)}
+ className="mb-4"
+/>
+
+
+<Text className="mt-1 text-sm text-gray-500">
+ For multiple CC recipients, separate email addresses with commas
+</Text> */}
+              <Textarea
+                label="Email Description"
+                placeholder="Enter email content"
+                value={emailDescription}
+                onChange={(e) => setEmailDescription(e.target.value)}
+                style={{ height: '160px' }}
+                required
+              />
+            </div>
+          </div>
+
+          <div
+            style={{
+              padding: '12px',
+              borderTop: '1px solid #e5e7eb',
+              backgroundColor: '#ffffff',
+              boxShadow: '0 -2px 4px rgba(0,0,0,0.1)',
+            }}
+          >
+            <div
+              style={{
+                display: 'flex',
+                justifyContent: 'flex-end',
+                gap: '12px',
+              }}
+            >
+              <Button
+                variant="outline"
+                onClick={() => setDrawerState(false)}
+                disabled={isEmailSending}
+                style={{ borderColor: '#ddd', color: '#333' }}
+              >
+                Cancel
+              </Button>
+              <Button
+                variant="solid"
+                onClick={handleSendEmail}
+                disabled={isEmailSending}
+              >
+                {isEmailSending ? 'Sending...' : 'Send Email'}
+              </Button>
+            </div>
+          </div>
+        </div>
+      </Drawer>
 
       <div className="">
         <Tab>
@@ -669,22 +754,23 @@ export default function InvoiceDetailsPage() {
                         Issue Date:
                       </span>
                       <span className="font-semibold text-gray-800">
-                      {invoice.issuedate ? format(new Date(invoice.issuedate), 'd MMM, yyyy') : 'N/A'}
+                        {invoice.issuedate
+                          ? format(new Date(invoice.issuedate), 'd MMM, yyyy')
+                          : 'N/A'}
 
-                     
-  {/* {invoice.issuedate ? new Date(invoice.issuedate).toLocaleDateString() : 'N/A'} */}
-</span>
-
+                        {/* {invoice.issuedate ? new Date(invoice.issuedate).toLocaleDateString() : 'N/A'} */}
+                      </span>
                     </div>
                     <div className="flex items-center justify-between border-b border-gray-100 pb-2">
                       <span className="font-medium text-gray-600">
                         Due Date:
                       </span>
                       <span className="font-semibold text-gray-800">
-  {/* {invoice.duedate ? new Date(invoice.duedate).toLocaleDateString() : 'N/A'} */}
-  {invoice.duedate ? format(new Date(invoice.duedate), 'd MMM, yyyy') : 'N/A'}
-</span>
-
+                        {/* {invoice.duedate ? new Date(invoice.duedate).toLocaleDateString() : 'N/A'} */}
+                        {invoice.duedate
+                          ? format(new Date(invoice.duedate), 'd MMM, yyyy')
+                          : 'N/A'}
+                      </span>
                     </div>
                   </div>
                 </div>
@@ -723,15 +809,13 @@ export default function InvoiceDetailsPage() {
                             {invoice.currency} {payment.amount}
                           </Table.Cell>
                           <Table.Cell>
-                            
                             {/* {payment.payment_date}  */}
- 
-                            {format(new Date(payment.payment_date), 'd MMM, yyyy')}
-                        
-                            
-                            
-                            </Table.Cell>
-                          
+                            {format(
+                              new Date(payment.payment_date),
+                              'd MMM, yyyy'
+                            )}
+                          </Table.Cell>
+
                           <Table.Cell>{payment.method}</Table.Cell>
                           <Table.Cell>{payment.reference}</Table.Cell>
                         </Table.Row>
@@ -744,8 +828,39 @@ export default function InvoiceDetailsPage() {
               </div>
             </Tab.Panel>
 
-
             {/* <Tab.Panel>
+             <div className="rounded-lg bg-white p-6 shadow-lg">
+               <h2 className="mb-6 border-b pb-4 text-2xl font-bold">
+                 Activity Logs
+               </h2>
+
+
+               <h3 className="mt-6 text-xl font-semibold">
+                 Invoice Reminders
+               </h3>
+               {reminderError ? (
+                 <p>{reminderError}</p>
+               ) : reminders.length > 0 ? (
+                 <Timeline
+                   data={reminders.map((reminder) => ({
+                     title: reminder.trigger_name,
+                     text: reminder.email_subject,
+                     date: reminder.reminder_date,
+                     hightlightedText: `(${reminder.days_until_reminder} days until reminder)`,
+                     status:
+                       reminder.days_until_reminder <= 0
+                         ? 'success'
+                         : 'pending',
+                   }))}
+                   className="mt-8"
+                 />
+               ) : (
+                 <p>No reminders available.</p>
+               )}
+             </div>
+           </Tab.Panel>*/}
+
+            <Tab.Panel>
               <div className="rounded-lg bg-white p-6 shadow-lg">
                 <h2 className="mb-6 border-b pb-4 text-2xl font-bold">
                   Activity Logs
@@ -756,7 +871,7 @@ export default function InvoiceDetailsPage() {
                 </h3>
                 {reminderError ? (
                   <p>{reminderError}</p>
-                ) : reminders.length > 0 ? (
+                ) : reminders && reminders.length > 0 ? (
                   <Timeline
                     data={reminders.map((reminder) => ({
                       title: reminder.trigger_name,
@@ -774,38 +889,7 @@ export default function InvoiceDetailsPage() {
                   <p>No reminders available.</p>
                 )}
               </div>
-            </Tab.Panel>*/}
-
-<Tab.Panel>
-  <div className="rounded-lg bg-white p-6 shadow-lg">
-    <h2 className="mb-6 border-b pb-4 text-2xl font-bold">
-      Activity Logs
-    </h2>
-
-    <h3 className="mt-6 text-xl font-semibold">
-      Invoice Reminders
-    </h3>
-    {reminderError ? (
-      <p>{reminderError}</p>
-    ) : reminders && reminders.length > 0 ? (
-      <Timeline
-        data={reminders.map((reminder) => ({
-          title: reminder.trigger_name,
-          text: reminder.email_subject,
-          date: reminder.reminder_date,
-          hightlightedText: `(${reminder.days_until_reminder} days until reminder)`,
-          status:
-            reminder.days_until_reminder <= 0
-              ? 'success'
-              : 'pending',
-        }))}
-        className="mt-8"
-      />
-    ) : (
-      <p>No reminders available.</p>
-    )}
-  </div>
-</Tab.Panel>
+            </Tab.Panel>
           </Tab.Panels>
         </Tab>
       </div>
