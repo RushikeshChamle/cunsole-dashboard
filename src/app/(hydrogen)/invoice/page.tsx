@@ -56,6 +56,7 @@ interface Invoice {
   account: number;
 }
 
+
 interface Customer {
   id: string;
   name: string;
@@ -64,6 +65,8 @@ interface Customer {
   total_amount_to_pay: number;
   total_paid_amount: number;
 }
+
+
 
 interface ApiResponse {
   customer: Customer;
