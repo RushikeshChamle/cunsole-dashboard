@@ -10,8 +10,13 @@ import { useEffect, useState } from 'react';
 import { PiPlusBold } from 'react-icons/pi';
 import { MagnifyingGlassIcon } from '@heroicons/react/24/outline';
 import { format } from 'date-fns'; // Import the format function
+import { Sparkles, Loader2 } from 'lucide-react';
+import {  ActionIcon, Select } from 'rizzui';
+import { XMarkIcon } from '@heroicons/react/24/outline';
 
 
+
+import { Modal } from "rizzui";
 
 
 const pageHeader = {
@@ -30,6 +35,25 @@ const pageHeader = {
     },
   ],
 };
+
+
+const toneOptions = [
+  { value: 'professional', label: 'Professional' },
+  { value: 'friendly', label: 'Friendly' },
+  { value: 'formal', label: 'Formal' },
+];
+
+const styleOptions = [
+  { value: 'direct', label: 'Direct' },
+  { value: 'descriptive', label: 'Descriptive' },
+  { value: 'persuasive', label: 'Persuasive' },
+];
+
+const lengthOptions = [
+  { value: 'short', label: 'Short' },
+  { value: 'medium', label: 'Medium' },
+  { value: 'long', label: 'Long' },
+];
 
 
 interface EmailTrigger {
@@ -71,6 +95,21 @@ export default function EmailTriggersListPage() {
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
   const [searchTerm, setSearchTerm] = useState<string>('');
+
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [generationStep, setGenerationStep] = useState('options');
+  const [isGenerating, setIsGenerating] = useState(false);
+  const [aiOptions, setAiOptions] = useState({
+    tone: 'professional',
+    style: 'direct',
+    length: 'medium',
+    includeGreeting: true,
+    includeSalutation: true,
+  });
+  const [generatedContent, setGeneratedContent] = useState({
+    subject: '',
+    body: '',
+  });
 
   const [drawerState, setDrawerState] = useState<DrawerState>({
     isOpen: false,
@@ -201,10 +240,464 @@ export default function EmailTriggersListPage() {
   if (loading) {
     return (
       <div className="flex min-h-screen items-center justify-center">
-        <Loader variant="pulse" />
+        <Loader variant="threeDot" />
       </div>
     );
   }
+
+
+
+
+  const handleAIGenerate = async () => {
+    setIsGenerating(true);
+    try {
+      const response = await axiosInstance.post('/users/generate_triggr_by_ai/', {
+        tone: aiOptions.tone,
+        style: aiOptions.style,
+        length: aiOptions.length,
+        include_greeting: aiOptions.includeGreeting,
+        include_salutation: aiOptions.includeSalutation,
+        placeholders: [
+          "{Invoice.Name}",
+          "{Customer.name}",
+          "{Invoice.Amount}",
+          "{Invoice.date}"
+        ]
+      });
+
+      if (response.data.status === 'success') {
+        setGeneratedContent({
+          subject: response.data.subject,
+          body: response.data.body
+        });
+        setGenerationStep('preview');
+      } else {
+        throw new Error(response.data.message || 'Failed to generate content');
+      }
+    } catch (error) {
+      console.error('Error generating content:', error);
+    } finally {
+      setIsGenerating(false);
+      // Ensure drawer stays open after generation completes
+      setDrawerState(prevState => ({
+        ...prevState,
+        isOpen: true
+      }));
+    }
+  };
+
+
+
+
+
+  // const handleAIGenerate = async () => {
+  //   setIsGenerating(true);
+  //   try {
+  //     const response = await axiosInstance.post('/users/generate_triggr_by_ai/', {
+  //       tone: aiOptions.tone,
+  //       style: aiOptions.style,
+  //       length: aiOptions.length,
+  //       include_greeting: aiOptions.includeGreeting,
+  //       include_salutation: aiOptions.includeSalutation,
+  //       placeholders: [
+  //         "{Invoice.Name}",
+  //         "{Customer.name}",
+  //         "{Invoice.Amount}",
+  //         "{Invoice.date}"
+  //       ]
+  //     });
+
+  //     if (response.data.status === 'success') {
+  //       setGeneratedContent({
+  //         subject: response.data.subject,
+  //         body: response.data.body
+  //       });
+  //       setGenerationStep('preview');
+  //     } else {
+  //       throw new Error(response.data.message || 'Failed to generate content');
+  //     }
+  //   } catch (error) {
+  //     console.error('Error generating content:', error);
+  //   } finally {
+  //     setIsGenerating(false);
+  //   }
+  // };
+
+  // const handleApplyContent = () => {
+  //   if (drawerState.triggerDetails && drawerState.isEditable) {
+  //     setDrawerState(prevState => ({
+  //       ...prevState,
+  //       isOpen: true, // Ensure drawer stays open
+  //       triggerDetails: {
+  //         ...prevState.triggerDetails!,
+  //         email_subject: generatedContent.subject,
+  //         email_body: generatedContent.body,
+  //       }
+  //     }));
+  //   }
+  //   setIsModalOpen(false);
+  //   setGenerationStep('options');
+  // };
+
+
+
+  const handleApplyContent = () => {
+    if (drawerState.triggerDetails && drawerState.isEditable) {
+      setDrawerState(prevState => ({
+        ...prevState,
+        isOpen: true, // Ensure drawer stays open
+        triggerDetails: {
+          ...prevState.triggerDetails!,
+          email_subject: generatedContent.subject,
+          email_body: generatedContent.body,
+        }
+      }));
+    }
+    setIsModalOpen(false);
+    setGenerationStep('options');
+  };
+
+
+
+
+  const handleCloseModal = () => {
+    setIsModalOpen(false);
+    setGenerationStep('options');
+    // Ensure drawer stays open when closing modal
+    setDrawerState(prevState => ({
+      ...prevState,
+      isOpen: true
+    }));
+  };
+
+  const handleOpenModal = () => {
+    setIsModalOpen(true);
+    // Ensure drawer stays open
+    setDrawerState(prevState => ({
+      ...prevState,
+      isOpen: true
+    }));
+  };
+
+ 
+
+
+
+
+  // Define a type for the Select option
+  interface SelectOption {
+    value: string;
+    label: string;
+  }
+
+  const AIOptionsForm = () => (
+    <div className="space-y-6">
+      <div>
+        <Text className="text-sm font-medium mb-2">Tone</Text>
+        <Select
+          options={toneOptions}
+          value={aiOptions.tone}
+          onChange={(option: SelectOption | null) => setAiOptions(prev => ({ ...prev, tone: option?.value || prev.tone }))}
+          className="w-full"
+        />
+      </div>
+
+      <div>
+        <Text className="text-sm font-medium mb-2">Style</Text>
+        <Select
+          options={styleOptions}
+          value={aiOptions.style}
+          onChange={(option: SelectOption | null) => setAiOptions(prev => ({ ...prev, style: option?.value || prev.style }))}
+          className="w-full"
+        />
+      </div>
+
+      <div>
+        <Text className="text-sm font-medium mb-2">Length</Text>
+        <Select
+          options={lengthOptions}
+          value={aiOptions.length}
+          onChange={(option: SelectOption | null) => setAiOptions(prev => ({ ...prev, length: option?.value || prev.length }))}
+          className="w-full"
+        />
+      </div>
+
+      <div className="space-y-3">
+        <Checkbox 
+          label="Include Greeting"
+          checked={aiOptions.includeGreeting}
+          onChange={e => setAiOptions(prev => ({ 
+            ...prev, 
+            includeGreeting: e.target.checked 
+          }))}
+        />
+        
+        <Checkbox 
+          label="Include Salutation"
+          checked={aiOptions.includeSalutation}
+          onChange={e => setAiOptions(prev => ({ 
+            ...prev, 
+            includeSalutation: e.target.checked 
+          }))}
+        />
+      </div>
+
+      <Button
+        onClick={() => {
+          handleAIGenerate();
+          setIsModalOpen(true);
+          // Ensure drawer stays open when generating
+          setDrawerState(prevState => ({
+            ...prevState,
+            isOpen: true
+          }));
+        }}
+        disabled={isGenerating}
+        className="w-full relative z-[10001]"
+      >
+        {isGenerating ? (
+          <>
+            <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+            Generating...
+          </>
+        ) : (
+          <>
+            <Sparkles className="mr-2 h-4 w-4" />
+            Generate Content
+          </>
+        )}
+      </Button>
+    </div>
+  );
+
+  const ContentPreviewForm = () => (
+    <div className="space-y-6">
+      <div>
+        <Text className="text-sm font-medium mb-2">Preview & Edit Subject</Text>
+        <Textarea
+          value={generatedContent.subject}
+          onChange={(e) => setGeneratedContent(prev => ({
+            ...prev,
+            subject: e.target.value
+          }))}
+          className="w-full"
+          rows={2}
+        />
+      </div>
+
+      <div>
+        <Text className="text-sm font-medium mb-2">Preview & Edit Body</Text>
+        <Textarea
+          value={generatedContent.body}
+          onChange={(e) => setGeneratedContent(prev => ({
+            ...prev,
+            body: e.target.value
+          }))}
+          className="w-full"
+          rows={8}
+        />
+      </div>
+
+      <div className="flex space-x-3">
+        <Button
+          variant="outline"
+          onClick={() => {
+            setGenerationStep('options');
+            // Ensure drawer stays open when going back to options
+            setDrawerState(prevState => ({
+              ...prevState,
+              isOpen: true
+            }));
+          }}
+          className="flex-1"
+        >
+          Back to Options
+        </Button>
+        <Button
+          onClick={() => {
+            handleApplyContent();
+            // Ensure drawer stays open when applying content
+            setDrawerState(prevState => ({
+              ...prevState,
+              isOpen: true
+            }));
+          }}
+          className="flex-1"
+        >
+          Use This Content
+        </Button>
+      </div>
+    </div>
+  );
+
+
+
+  const DrawerContent = () => (
+    <div className="flex h-full flex-col">
+    <div className="flex-1  px-5 py-2">
+      <h3 className="mb-4 text-xl font-semibold">
+        Email Trigger Details
+      </h3>
+
+      {drawerState.triggerDetails && (
+        <div className="space-y-4">
+          {/* Input fields for viewing/editing details */}
+
+          {/* <Button
+              variant="outline"
+              onClick={() => setIsModalOpen(true)}
+              className="w-full"
+            > */}
+
+<Button
+              variant="outline"
+              onClick={handleOpenModal} // Use the new handler
+              className="w-full"
+            >
+              <Sparkles className="mr-2 h-4 w-4" />
+              Generate with AI
+            </Button>
+          <Input
+            label="Name"
+            value={drawerState.triggerDetails.name}
+            disabled={!drawerState.isEditable}
+            onChange={(e) =>
+              setDrawerState((prevState) => ({
+                ...prevState,
+                triggerDetails: {
+                  ...prevState.triggerDetails!,
+                  name: e.target.value,
+                },
+              }))
+            }
+            
+
+
+
+          />
+          <Input
+            label="Condition Type"
+            value={getConditionTypeLabel(
+              drawerState.triggerDetails.condition_type
+            )}
+            disabled
+          />
+          <Textarea
+            label="Email Subject"
+            value={drawerState.triggerDetails.email_subject}
+            disabled={!drawerState.isEditable}
+            onChange={(e) =>
+              setDrawerState((prevState) => ({
+                ...prevState,
+                triggerDetails: {
+                  ...prevState.triggerDetails!,
+                  email_subject: e.target.value,
+                },
+              }))
+            }
+          />
+          <Textarea
+            label="Email Body"
+            value={drawerState.triggerDetails.email_body}
+            disabled={!drawerState.isEditable}
+            onChange={(e) =>
+              setDrawerState((prevState) => ({
+                ...prevState,
+                triggerDetails: {
+                  ...prevState.triggerDetails!,
+                  email_body: e.target.value,
+                },
+              }))
+            }
+          />
+          <Input
+            label="Days Offset"
+            value={drawerState.triggerDetails.days_offset.toString()}
+            disabled={!drawerState.isEditable}
+            onChange={(e) =>
+              setDrawerState((prevState) => ({
+                ...prevState,
+                triggerDetails: {
+                  ...prevState.triggerDetails!,
+                  days_offset: parseInt(e.target.value, 10),
+                },
+              }))
+            }
+          />
+
+        </div>
+      )}
+    </div>
+
+    {/* Footer with Action buttons */}
+    <div
+      className="mt-2 px-5"
+      style={{
+        position: 'relative',
+        // top: "-6px",
+        top: 'calc(-14px + 2vh);' /* Adjusts the top position dynamically based on viewport height */,
+      }}
+    >
+      {' '}
+      {/* Optional: Adjust margin-top if needed */}
+      <div className="flex justify-end space-x-1">
+        {drawerState.isEditable ? (
+          <>
+
+
+            <Button onClick={handleEditToggle} variant="outline">
+              Cancel
+            </Button>
+            <div className="w-2" />{' '}
+            {/* Gap between Cancel and Save buttons */}
+            <Button onClick={handleSaveChanges}>Save</Button>
+          </>
+        ) : (
+          <>
+
+
+
+
+            <Button
+
+
+
+
+
+              variant="outline"
+              onClick={handleDeactivateTrigger}
+
+            // disabled={!drawerState.isEditable || !drawerState.triggerDetails?.isactive}
+            >
+              Deactivate Trigger
+            </Button>
+
+            <Button
+              variant="outline"
+              onClick={() =>
+                setDrawerState({
+                  isOpen: false,
+                  triggerDetails: null,
+                  isEditable: false, // Include the isEditable property
+                })
+              }
+            >
+              Close
+            </Button>
+            <div className="w-2" />{' '}
+            {/* Gap between Close and Edit buttons */}
+            <Button onClick={handleEditToggle}>Edit</Button>
+          </>
+        )}
+      </div>
+    </div>
+  </div>
+  )
+
+
+
+
+
 
   return (
     <>
@@ -234,155 +727,49 @@ export default function EmailTriggersListPage() {
         />
       </div>
 
-
       <Drawer
-        isOpen={drawerState.isOpen} // Ensure state is controlling drawer
+        isOpen={drawerState.isOpen}
         size="lg"
-        onClose={() =>
-          setDrawerState((prevState) => ({ ...prevState, isOpen: false }))
-        } // Close drawer handler
+        onClose={() => setDrawerState(prev => ({ ...prev, isOpen: false }))}
+
+        className="z-[1000]"
       >
-        <div className="flex h-full flex-col">
-          <div className="flex-1 overflow-y-auto px-5 py-2">
-            <h3 className="mb-4 text-xl font-semibold">
-              Email Trigger Details
-            </h3>
 
-            {drawerState.triggerDetails && (
-              <div className="space-y-4">
-                {/* Input fields for viewing/editing details */}
-                <Input
-                  label="Name"
-                  value={drawerState.triggerDetails.name}
-                  disabled={!drawerState.isEditable}
-                  onChange={(e) =>
-                    setDrawerState((prevState) => ({
-                      ...prevState,
-                      triggerDetails: {
-                        ...prevState.triggerDetails!,
-                        name: e.target.value,
-                      },
-                    }))
-                  }
-                />
-                <Input
-                  label="Condition Type"
-                  value={getConditionTypeLabel(
-                    drawerState.triggerDetails.condition_type
-                  )}
-                  disabled
-                />
-                <Textarea
-                  label="Email Subject"
-                  value={drawerState.triggerDetails.email_subject}
-                  disabled={!drawerState.isEditable}
-                  onChange={(e) =>
-                    setDrawerState((prevState) => ({
-                      ...prevState,
-                      triggerDetails: {
-                        ...prevState.triggerDetails!,
-                        email_subject: e.target.value,
-                      },
-                    }))
-                  }
-                />
-                <Textarea
-                  label="Email Body"
-                  value={drawerState.triggerDetails.email_body}
-                  disabled={!drawerState.isEditable}
-                  onChange={(e) =>
-                    setDrawerState((prevState) => ({
-                      ...prevState,
-                      triggerDetails: {
-                        ...prevState.triggerDetails!,
-                        email_body: e.target.value,
-                      },
-                    }))
-                  }
-                />
-                <Input
-                  label="Days Offset"
-                  value={drawerState.triggerDetails.days_offset.toString()}
-                  disabled={!drawerState.isEditable}
-                  onChange={(e) =>
-                    setDrawerState((prevState) => ({
-                      ...prevState,
-                      triggerDetails: {
-                        ...prevState.triggerDetails!,
-                        days_offset: parseInt(e.target.value, 10),
-                      },
-                    }))
-                  }
-                />
 
-              </div>
-            )}
+         
+<Modal
+        isOpen={isModalOpen}
+        onClose={handleCloseModal}
+        customSize="600px"
+        className="z-[1100]"
+
+    
+
+
+      >
+        <div className="m-auto px-7 pt-6 pb-8" style={{zIndex: 100}}>
+          <div className="mb-7 flex items-center justify-between">
+            <Text as="span" className="flex items-center text-lg font-semibold">
+              <Sparkles className="h-5 w-5 mr-2 text-blue-600" />
+              {generationStep === 'options' ? 'AI Content Generator' : 'Preview & Edit Content'}
+            </Text>
+            <ActionIcon
+              size="sm"
+              variant="text"
+              onClick={handleCloseModal}
+            >
+              <XMarkIcon className="h-6 w-6" strokeWidth={1.8} />
+            </ActionIcon>
           </div>
 
-          {/* Footer with Action buttons */}
-          <div
-            className="mt-2 px-5"
-            style={{
-              position: 'relative',
-              // top: "-6px",
-              top: 'calc(-14px + 2vh);' /* Adjusts the top position dynamically based on viewport height */,
-            }}
-          >
-            {' '}
-            {/* Optional: Adjust margin-top if needed */}
-            <div className="flex justify-end space-x-1">
-              {drawerState.isEditable ? (
-                <>
-
-
-                  <Button onClick={handleEditToggle} variant="outline">
-                    Cancel
-                  </Button>
-                  <div className="w-2" />{' '}
-                  {/* Gap between Cancel and Save buttons */}
-                  <Button onClick={handleSaveChanges}>Save</Button>
-                </>
-              ) : (
-                <>
-
-
-
-
-                  <Button
-
-
-
-
-
-                    variant="outline"
-                    onClick={handleDeactivateTrigger}
-
-                  // disabled={!drawerState.isEditable || !drawerState.triggerDetails?.isactive}
-                  >
-                    Deactivate Trigger
-                  </Button>
-
-                  <Button
-                    variant="outline"
-                    onClick={() =>
-                      setDrawerState({
-                        isOpen: false,
-                        triggerDetails: null,
-                        isEditable: false, // Include the isEditable property
-                      })
-                    }
-                  >
-                    Close
-                  </Button>
-                  <div className="w-2" />{' '}
-                  {/* Gap between Close and Edit buttons */}
-                  <Button onClick={handleEditToggle}>Edit</Button>
-                </>
-              )}
-            </div>
-          </div>
+          {generationStep === 'options' ? <AIOptionsForm /> : <ContentPreviewForm />}
         </div>
+      </Modal>
+        <DrawerContent />
       </Drawer>
+
+
+
 
       <Table>
         <Table.Header>
