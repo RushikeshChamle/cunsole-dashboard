@@ -192,7 +192,7 @@ export default function CustomersListPage() {
   if (loading) {
     return (
       <div className="flex min-h-screen items-center justify-center">
-        <Loader variant="pulse" />
+        <Loader variant="threeDot" />
       </div>
     );
   }
