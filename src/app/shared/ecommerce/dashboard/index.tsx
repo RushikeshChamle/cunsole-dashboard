@@ -295,7 +295,7 @@ export default function EcommerceDashboard() {
           contentClassName="sm:max-w-[calc(100%-240px)] lg:max-w-[calc(100%-340px)]"
           className="border border-muted bg-gray-0 pb-6 lg:pb-7 dark:bg-gray-100/30"
         >
-          <Link href={routes.eCommerce.createProduct} className="inline-flex mt-4 sm:mt-6">
+          <Link href="https://www.dashboard.cunsole.com/invoice" className="inline-flex mt-4 sm:mt-6">
             <Button variant="outline" className="h-[34px] shadow md:h-9">
               <span>Recover Unpaid Invoices</span>{" "}
               <PiArrowRightBold strokeWidth="2" className="h-4 w-4 ml-2" />
