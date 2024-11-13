@@ -7,7 +7,7 @@ import Logo from '@components/logo';
 import HeaderMenuRight from '@/layouts/header-menu-right';
 import StickyHeader from '@/layouts/sticky-header';
 import SearchWidget from '@/app/shared/search/search';
-
+import Title from 'rizzui';
 export default function Header() {
   return (
     <StickyHeader className="z-[990] 2xl:py-5 3xl:px-8  4xl:px-10">
@@ -15,13 +15,25 @@ export default function Header() {
         <HamburgerButton
           view={<Sidebar className="static w-full 2xl:w-full" />}
         />
-        <Link
+        
+        {/* <Link
           href={'/'}
           aria-label="Site Logo"
           className="me-4 w-9 shrink-0 text-gray-800 hover:text-gray-900 lg:me-5 xl:hidden"
         >
           <Logo iconOnly={true} />
-        </Link>
+          <Title>Cunsole</Title>
+
+        </Link> */}
+
+        <Link
+  href={'/'}
+  aria-label="Site Logo"
+  className="me-4 w-9 shrink-0 text-gray-800 hover:text-gray-900 lg:me-5 xl:hidden"
+>
+  <h1>Cunsole</h1>
+</Link>
+
 
         <SearchWidget />
       </div>
