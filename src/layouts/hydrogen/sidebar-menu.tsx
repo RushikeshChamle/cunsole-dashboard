@@ -7,13 +7,27 @@ import { PiCaretDownBold } from 'react-icons/pi';
 import { menuItems } from '@/layouts/hydrogen/menu-items';
 import StatusBadge from '@components/get-status-badge';
 
+interface DropdownItem {
+  name: string;
+  href: string;
+  badge?: string;
+}
+
+interface MenuItem {
+  name: string;
+  href?: string;
+  icon?: React.ReactElement;
+  dropdownItems?: DropdownItem[];
+  badge?: string;
+}
+
 
 export function SidebarMenu() {
   const pathname = usePathname();
 
   return (
     <div className="mt-4 pb-3 3xl:mt-6">
-      {menuItems.map((item, index) => {
+      {menuItems.map((item: MenuItem, index) => {
         const isActive = pathname === (item?.href as string);
         const pathnameExistInDropdowns: any = item?.dropdownItems?.filter(
           (dropdownItem) => dropdownItem.href === pathname
@@ -63,7 +77,7 @@ export function SidebarMenu() {
                       </div>
                     )}
                   >
-                    {item?.dropdownItems?.map((dropdownItem, index) => {
+                    {item?.dropdownItems?.map((dropdownItem: DropdownItem, index: number) => {
                       const isChildActive =
                         pathname === (dropdownItem?.href as string);
 
