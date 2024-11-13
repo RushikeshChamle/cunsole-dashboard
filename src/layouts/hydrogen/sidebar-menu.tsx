@@ -7,6 +7,7 @@ import { PiCaretDownBold } from 'react-icons/pi';
 import { menuItems } from '@/layouts/hydrogen/menu-items';
 import StatusBadge from '@components/get-status-badge';
 
+
 export function SidebarMenu() {
   const pathname = usePathname();
 
