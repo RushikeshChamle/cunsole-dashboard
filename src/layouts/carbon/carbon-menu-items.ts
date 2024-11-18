@@ -48,9 +48,12 @@ import {
   PiUserPlusDuotone,
   PiShapesDuotone,
   PiNewspaperClippingDuotone,
+  PiNewspaper,
+  PiUsersBold
 } from 'react-icons/pi';
 import { atom } from 'jotai';
 import ProjectWriteIcon from '@components/icons/project-write';
+import { AiOutlineFieldTime } from "react-icons/ai";
 
 export interface SubMenuItemType {
   name: string;
@@ -79,11 +82,13 @@ export interface MenuItemsType {
 
 export const carbonMenuItems: MenuItemsType[] = [
  
+
+  // PiBrowserDuotone
   {
     id: '1',
     name: 'Dashboard',
     title: 'Overview',
-    icon: PiBrowserDuotone,
+    icon: PiChartBarDuotone,
     menuItems: [
       // {
       //   name: 'File Manager',
@@ -114,11 +119,11 @@ export const carbonMenuItems: MenuItemsType[] = [
       // }
       // ,
       
-      
+      // PiCurrencyCircleDollarDuotone
       {
         name: 'Dashboard',
         href: routes.ARdashboard.dashboard,
-        icon: PiCurrencyCircleDollarDuotone,
+        icon: PiChartBarDuotone,
       }
       ,
       // {
@@ -147,7 +152,7 @@ export const carbonMenuItems: MenuItemsType[] = [
     id: '3',
     name: 'Invoices',
     title: 'Apps Kit',
-    icon: PiAppStoreLogoDuotone,
+    icon: PiCurrencyDollarDuotone,
     menuItems: [
       // {
       //   name: 'E-Commerce',
@@ -344,7 +349,7 @@ export const carbonMenuItems: MenuItemsType[] = [
       {
         name: 'Customers',
         href: routes.searchAndFilter.realEstate,
-        icon: PiHouseLineDuotone,
+        icon: PiUserCircleDuotone,
         badge: '',
       },
       // {
@@ -364,7 +369,7 @@ export const carbonMenuItems: MenuItemsType[] = [
     id: '4',
     name: 'Actions',
     title: 'Widgets',
-    icon: PiPackageDuotone,
+    icon: PiSquaresFourDuotone,
     menuItems: [
 
       {
@@ -393,7 +398,7 @@ export const carbonMenuItems: MenuItemsType[] = [
     id: '5',
     name: 'Setting',
     title: 'Forms',
-    icon: PiNotePencilDuotone,
+    icon: PiUserGearDuotone,
     menuItems: [
       {
         name: 'Account Settings',
@@ -428,17 +433,17 @@ export const carbonMenuItems: MenuItemsType[] = [
       // },
     ],
   },
-  {
-    id: '6',
-    name: 'Activity Logs',
-    title: 'Tables',
-    icon: PiTableDuotone,
-    menuItems: [
-      {
-        name: 'Basic',
-        href: routes.tables.basic,
-        icon: PiGridFourDuotone,
-      },
+  // {
+  //   id: '6',
+  //   name: 'Activity Logs',
+  //   title: 'Tables',
+  //   icon: AiOutlineFieldTime,
+  //   menuItems: [
+  //     {
+  //       name: 'Basic',
+  //       href: routes.tables.basic,
+  //       icon: AiOutlineFieldTime,
+  //     },
       // {
       //   name: 'Collapsible',
       //   href: routes.tables.collapsible,
@@ -495,8 +500,8 @@ export const carbonMenuItems: MenuItemsType[] = [
       //     },
       //   ],
       // },
-    ],
-  },
+    // ],
+  // },
   // {
   //   id: '7',
   //   name: 'Pages',

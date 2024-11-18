@@ -323,7 +323,7 @@ export default function PromotionalSales({ className = '' }: PromotionalSalesPro
   return (
     <div className={`w-full max-w-2xl p-4 md:p-6 bg-background border border-border rounded-lg shadow-sm ${className}`}>
       <div className="flex flex-col md:flex-row md:items-center justify-between pb-2 space-y-2 md:space-y-0">
-        <h3 className="text-lg font-semibold">Accounts Receivable Status</h3>
+        <h3 className="text-lg font-semibold">Aging Balance</h3>
         <RizzuiTooltip size="sm" shadow="lg" placement="left" content={<CustomContent />}>
           <AlertCircle className="h-4 w-4 text-muted-foreground" />
         </RizzuiTooltip>

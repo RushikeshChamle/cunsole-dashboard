@@ -28,11 +28,11 @@ export function CarbonDrawerSidebar({ className }: { className?: string }) {
       </SimpleBar>
 
       <div className="relative bg-gray-0 px-6 pb-3 pt-1 dark:bg-gray-100">
-        <WorkSpaceSwitcher
+        {/* <WorkSpaceSwitcher
           dropdownClassName="max-w-[270px]"
           selectClassName="border-0 border-t-2 border-gray-200 rounded-none"
           suffixClassName="rotate-180"
-        />
+        /> */}
       </div>
     </aside>
   );

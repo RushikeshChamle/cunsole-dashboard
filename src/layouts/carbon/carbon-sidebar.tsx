@@ -37,10 +37,10 @@ export function CarbonSidebar({ className }: { className?: string }) {
         </Link>
       </div>
 
-      <WorkSpaceSwitcher
+      {/* <WorkSpaceSwitcher
         className="px-6 pb-3.5 pt-3.5"
         suffixClassName="text-gray-500 w-5 h-5"
-      />
+      /> */}
 
       <SimpleBar
         className={cn(
