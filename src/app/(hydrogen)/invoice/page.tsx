@@ -54,6 +54,7 @@ interface Invoice {
   created_at: string;
   updated_at: string;
   account: number;
+  status:number;
 }
 
 
@@ -94,47 +95,6 @@ export default function CustomersListPage() {
   const [error, setError] = useState<string | null>(null);
   const [searchTerm, setSearchTerm] = useState<string>(''); // New state for search term
 
-  // useEffect(() => {
-  //   async function fetchData() {
-  //     setLoading(true);
-  //     setError(null);
-  //     try {
-  //       const token = getCookie('access_token');
-  //       if (!token) {
-  //         setError('No access token found');
-  //         return;
-  //       }
-
-  //       const response = await fetch(
-  //         'http://localhost:9000/customers/cutomerinvoices/',
-  //         {
-  //           headers: {
-  //             Authorization: `Bearer ${token}`,
-  //             'Content-Type': 'application/json',
-  //           },
-  //         }
-  //       );
-
-  //       if (!response.ok) {
-  //         const errorData: any = await response.json();
-  //         throw new Error(errorData.error || 'Network response was not ok');
-  //       }
-
-  //       const data = (await response.json()) as ApiResponse[]; // Assert the type
-  //       setCustomersData(data); // Ensure you are setting the correct state here
-  //     } catch (error: unknown) {
-  //       if (error instanceof Error) {
-  //         setError(error.message);
-  //       } else {
-  //         setError('An unknown error occurred');
-  //       }
-  //     } finally {
-  //       setLoading(false);
-  //     }
-  //   }
-
-  //   fetchData();
-  // }, []);
 
 
   // new with updated axio prod routing
@@ -161,19 +121,7 @@ export default function CustomersListPage() {
     fetchData();
   }, []);
 
-  // Filter invoices based on the search term
-  // const filteredData = customersData
-  //   .map((customerData) => ({
-  //     ...customerData,
-  //     invoices: customerData.invoices.filter((invoice) => {
-  //       return (
-  //         invoice.customid.toLowerCase().includes(searchTerm.toLowerCase()) ||
-  //         customerData.customer.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-  //         customerData.customer.email.toLowerCase().includes(searchTerm.toLowerCase())
-  //       );
-  //     }),
-  //   }))
-  //   .filter((customerData) => customerData.invoices.length > 0);
+
 
   const filteredData = customersData
   .map((customerData) => ({
@@ -236,11 +184,14 @@ export default function CustomersListPage() {
           <Table.Row>
             <Table.Head>Invoice ID</Table.Head>
             <Table.Head>Customer Name</Table.Head>
-            <Table.Head>Customer Email</Table.Head>
-            <Table.Head>Total Amount</Table.Head>
-            <Table.Head>Paid Amount</Table.Head>
+            {/* <Table.Head>Customer Email</Table.Head> */}
+
             <Table.Head>Created At</Table.Head>
             <Table.Head>Due Date</Table.Head>
+            <Table.Head>Status</Table.Head>
+
+            <Table.Head>Total Amount</Table.Head>
+            <Table.Head>Paid Amount</Table.Head>
             <Table.Head>Details</Table.Head>
           </Table.Row>
         </Table.Header>
@@ -257,9 +208,9 @@ export default function CustomersListPage() {
                 <Table.Row key={invoice.id}>
                   <Table.Cell>{invoice.customid}</Table.Cell>
                   <Table.Cell>{customerData.customer.name}</Table.Cell>
-                  <Table.Cell>{customerData.customer.email}</Table.Cell>
-                  <Table.Cell>{invoice.total_amount}</Table.Cell>
-                  <Table.Cell>{invoice.paid_amount}</Table.Cell>
+                  {/* <Table.Cell>{customerData.customer.email}</Table.Cell> */}
+                  {/* <Table.Cell>{customerData.customer.email}</Table.Cell> */}
+                
                   <Table.Cell>
                     
                     
@@ -276,6 +227,57 @@ export default function CustomersListPage() {
 
                     
                     </Table.Cell>
+                    <Table.Cell>
+                    {/* <Badge>{invoice.status}</Badge> */}
+
+                    {/* <Badge
+    variant="solid"
+    className={
+      invoice.status === 0
+        ? 'bg-red-500 text-white'
+        : invoice.status === 1
+        ? 'bg-orange-500 text-white'
+        : invoice.status === 2
+        ? 'bg-green-500 text-white'
+        : 'bg-gray-500 text-white'
+    }
+  >
+    {invoice.status === 0
+      ? 'Due'
+      : invoice.status === 1
+      ? 'Partial'
+      : invoice.status === 2
+      ? 'Completed'
+      : 'Writeoff'}
+  </Badge> */}
+
+<Badge
+    variant="solid"
+    size="sm"
+    className={
+      invoice.status === 0
+        ? 'bg-red-200 text-red-700'
+        : invoice.status === 1
+        ? 'bg-yellow-200 text-yellow-700'
+        : invoice.status === 2
+        ? 'bg-green-200 text-green-700'
+        : 'bg-gray-200 text-gray-700'
+    }
+  >
+    {invoice.status === 0
+      ? 'Due'
+      : invoice.status === 1
+      ? 'Partial'
+      : invoice.status === 2
+      ? 'Completed'
+      : 'Writeoff'}
+  </Badge>
+ 
+
+                      </Table.Cell>
+
+                    <Table.Cell>{invoice.total_amount}</Table.Cell>
+                    <Table.Cell>{invoice.paid_amount}</Table.Cell>
                   <Table.Cell>
                     <Link href={`/invoice/${invoice.id}`}>
                       <Button variant="outline" size="sm">

@@ -31,7 +31,7 @@ export function CarbonSidebarMenu() {
         as="span"
         className="block px-[25px] pt-5 font-lexend text-xs uppercase text-gray-400 dark:text-gray-600"
       >
-        Menu
+        {/* Menu */}
       </Text>
 
       <ul className="pb-12">

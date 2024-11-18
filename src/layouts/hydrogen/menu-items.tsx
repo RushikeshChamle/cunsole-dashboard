@@ -607,7 +607,7 @@ export const menuItems = [
   {
     name: 'Invoices',
     href: '/invoice',
-    icon: <PiChartBarDuotone />,
+    icon: <PiCurrencyDollarDuotone />,
   },
 
 
@@ -637,22 +637,22 @@ export const menuItems = [
   {
     name: 'Customers',
     href: routes.searchAndFilter.realEstate,
-    icon: <PiUserDuotone />,
+    icon: <PiUserCircleDuotone />,
   },
   {
     name: 'Actions',
     href: routes.actions.home,
-    icon: <PiStepsDuotone />,
+    icon: <PiSquaresFourDuotone />,
   },
   {
     name: 'Settings',
     href: 'forms/profile-settings',
     icon: <PiUserGearDuotone />,
   },
-  {
-    name: 'Activity Logs',
-    href: routes.tables.basic,
-    icon: <PiNoteBlankDuotone />,
-  },
+  // {
+  //   name: 'Activity Logs',
+  //   href: routes.tables.basic,
+  //   icon: <PiNoteBlankDuotone />,
+  // },
 ];
 

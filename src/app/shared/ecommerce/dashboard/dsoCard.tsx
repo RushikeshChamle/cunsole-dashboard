@@ -167,7 +167,7 @@ export default function BarChartList({ className }: BarChartListProps) {
   return (
     <div className={`w-full max-w-4xl p-6 bg-background border rounded-lg shadow-sm ${className}`}>
       <div className="flex items-center justify-between pb-2">
-        <h3 className="text-lg font-semibold">Accounts Receivable DSO</h3>
+        <h3 className="text-lg font-semibold">Days Sales Outstanding</h3>
         <AlertCircle className="h-4 w-4 text-muted-foreground" />
       </div>
 

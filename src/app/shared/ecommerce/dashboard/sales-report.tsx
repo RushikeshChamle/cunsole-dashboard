@@ -1352,7 +1352,7 @@ export default function CreditSalesChart({ className }: { className?: string }) 
 
     return (
         <WidgetCard
-            title="Account Receivable"
+            title="Credit Sales vs Balance Due"
             description={
                 <>
                     <Badge renderAsDot className="me-0.5 bg-[#3b82f6]" /> Total Credit Sales
