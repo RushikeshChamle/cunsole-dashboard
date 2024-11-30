@@ -250,7 +250,7 @@ const getSelectLabel = () => {
     setLoading(true);
     setError(null);
     try {
-      const response = await axiosInstance.get('/customers/customerinvoices/');
+      const response = await axiosInstance.get('/invoices/customersdetails/');
       const data = response.data as ApiResponse[];
       setCustomers(data.map((customerData) => customerData.customer));
     } catch (error: any) {
@@ -537,6 +537,8 @@ const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     width: '100%', // Full-width container
   }}
 >
+
+  
 <div
         style={{
           position: 'relative',
