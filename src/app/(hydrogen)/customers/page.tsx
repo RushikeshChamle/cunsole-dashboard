@@ -12,7 +12,13 @@ import { RxCross2, RxUpload } from 'react-icons/rx';
 import { PiPlusBold } from 'react-icons/pi';
 import { CalendarIcon, ChevronDownIcon } from "@heroicons/react/24/outline";
 import { MagnifyingGlassIcon, ArrowRightIcon, CurrencyDollarIcon } from '@heroicons/react/24/outline';
+import { TbFilter } from 'react-icons/tb';
+import DatePicker from "src/app/shared/datepicker.tsx";
+import { 
 
+  Drawer,
+  Select
+} from 'rizzui';
 interface ErrorResponse {
   error: string;
 }
@@ -50,6 +56,17 @@ interface ApiResponse {
 //   ],
 // };
 
+const options = [
+  { label: 'Last 7 Days', value: 'last_7_days' },
+  { label: 'Last 30 Days', value: 'last_30_days' },
+  { label: 'Last 60 Days', value: 'last_60_days' },
+  { label: 'Last 90 Days', value: 'last_90_days' },
+  { label: 'This Month', value: 'this_month' },
+  { label: 'This Quarter', value: 'this_quarter' },
+  { label: 'This Year', value: 'this_year' },
+  { label: 'Custom', value: 'custom' },
+];
+
 
 const pageHeader = {
   title: 'Customers List',
@@ -69,6 +86,18 @@ const pageHeader = {
 };
 
 
+interface FilterState { // Added missing FilterState interface
+  invoiceId?: string;
+  customerName?: string;
+  createdFrom?: Date | null;
+  createdTo?: Date | null;
+  dueFrom?: Date | null;
+  dueTo?: Date | null;
+  status?: string;
+  minAmount?: string;
+  maxAmount?: string;
+}
+
 export default function CustomersListPage() {
   const [customers, setCustomers] = useState<Customer[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
@@ -77,10 +106,144 @@ export default function CustomersListPage() {
   const [file, setFile] = useState<File | null>(null);
   const [createModalState, setCreateModalState] = useState({ isOpen: false, size: 'xl' });
   const [importModalState, setImportModalState] = useState({ isOpen: false, size: 'lg' });
-  
+  const [filterdrawerState, setFilterdrawerState] = useState(false);
   const [formDataC, setFormDataC] = useState({
     name: '', email: '', phone: '', address: '', city: '', state: '',
     postalcode: '', country: '', creditlimit: '', paymentterms: '',
+  });
+    const [startDate, setStartDate] = useState<Date | null>(null);
+  const [endDate, setEndDate] = useState<Date | null>(null);
+
+  const [value, setValue] = useState(options[0]); // default to "Last 7 Days"
+  const [dateRangeLabel, setDateRangeLabel] = useState('');
+  const [isCustom, setIsCustom] = useState(false);
+
+
+  const calculateDateRange = (selectedOption) => {
+    let newStartDate = null;
+    let newEndDate = null;
+    const today = new Date();
+    
+    switch (selectedOption.value) {
+      case 'last_7_days':
+        newStartDate = new Date(today);
+        newStartDate.setDate(today.getDate() - 7);
+        newEndDate = new Date();
+        break;
+      case 'last_30_days':
+        newStartDate = new Date(today);
+        newStartDate.setDate(today.getDate() - 30);
+        newEndDate = new Date();
+        break;
+      case 'last_60_days':
+        newStartDate = new Date(today);
+        newStartDate.setDate(today.getDate() - 60);
+        newEndDate = new Date();
+        break;
+      case 'last_90_days':
+        newStartDate = new Date(today);
+        newStartDate.setDate(today.getDate() - 90);
+        newEndDate = new Date();
+        break;
+      case 'this_month':
+        newStartDate = new Date(today.getFullYear(), today.getMonth(), 1);
+        newEndDate = new Date(today.getFullYear(), today.getMonth() + 1, 0);
+        break;
+      case 'this_quarter':
+        const quarterStartMonth = Math.floor(today.getMonth() / 3) * 3;
+        newStartDate = new Date(today.getFullYear(), quarterStartMonth, 1);
+        newEndDate = new Date(today.getFullYear(), quarterStartMonth + 3, 0);
+        break;
+      case 'this_year':
+        newStartDate = new Date(today.getFullYear(), 0, 1);
+        newEndDate = new Date(today.getFullYear(), 11, 31);
+        break;
+      case 'custom':
+        newStartDate = null;
+        newEndDate = null;
+        break;
+    }
+  
+    return { newStartDate, newEndDate };
+  };
+  
+  const handlePresetChange = (selectedOption) => {
+    setValue(selectedOption);
+    
+    // Check if custom is selected
+    setIsCustom(selectedOption.value === 'custom');
+    
+      // If not custom, calculate and set date range
+  if (selectedOption.value !== 'custom') {
+    const { newStartDate, newEndDate } = calculateDateRange(selectedOption);
+    setStartDate(newStartDate);
+    setEndDate(newEndDate);
+
+    // Format dates for display
+    if (newStartDate && newEndDate) {
+      const formatOptions = { 
+        month: 'short', 
+        day: 'numeric', 
+        year: 'numeric' 
+      };
+      const formattedStartDate = newStartDate.toLocaleDateString('en-US', formatOptions);
+      const formattedEndDate = newEndDate.toLocaleDateString('en-US', formatOptions);
+      
+      setDateRangeLabel(`${formattedStartDate} - ${formattedEndDate}`);
+    } else {
+      setDateRangeLabel('');
+    }
+  } else {
+    // Reset for custom
+    setStartDate(null);
+    setEndDate(null);
+    setDateRangeLabel('');
+  }
+};
+
+const getSelectLabel = () => {
+  // If there's a specific date range label, use it
+  if (dateRangeLabel) {
+    return dateRangeLabel;
+  }
+  
+  // If custom and dates are set, format them
+  if (isCustom && startDate && endDate) {
+    const formatOptions = { 
+      month: 'short', 
+      day: 'numeric', 
+      year: 'numeric' 
+    };
+    const formattedStartDate = startDate.toLocaleDateString('en-US', formatOptions);
+    const formattedEndDate = endDate.toLocaleDateString('en-US', formatOptions);
+    
+    return `${formattedStartDate} - ${formattedEndDate}`;
+  }
+  
+  // Fallback to the original label
+  return value.label;
+};
+
+
+  // Add the resetDateFilter function
+  const resetDateFilter = () => {
+    setStartDate(null);
+    setEndDate(null);
+    setValue(options[0]); // Reset to default option
+    setDateRangeLabel('');
+    setIsCustom(false);
+  };
+
+  const [filters, setFilters] = useState<FilterState>({
+    invoiceId: '',
+    customerName: '',
+    createdFrom: null,
+    createdTo: null,
+    dueFrom: null,
+    dueTo: null,
+    status: '',
+    minAmount: '',
+    maxAmount: ''
   });
 
   async function fetchData() {
@@ -206,6 +369,16 @@ const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
       customer.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
       customer.phone.includes(searchTerm)
   );
+
+  const handleResetFilters = () => {
+    setStartDate(null);
+    setEndDate(null);
+  };
+
+  const handleRangeChange = (range: [Date | null, Date | null]) => {
+    setStartDate(range[0]);
+    setEndDate(range[1]);
+  };
 
   if (loading) return <p>Loading...</p>;
 
@@ -342,7 +515,7 @@ const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
       </Modal>
 
       {/* Search Bar */}
-      <div style={{ position: 'relative', width: '17rem' }}>
+      {/* <div style={{ position: 'relative', width: '17rem' }}>
         <Input
           className="mb-2"
           prefix={<MagnifyingGlassIcon className="w-4" />}
@@ -353,7 +526,151 @@ const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
 
 
         />
+      </div> */}
+
+
+<div
+  style={{
+    display: 'flex', // Use flexbox
+    alignItems: 'center', // Center items vertically
+    justifyContent: 'space-between', // Space between search and button
+    width: '100%', // Full-width container
+  }}
+>
+<div
+        style={{
+          position: 'relative',
+          flex: 1,
+          maxWidth: '17rem',
+        }}
+      >
+        <Input
+          className="mb-2"
+          prefix={<MagnifyingGlassIcon className="w-4" />}
+          placeholder="Search"
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+        />
       </div>
+
+      {/* Wrapper for DatePicker, Select, and Button */}
+      <div style={{ display: 'flex', alignItems: 'center' }}>
+        {!isCustom && (
+          <div style={{ position: 'relative', flex: 1, maxWidth: '17rem', marginRight: '1rem' }}>
+            <Select
+              options={options}
+              value={getSelectLabel()}
+              onChange={handlePresetChange}
+              clearable={true}
+              onClear={resetDateFilter}
+            />
+          </div>
+        )}
+
+        {isCustom && (
+          <div id="custom-date-picker" style={{ marginRight: '1rem' }}>
+   <DatePicker
+  selected={startDate}
+  onChange={handleRangeChange}
+  startDate={startDate}
+  endDate={endDate}
+  monthsShown={2}
+  placeholderText="Select Date Range"
+  selectsRange
+  inputProps={{
+    clearable: true,
+    onClear: resetDateFilter,
+  }}
+/>
+          </div>
+        )}
+
+        {/* Button */}
+        <Button variant="outline" onClick={() => setFilterdrawerState(true)}>
+          <TbFilter className="h-[15px] w-[15px]" />
+        </Button>
+      </div>
+    </div>
+
+
+
+
+<Drawer
+        isOpen={filterdrawerState}
+        onClose={() => setFilterdrawerState(false)}
+      >
+        <div className="py-4 px-5 space-y-4">
+          <h2 className="text-lg font-semibold">Filter Invoices</h2>
+          
+    
+
+{/* <MultiSelect
+  value={selectedCustomers}
+  clearable={true}
+  searchable={true}
+  options={customerMultiSelectOptions}
+  onChange={setSelectedCustomers}
+  onClear={() => setSelectedCustomers([])}
+  label="Select Customers"
+  
+  // Add these props to help with debugging and display
+  placeholder="Select customers"
+  getOptionLabel={(option) => option.label}
+  getOptionValue={(option) => option.value}
+/> */}
+
+
+
+          
+          <div className="grid grid-cols-2 gap-2">
+       
+          </div>
+
+          
+          
+          <div className="grid grid-cols-2 gap-2">
+       
+          </div>
+          
+         
+          
+          <div className="grid grid-cols-2 gap-2">
+            <Input
+              label="Min Amount"
+              type="number"
+              placeholder="Minimum Amount"
+
+
+            />
+            <Input
+              label="Max Amount"
+              type="number"
+              placeholder="Maximum Amount"
+
+
+            />
+          </div>
+          
+          <div className="flex justify-between mt-4">
+            <Button 
+              variant="outline" 
+              onClick={handleResetFilters}
+            >
+              Reset
+            </Button>
+            <Button 
+            // onClick={handleApplyFilters}
+            
+            >
+              Apply Filters
+            </Button>
+          </div>
+        </div>
+      </Drawer>
+
+
+
+
 
       <Table>
         <Table.Header>
