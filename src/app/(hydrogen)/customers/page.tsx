@@ -119,7 +119,7 @@ export default function CustomersListPage() {
   const [isCustom, setIsCustom] = useState(false);
 
 
-  const calculateDateRange = (selectedOption) => {
+  const calculateDateRange = (selectedOption: { value: string }) => {
     let newStartDate = null;
     let newEndDate = null;
     const today = new Date();
@@ -167,7 +167,7 @@ export default function CustomersListPage() {
     return { newStartDate, newEndDate };
   };
   
-  const handlePresetChange = (selectedOption) => {
+  const handlePresetChange = (selectedOption: { label: string; value: string }) => {
     setValue(selectedOption);
     
     // Check if custom is selected
@@ -181,10 +181,10 @@ export default function CustomersListPage() {
 
     // Format dates for display
     if (newStartDate && newEndDate) {
-      const formatOptions = { 
+      const formatOptions: Intl.DateTimeFormatOptions = { 
         month: 'short', 
         day: 'numeric', 
-        year: 'numeric' 
+        year: 'numeric'
       };
       const formattedStartDate = newStartDate.toLocaleDateString('en-US', formatOptions);
       const formattedEndDate = newEndDate.toLocaleDateString('en-US', formatOptions);
@@ -209,7 +209,7 @@ const getSelectLabel = () => {
   
   // If custom and dates are set, format them
   if (isCustom && startDate && endDate) {
-    const formatOptions = { 
+    const formatOptions: Intl.DateTimeFormatOptions = { 
       month: 'short', 
       day: 'numeric', 
       year: 'numeric' 
@@ -559,13 +559,13 @@ const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
       <div style={{ display: 'flex', alignItems: 'center' }}>
         {!isCustom && (
           <div style={{ position: 'relative', flex: 1, maxWidth: '17rem', marginRight: '1rem' }}>
-            <Select
+            {/* <Select
               options={options}
               value={getSelectLabel()}
               onChange={handlePresetChange}
               clearable={true}
               onClear={resetDateFilter}
-            />
+            /> */}
           </div>
         )}
 
@@ -588,9 +588,9 @@ const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         )}
 
         {/* Button */}
-        <Button variant="outline" onClick={() => setFilterdrawerState(true)}>
+        {/* <Button variant="outline" onClick={() => setFilterdrawerState(true)}>
           <TbFilter className="h-[15px] w-[15px]" />
-        </Button>
+        </Button> */}
       </div>
     </div>
 

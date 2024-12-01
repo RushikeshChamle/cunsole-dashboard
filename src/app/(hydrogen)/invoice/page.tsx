@@ -210,7 +210,7 @@ export default function InvoiceListPage() {
     try {
       // Fetch customers
       const customersResponse = await axiosInstance.get('/customers/customers/');
-      const customerOptions = customersResponse.data.customers.map((customer) => ({
+      const customerOptions = customersResponse.data.customers.map((customer: Customer) => ({
         label: customer.name,
         value: customer.id,
       }));
@@ -252,7 +252,7 @@ export default function InvoiceListPage() {
   }, [fetchData]);
 
 
-  const handleDateRangePresetChange = (selectedOption) => {
+  const handleDateRangePresetChange = (selectedOption: { label: string; value: string }) => {
     setValue(selectedOption); // Update the selected value
     setIsCustomDateRange(selectedOption.value === 'custom'); // Set custom flag only for "Custom"
 
@@ -369,7 +369,7 @@ export default function InvoiceListPage() {
   };
 
 
-  const handlePresetChange = (selectedOption) => {
+  const handlePresetChange = (selectedOption: { label: string; value: string }) => {
     setValue(selectedOption);
 
     // Check if custom is selected
@@ -387,7 +387,8 @@ export default function InvoiceListPage() {
           month: 'short',
           day: 'numeric',
           year: 'numeric'
-        };
+        } as const;
+
         const formattedStartDate = newStartDate.toLocaleDateString('en-US', formatOptions);
         const formattedEndDate = newEndDate.toLocaleDateString('en-US', formatOptions);
 
@@ -586,9 +587,11 @@ export default function InvoiceListPage() {
             />
           )}
 
-          <Button variant="outline" onClick={() => setFilterdrawerState(true)}>
+          {/* Button for advance search */}
+
+          {/* <Button variant="outline" onClick={() => setFilterdrawerState(true)}>
             <TbFilter className="h-[15px] w-[15px]" />
-          </Button>
+          </Button> */}
         </div>
       </div>
 
@@ -716,7 +719,7 @@ export default function InvoiceListPage() {
           {filteredData.length === 0 ? (
             <Table.Row>
               <Table.Cell colSpan={8} className="text-center">
-                No invoices found for this account.
+                No invoices found
               </Table.Cell>
             </Table.Row>
           ) : (
@@ -772,4 +775,5 @@ export default function InvoiceListPage() {
     </>
   );
 }
+
 
