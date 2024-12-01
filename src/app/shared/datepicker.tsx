@@ -13,9 +13,6 @@ const calendarContainerStyles = {
 };
 
 
-
-
-
 const prevNextButtonStyles = {
   base: "[&.react-datepicker>button]:items-baseline [&.react-datepicker>button]:top-7",
   border:
