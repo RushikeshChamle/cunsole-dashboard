@@ -24,6 +24,7 @@ export default function Header() {
         </Link>
 
         <SearchWidget />
+
       </div>
 
       <HeaderMenuRight />
