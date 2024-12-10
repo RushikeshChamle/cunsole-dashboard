@@ -1,6 +1,8 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { Modal, Button, Text, Input, ActionIcon } from 'rizzui';
-import { AiOutlineQuestionCircle, AiOutlineSend, AiOutlineClose } from 'react-icons/ai';
+import {  AiOutlineSend, AiOutlineClose } from 'react-icons/ai';
+import { RiSparklingLine } from "react-icons/ri";
+// AiOutlineQuestionCircle
 import { motion, AnimatePresence } from 'framer-motion';
 import axiosInstance from '@/axiosInstance';
 import ReactMarkdown from 'react-markdown'; // Import react-markdown
@@ -102,6 +104,7 @@ export default function AiSummary() {
 
   const quickPrompts = [
     "Analyze current receivables status", 
+    "Suggest top-priority collections",
     "Identify cash flow bottlenecks", 
     "Improve collection efficiency"
   ];
@@ -114,7 +117,7 @@ export default function AiSummary() {
         className="relative h-[34px] w-[34px] shadow-md dark:bg-gray-100 md:h-9 md:w-9"
         onClick={() => setIsOpen(true)}
       >
-        <AiOutlineQuestionCircle className="h-[18px] w-auto" />
+        <RiSparklingLine className="h-[18px] w-auto" />
       </ActionIcon>
 
       <Modal
@@ -159,7 +162,7 @@ export default function AiSummary() {
                   exit={{ opacity: 0 }}
                   className="text-sm text-gray-500 italic text-center py-4 bg-white rounded-lg shadow-sm"
                 >
-                  AI is crafting a thoughtful response...
+                  Cunsole AI is crafting a thoughtful response...
                 </motion.div>
               )}
             </div>

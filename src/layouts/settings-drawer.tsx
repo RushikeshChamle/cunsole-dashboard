@@ -15,7 +15,7 @@ export default function SettingsDrawer() {
         <div className="px-5 py-6">
           <ThemeSwitcher />
           <AppDirection />
-          <LayoutSwitcher />
+          {/* <LayoutSwitcher /> */}
           <ColorOptions />
         </div>
       </SimpleBar>
