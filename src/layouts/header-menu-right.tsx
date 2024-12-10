@@ -70,7 +70,7 @@ export default function HeaderMenuRight() {
           />
         </ActionIcon>
       </NotificationDropdown> */}
-
+{/* 
  <MessagesDropdown>
        <ActionIcon
         aria-label="Messages"
@@ -85,7 +85,7 @@ export default function HeaderMenuRight() {
          className="absolute right-2.5 top-2.5 -translate-y-1/3 translate-x-1/2"
         />
         </ActionIcon>
-       </MessagesDropdown> 
+       </MessagesDropdown>  */}
 
        <AiSummary></AiSummary>
 

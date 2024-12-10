@@ -246,6 +246,7 @@ const getSelectLabel = () => {
     maxAmount: ''
   });
 
+  
   async function fetchData() {
     setLoading(true);
     setError(null);
