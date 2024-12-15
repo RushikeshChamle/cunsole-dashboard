@@ -23,6 +23,10 @@ export const routes = {
     nft: '/search/nft',
     flight: '/search/flight',
   },
+
+
+
+
   support: {
     dashboard: '/support',
     inbox: '/support/inbox',
@@ -52,11 +56,18 @@ export const routes = {
   },
 
 
+  reports: {
+    reports: '/reports',
+  },
+
+
 
   appointment: {
     dashboard: '/appointment',
     appointmentList: '/appointment/list',
   },
+
+
   executive: {
     dashboard: '/executive',
   },
@@ -139,6 +150,13 @@ export const routes = {
     personalInformation: '/forms/profile-settings/profile',
     newsletter: '/forms/newsletter',
   },
+
+
+
+
+
+
+
   emailTemplates: '/email-templates',
   profile: '/profile',
   welcome: '/welcome',

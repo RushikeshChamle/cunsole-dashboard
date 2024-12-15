@@ -7,7 +7,6 @@ import { siteConfig } from '@/config/site.config';
 import { inter, lexendDeca } from '@/app/fonts';
 import cn from '@utils/class-names';
 import NextProgress from '@components/next-progress';
-
 import { AuthProvider } from './AuthContext';
 
 
@@ -22,6 +21,7 @@ export const metadata = {
   title: siteConfig.title,
   description: siteConfig.description,
 };
+
 
 export default async function RootLayout({
   children,
@@ -40,8 +40,6 @@ export default async function RootLayout({
         suppressHydrationWarning
         className={cn(inter.variable, lexendDeca.variable, 'font-inter')}>
               <AuthProvider>
-
-
           <ThemeProvider>
             <NextProgress />
             {children}
@@ -49,11 +47,13 @@ export default async function RootLayout({
             <GlobalDrawer/>
             <GlobalModal />
           </ThemeProvider>
-
           </AuthProvider>
-
-
       </body>
     </html>
   );
 }
+
+
+
+
+
