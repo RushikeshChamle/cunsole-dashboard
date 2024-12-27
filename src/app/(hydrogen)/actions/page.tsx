@@ -290,55 +290,6 @@ export default function EmailTriggersListPage() {
 
 
 
-  // const handleAIGenerate = async () => {
-  //   setIsGenerating(true);
-  //   try {
-  //     const response = await axiosInstance.post('/users/generate_triggr_by_ai/', {
-  //       tone: aiOptions.tone,
-  //       style: aiOptions.style,
-  //       length: aiOptions.length,
-  //       include_greeting: aiOptions.includeGreeting,
-  //       include_salutation: aiOptions.includeSalutation,
-  //       placeholders: [
-  //         "{Invoice.Name}",
-  //         "{Customer.name}",
-  //         "{Invoice.Amount}",
-  //         "{Invoice.date}"
-  //       ]
-  //     });
-
-  //     if (response.data.status === 'success') {
-  //       setGeneratedContent({
-  //         subject: response.data.subject,
-  //         body: response.data.body
-  //       });
-  //       setGenerationStep('preview');
-  //     } else {
-  //       throw new Error(response.data.message || 'Failed to generate content');
-  //     }
-  //   } catch (error) {
-  //     console.error('Error generating content:', error);
-  //   } finally {
-  //     setIsGenerating(false);
-  //   }
-  // };
-
-  // const handleApplyContent = () => {
-  //   if (drawerState.triggerDetails && drawerState.isEditable) {
-  //     setDrawerState(prevState => ({
-  //       ...prevState,
-  //       isOpen: true, // Ensure drawer stays open
-  //       triggerDetails: {
-  //         ...prevState.triggerDetails!,
-  //         email_subject: generatedContent.subject,
-  //         email_body: generatedContent.body,
-  //       }
-  //     }));
-  //   }
-  //   setIsModalOpen(false);
-  //   setGenerationStep('options');
-  // };
-
 
 
   const handleApplyContent = () => {
